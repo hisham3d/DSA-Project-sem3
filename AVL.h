@@ -386,6 +386,7 @@ void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string old, string newVal
     {
         string  str = "";
         vector<string>temp = GetTuples(S);
+        cout << "CHECK" << endl;
         if (toLower(temp[index]) != toLower(old))
             continue;
         for (auto Str : temp)
@@ -393,6 +394,7 @@ void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string old, string newVal
         str.erase(0, 1);
         tuples.push_back(str);
     }
+    cout << "DONE" << endl;
     stringstream sstream;
     for (int i = 0; i < ptr->AddressList.size(); i++)
     {
@@ -424,9 +426,8 @@ void UpdateTuple(AVL<string>*& Avl, vector<string> fields)
     cin.ignore();
     cout << "\nEnter the update query: ";
     getline(cin, input, '\n');
-    stringstream sstream;
-    sstream << input;
-    sstream >> input;
+    stringstream sstream(input);
+
     vector<string> tags;
     while (getline(sstream, input, ','))
     {
@@ -434,19 +435,22 @@ void UpdateTuple(AVL<string>*& Avl, vector<string> fields)
             input.erase(0, 1);
         tags.push_back(input);
     }
-    if (tags.size() < 4)
+
+    if (tags.size() < 3)
     {
-        cout << "INCORRECT QUERY\n";
+        cout << "INCORRECT QUERY" << endl;
         return;
     }
-    AVLDataNode<string>* toDelete = Avl->recursiveSearch(Avl->root, (tags[0]));
-    cout << toDelete->value;
-    if (toDelete == NULL)
+    AVLDataNode<string>* toDelete = Avl->recursiveSearch(Avl->root, tags[1]);
+    if (toDelete == NULL) {
         return;
-    UpdateTupleInfile(toDelete, getFieldIndex(fields, tags[1]), tags[2], tags[3]);
+    }
+    cout << toDelete->value;
+    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[1], tags[2]);
     if (toLower(tags[1]) == toLower(Avl->fieldname))
     {
-        Avl = &stringCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "int", activeBranch2);
+        cout << "IF CONDITION" << endl;
+        Avl = &stringCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "string", activeBranch2);
         Avl->CreateTreeFile(Avl->root);
     }
 }
@@ -454,7 +458,44 @@ void UpdateTuple(AVL<int>*& Avl, vector<string> fields)
 {
     string input = "";
     cin.ignore();
-    cout << "\nEnter the update query : ";
+    cout << "\nEnter the update query: ";
+    getline(cin, input, '\n');
+    stringstream sstream(input);
+
+    vector<string> tags;
+    while (getline(sstream, input, ','))
+    {
+        if (input[0] == ' ')
+            input.erase(0, 1);
+        tags.push_back(input);
+    }
+
+    if (tags.size() < 3)
+    {
+        cout << "INCORRECT QUERY" << endl;
+        return;
+    }
+
+    AVLDataNode<int>* toDelete = Avl->recursiveSearch(Avl->root, stoi(tags[1]));
+    if (toDelete == NULL) {
+        cout << "Tuple not found" << endl;
+        return;
+    }
+
+    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[1], tags[2]);
+    if (toLower(tags[1]) == toLower(Avl->fieldname))
+    {
+        Avl = &intCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "int", activeBranch2);
+        Avl->CreateTreeFile(Avl->root);
+        cout << "Tree created again" << endl;
+    }
+}
+
+void UpdateTuple(AVL<double>*& Avl, vector<string> fields)
+{
+    string input = "";
+    cin.ignore();
+    cout << "\nEnter the update query: ";
     getline(cin, input, '\n');
     stringstream sstream(input);
 
@@ -471,43 +512,6 @@ void UpdateTuple(AVL<int>*& Avl, vector<string> fields)
         cout << "INCORRECT QUERY" << endl;
         return;
     }
-
-    AVLDataNode<int>* toDelete = Avl->recursiveSearch(Avl->root, stoi(tags[0]));
-    if (toDelete == NULL) {
-        cout << "Tuple not found" << endl;
-        return;
-    }
-
-    UpdateTupleInfile(toDelete, getFieldIndex(fields, tags[1]), tags[2], tags[3]);
-    if (toLower(tags[1]) == toLower(Avl->fieldname))
-    {
-        Avl = &intCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "int", activeBranch2);
-        Avl->CreateTreeFile(Avl->root);
-        cout << "Tree created again" << endl;
-    }
-}
-
-void UpdateTuple(AVL<double>*& Avl, vector<string> fields)
-{
-    string input = "";
-    cin.ignore();
-    cout << "\nEnter the update query : ";
-    getline(cin, input, '\n');
-    stringstream sstream;
-    sstream << input;
-    sstream >> input;
-    vector<string> tags;
-    while (getline(sstream, input, ','))
-    {
-        if (input[0] == ' ')
-            input.erase(0, 1);
-        tags.push_back(input);
-    }
-    if (tags.size() < 4)
-    {
-        cout << "INCORRECT QUERY\n";
-        return;
-    }
     AVLDataNode<double>* toDelete = Avl->recursiveSearch(Avl->root, stod(tags[0]));
     cout << toDelete->value;
     if (toDelete == NULL)
@@ -515,7 +519,7 @@ void UpdateTuple(AVL<double>*& Avl, vector<string> fields)
     UpdateTupleInfile(toDelete, getFieldIndex(fields, tags[1]), tags[2], tags[3]);
     if (toLower(tags[1]) == toLower(Avl->fieldname))
     {
-        Avl = &doubleCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "int", activeBranch2);
+        Avl = &doubleCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "double", activeBranch2);
         Avl->CreateTreeFile(Avl->root);
     }
 }

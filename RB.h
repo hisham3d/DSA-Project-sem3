@@ -873,7 +873,6 @@ void UpdateTuple(RedBlackTree<int>*& RB, vector<string> fields)
     stringstream sstream;
     sstream << input;
     sstream >> input;
-    cout << input << endl;
     vector<string> tags;
     while (getline(sstream, input, ','))
     {

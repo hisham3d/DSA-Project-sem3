@@ -78,6 +78,18 @@ string toLower(string f)
 	}
 	return out;
 }
+string toUpper(string f)
+{
+	string out = "";
+	for (int i = 0; i < f.size(); i++)
+	{
+		if (islower(f[i]))
+			out += toupper(f[i]);
+		else
+			out += f[i];
+	}
+	return out;
+}
 int getFieldIndex(vector<string>& fields, string fName)
 {
 	for (int i = 0; i < fields.size(); i++)
