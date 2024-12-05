@@ -14,7 +14,7 @@
 #include <iomanip>
 using namespace std;
 
-vector<string> arrFileNames = { "healthcare_dataset.csv" };
+string fileName = "healthcare_dataset.csv";
 class AddressLocation
 {
 public:

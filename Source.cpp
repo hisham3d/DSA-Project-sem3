@@ -343,7 +343,7 @@ int main()
 	cout << "Working in branch: " << activeBranch << endl;
 
 	vector<string> Fields, Entries, DataTypes;
-	GetFields(arrFileNames[0], Fields, Entries);
+	GetFields(fileName, Fields, Entries);
 	DataTypes = AllocateDataTypes(Entries);
 
 	char ch;

@@ -646,10 +646,9 @@ RedBlackTree<string>& stringCreateRBTree(int index, string typee, string branch)
     activeBranch3 = branch;
     RedBlackTree<string>* Tree = new  RedBlackTree<string>();
     vector<string> lineREAD;
-    for (auto filename : arrFileNames)
-    {
+
         fstream file;
-        file.open("FilesToREAD\\" + filename, ios::in);
+        file.open("FilesToREAD\\" + fileName, ios::in);
         READLINE(file, lineREAD);
         int lineNumber = 1;
         while (!file.eof())
@@ -658,11 +657,10 @@ RedBlackTree<string>& stringCreateRBTree(int index, string typee, string branch)
             READLINE(file, lineREAD);
             if (lineREAD.size() <= 1)
                 break;
-            Tree->insert(lineREAD[index], lineREAD[index], filename, to_string(lineNumber++));
+            Tree->insert(lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
         }
         //Tree->printInorder(Tree->root);
         file.close();
-    }
 
     return *Tree;
 }
@@ -670,10 +668,9 @@ RedBlackTree<int>& intCreateRBTree(int index, string typee, string branch)
 {
     activeBranch3 = branch;
     RedBlackTree<int>* Tree = new  RedBlackTree<int>();
-    for (auto filename : arrFileNames)
-    {
+
         fstream file;
-        file.open("FilesToREAD\\" + filename, ios::in);
+        file.open("FilesToREAD\\" + fileName, ios::in);
         vector<string> lineREAD;
         READLINE(file, lineREAD);
         int lineNumber = 1;
@@ -683,20 +680,19 @@ RedBlackTree<int>& intCreateRBTree(int index, string typee, string branch)
             READLINE(file, lineREAD);
             if (lineREAD.size() <= 1)
                 break;
-            Tree->insert(stoi(lineREAD[index]), lineREAD[index], filename, to_string(lineNumber++));
+            Tree->insert(stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
         }
         file.close();
-    }
+
     return *Tree;
 }
 RedBlackTree<double>& doubleCreateRBTree(int index, string typee, string branch)
 {   
     activeBranch3 = branch;
     RedBlackTree<double>* Tree = new  RedBlackTree<double>();
-    for (auto filename : arrFileNames)
-    {
+
         fstream file;
-        file.open("FilesToREAD\\" + filename, ios::in);
+        file.open("FilesToREAD\\" + fileName, ios::in);
         vector<string> lineREAD;
         READLINE(file, lineREAD);
         int lineNumber = 1;
@@ -706,11 +702,11 @@ RedBlackTree<double>& doubleCreateRBTree(int index, string typee, string branch)
             READLINE(file, lineREAD);
             if (lineREAD.size() <= 1)
                 break;
-            Tree->insert(stod(lineREAD[index]), lineREAD[index], filename, to_string(lineNumber++));
+            Tree->insert(stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
         }
         //Tree->printInorder(Tree->root);
         file.close();
-    }
+
     return *Tree;
 }
 RBDataNode<string>& ReadRBNodeFromFile(string filename)

@@ -436,10 +436,8 @@ BTree<string>& stringCreateBTREE(int index, string typee, string branch)
 	cin >> degree;
 	BTree<string>* Tree = new  BTree<string>(degree);
 
-	for (auto filename : arrFileNames)
-	{
 		fstream file;
-		file.open("FilesToREAD\\" + filename, ios::in);
+		file.open("FilesToREAD\\" + fileName, ios::in);
 
 		vector<string> lineREAD;
 		READLINE(file, lineREAD);
@@ -450,12 +448,11 @@ BTree<string>& stringCreateBTREE(int index, string typee, string branch)
 			READLINE(file, lineREAD);
 			if (lineREAD.size() <= 1)
 				break;
-			Tree->insert(lineREAD[index], filename, to_string(lineNumber++));
+			Tree->insert(lineREAD[index], fileName, to_string(lineNumber++));
 		}
 		//Tree->printInorder(Tree->root);
 		file.close();
 
-	}
 	return *Tree;
 }
 BTree<int>& intCreateBTREE(int index, string typee, string branch)
@@ -466,11 +463,8 @@ BTree<int>& intCreateBTREE(int index, string typee, string branch)
 	cin >> degree;
 	BTree<int>* Tree = new  BTree<int>(degree);
 
-
-	for (auto filename : arrFileNames)
-	{
 		fstream file;
-		file.open("FilesToREAD\\" + filename, ios::in);
+		file.open("FilesToREAD\\" + fileName, ios::in);
 		vector<string> lineREAD;
 		READLINE(file, lineREAD);
 		int lineNumber = 1;
@@ -480,11 +474,10 @@ BTree<int>& intCreateBTREE(int index, string typee, string branch)
 			READLINE(file, lineREAD);
 			if (lineREAD.size() <= 1)
 				break;
-			Tree->insert(stoi(lineREAD[index]), filename, to_string(lineNumber++));
+			Tree->insert(stoi(lineREAD[index]), fileName, to_string(lineNumber++));
 		}
 		//Tree->printInorder(Tree->root);
 		file.close();
-	}
 
 	return *Tree;
 }
@@ -495,10 +488,9 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 	cout << "Enter the minimum degree : ";
 	cin >> degree;
 	BTree<double>* Tree = new  BTree<double>(degree);
-	for (auto filename : arrFileNames)
-	{
+
 		fstream file;
-		file.open("FilesToREAD\\" + filename, ios::in);
+		file.open("FilesToREAD\\" + fileName, ios::in);
 
 
 		vector<string> lineREAD;
@@ -510,11 +502,11 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 			READLINE(file, lineREAD);
 			if (lineREAD.size() <= 1)
 				break;
-			Tree->insert(stod(lineREAD[index]), filename, to_string(lineNumber++));
+			Tree->insert(stod(lineREAD[index]), fileName, to_string(lineNumber++));
 		}
 		//Tree->printInorder(Tree->root);
 		file.close();
-	}
+
 	return *Tree;
 }
 template<typename T>

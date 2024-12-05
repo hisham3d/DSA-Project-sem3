@@ -216,10 +216,8 @@ AVL<string>& stringCreateAvlTree(int index, string typee, string branch)
 {
     activeBranch2 = branch;
     AVL<string>* Tree = new  AVL<string>();
-    for (auto filename : arrFileNames)
-    {
         fstream file;
-        file.open("FilesToREAD\\" + filename, ios::in);
+        file.open("FilesToREAD\\" + fileName, ios::in);
         vector<string> lineREAD;
         READLINE(file, lineREAD);
         int lineNumber = 1;
@@ -229,11 +227,10 @@ AVL<string>& stringCreateAvlTree(int index, string typee, string branch)
             READLINE(file, lineREAD);
             if (lineREAD.size() <= 1)
                 break;
-            Tree->root = Tree->insert(Tree->root, lineREAD[index], lineREAD[index], filename, to_string(lineNumber++));
+            Tree->root = Tree->insert(Tree->root, lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
         }
         //Tree->printInorder(Tree->root);
         file.close();
-    }
     return *Tree;
 }
 
@@ -241,10 +238,9 @@ AVL<int>& intCreateAvlTree(int index, string typee, string branch)
 {
     activeBranch2 = branch;
     AVL<int>* Tree = new  AVL<int>();
-    for (auto& filename : arrFileNames)
-    {
+    
         fstream file;
-        file.open("FilesToREAD\\" + filename, ios::in);
+        file.open("FilesToREAD\\" + fileName, ios::in);
         vector<string> lineREAD;
         READLINE(file, lineREAD);
         int lineNumber = 1;
@@ -254,11 +250,11 @@ AVL<int>& intCreateAvlTree(int index, string typee, string branch)
             READLINE(file, lineREAD);
             if (lineREAD.size() <= 1)
                 break;
-            Tree->root = Tree->insert(Tree->root, stoi(lineREAD[index]), lineREAD[index], filename, to_string(++lineNumber));
+            Tree->root = Tree->insert(Tree->root, stoi(lineREAD[index]), lineREAD[index], fileName, to_string(++lineNumber));
         }
         //Tree->printInorder(Tree->root);
         file.close();
-    }
+
     return *Tree;
 }
 
@@ -267,10 +263,9 @@ AVL<double>& doubleCreateAvlTree(int index, string typee, string branch)
 {
     activeBranch2 = branch;
     AVL<double>* Tree = new  AVL<double>();
-    for (auto& filename : arrFileNames)
-    {
+
         fstream file;
-        file.open("FilesToREAD\\" + filename, ios::in);
+        file.open("FilesToREAD\\" + fileName, ios::in);
         vector<string> lineREAD;
         READLINE(file, lineREAD);
         int lineNumber = 1;
@@ -280,12 +275,11 @@ AVL<double>& doubleCreateAvlTree(int index, string typee, string branch)
             READLINE(file, lineREAD);
             if (lineREAD.size() <= 1)
                 break;
-            Tree->root = Tree->insert(Tree->root, stod(lineREAD[index]), lineREAD[index], filename, to_string(lineNumber++));
+            Tree->root = Tree->insert(Tree->root, stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
         }
         //Tree->printInorder(Tree->root);
         file.close();
 
-    }
     return *Tree;
 }
 AVLDataNode<string>& ReadAvlNodeFromFile(string filename)
