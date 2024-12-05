@@ -5,7 +5,8 @@ using namespace std;
 
 string activeBranch;
 
-void ourNames() {
+void ourNames() 
+{
 	cout << "************************************************************************" << endl;
 	cout << endl << endl;
 	cout << "                        Hisham Abdullah 23I-0693" << endl;
@@ -15,6 +16,7 @@ void ourNames() {
 	cout << "************************************************************************" << endl;
 	cout << endl << endl;
 }
+
 int mainmenu()
 {
 	int choice;
@@ -28,6 +30,7 @@ int mainmenu()
 	cout << endl << endl;
 	return choice;
 }
+
 int submenu()
 {
 	system("cls");
@@ -45,6 +48,7 @@ int submenu()
 	cout << endl << endl;
 	return option;
 }
+
 template<typename T>
 void subMENUBTREE(BTree<T>* IBTREE, vector<string> Fields)
 {
@@ -57,10 +61,12 @@ void subMENUBTREE(BTree<T>* IBTREE, vector<string> Fields)
 		{
 			cout << "option not availabe for this tree yet\n";
 		}
+
 		if (option == 2)
 		{
 			DeleteTuple(IBTREE, Fields);
 		}
+		
 		if (option == 3)
 		{
 			T obj;
@@ -68,6 +74,7 @@ void subMENUBTREE(BTree<T>* IBTREE, vector<string> Fields)
 			cin >> obj;
 			PointSearch(IBTREE, Fields, obj);
 		}
+		
 		if (option == 4)
 		{
 			T n1, n2;
@@ -81,6 +88,7 @@ void subMENUBTREE(BTree<T>* IBTREE, vector<string> Fields)
 		cin >> ch;
 	} while (ch == 'Y' || ch == 'y');
 }
+
 void MENUBTREE(vector<string>Fields, vector<string> DataTypes)
 {
 	BTree<string>* SBTREE = NULL;
@@ -95,8 +103,10 @@ void MENUBTREE(vector<string>Fields, vector<string> DataTypes)
 		{
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
+		
 		cout << "Enter your choice : ";
 		cin >> choice;
+		
 		if (DataTypes[choice - 1] == "string")
 		{
 			SBTREE = &stringCreateBTREE(choice - 1, DataTypes[choice - 1], activeBranch);
@@ -105,6 +115,7 @@ void MENUBTREE(vector<string>Fields, vector<string> DataTypes)
 			SBTREE->CreateTreeFile();
 			subMENUBTREE(SBTREE, Fields);
 		}
+		
 		if (DataTypes[choice - 1] == "int")
 		{
 			IBTREE = &intCreateBTREE(choice - 1, DataTypes[choice - 1], activeBranch);
@@ -113,6 +124,7 @@ void MENUBTREE(vector<string>Fields, vector<string> DataTypes)
 			IBTREE->CreateTreeFile();
 			subMENUBTREE(IBTREE, Fields);
 		}
+		
 		if (DataTypes[choice - 1] == "double")
 		{
 			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\BTREE\\" + Fields[choice - 1]);
@@ -121,10 +133,12 @@ void MENUBTREE(vector<string>Fields, vector<string> DataTypes)
 			DBTREE->CreateTreeFile();
 			subMENUBTREE(DBTREE, Fields);
 		}
+		
 		cout << "\nDo you Want to run it again  for same TREE (Y/N): ";
 		cin >> ch;
 	} while (ch == 'Y' || ch == 'y');
 }
+
 template<typename T>
 void RBSUBMENU(RedBlackTree <T>* IRBTREE, vector<string>& Fields)
 {
@@ -134,6 +148,7 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, vector<string>& Fields)
 	{
 		UpdateTuple(IRBTREE, Fields);
 	}
+	
 	if (option == 2)
 	{
 		T obj;
@@ -142,6 +157,7 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, vector<string>& Fields)
 		DeleteTuple<T>(IRBTREE, getFieldIndex(Fields, IRBTREE->fieldname), obj);
 
 	}
+	
 	if (option == 3)
 	{
 		string obj;
@@ -150,6 +166,7 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, vector<string>& Fields)
 		getline(cin, obj, '\n');
 		PointSearch(&ReadRBNodeFromFile(IRBTREE->fieldname + "\\" + IRBTREE->GetNodeFilename(IRBTREE->root)), obj, Fields, IRBTREE->fieldname);
 	}
+	
 	if (option == 4)
 	{
 		string n1, n2;
@@ -162,6 +179,7 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, vector<string>& Fields)
 		RangeSearch(&ReadRBNodeFromFile(IRBTREE->fieldname + "\\" + IRBTREE->GetNodeFilename(IRBTREE->root)), n1, n2, Fields, IRBTREE->fieldname);
 	}
 }
+
 void MENURBTREE(vector<string>Fields, vector<string> DataTypes)
 {
 	RedBlackTree<string>* SRBTREE = NULL;
@@ -176,8 +194,10 @@ void MENURBTREE(vector<string>Fields, vector<string> DataTypes)
 		{
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
+		
 		cout << "Enter your choice : ";
 		cin >> choice;
+		
 		if (DataTypes[choice - 1] == "string")
 		{
 			SRBTREE = &stringCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
@@ -193,6 +213,7 @@ void MENURBTREE(vector<string>Fields, vector<string> DataTypes)
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
 		}
+		
 		if (DataTypes[choice - 1] == "int")
 		{
 			IRBTREE = &intCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
@@ -208,6 +229,7 @@ void MENURBTREE(vector<string>Fields, vector<string> DataTypes)
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
 		}
+		
 		if (DataTypes[choice - 1] == "double")
 		{
 			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\RB\\" + Fields[choice - 1]);
@@ -223,10 +245,12 @@ void MENURBTREE(vector<string>Fields, vector<string> DataTypes)
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
 		}
+		
 		cout << "\nDo you Want to run it again for same TREE (Y/N): ";
 		cin >> ch;
 	} while (ch == 'Y' || ch == 'y');
 }
+
 template<typename T>
 void AVLSUBMENU(AVL<T>* IAVLTREE, vector<string>& Fields)
 {
@@ -236,6 +260,7 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, vector<string>& Fields)
 	{
 		UpdateTuple(IAVLTREE, Fields);
 	}
+	
 	if (option == 2)
 	{
 		T obj;
@@ -243,6 +268,7 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, vector<string>& Fields)
 		cin >> obj;
 		DeleteTuple<T>(IAVLTREE, getFieldIndex(Fields, IAVLTREE->fieldname), obj);
 	}
+	
 	if (option == 3)
 	{
 		string obj;
@@ -252,6 +278,7 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, vector<string>& Fields)
 		PointSearch(&ReadAvlNodeFromFile(IAVLTREE->fieldname + "\\" + IAVLTREE->GetNodeFilename(IAVLTREE->root)), obj, Fields, IAVLTREE->fieldname);
 
 	}
+	
 	if (option == 4)
 	{
 		string n1, n2;
@@ -264,6 +291,7 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, vector<string>& Fields)
 		RangeSearch(&ReadAvlNodeFromFile(IAVLTREE->fieldname + "\\" + IAVLTREE->GetNodeFilename(IAVLTREE->root)), n1, n2, Fields, IAVLTREE->fieldname);
 	}
 }
+
 void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 {
 	AVL<string>* SAVLTREE = NULL;
@@ -274,12 +302,15 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 	{
 		system("cls");
 		int choice = 0;
+		
 		for (int i = 0; i < Fields.size(); i++)
 		{
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
+		
 		cout << "Enter your choice: ";
 		cin >> choice;
+		
 		if (DataTypes[choice - 1] == "string")
 		{
 			SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
@@ -295,6 +326,7 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
 		}
+		
 		if (DataTypes[choice - 1] == "int")
 		{
 			IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
@@ -310,8 +342,8 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
-
 		}
+
 		if (DataTypes[choice - 1] == "double")
 		{
 			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\AVL\\" + Fields[choice - 1]);
@@ -328,6 +360,7 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
 		}
+		
 		cout << "Do you Want to run it again for same TREE (Y/N): ";
 		cin >> ch;
 	} while (ch == 'Y' || ch == 'y');
@@ -362,13 +395,18 @@ int main()
 	}
 
 	int treechoice = mainmenu();
-	if (treechoice == 1) {
+	if (treechoice == 1) 
+	{
 		MENUAVLTREE(Fields, DataTypes);
 	}
-	else if (treechoice == 2) {
+	
+	else if (treechoice == 2) 
+	{
 		MENUBTREE(Fields, DataTypes);
 	}
-	else if (treechoice == 3) {
+	
+	else if (treechoice == 3) 
+	{
 		MENURBTREE(Fields, DataTypes);
 	}
 

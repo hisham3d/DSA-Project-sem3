@@ -6,7 +6,8 @@ using namespace std;
 string activeBranch4;
 
 template <typename T>
-class BTREEDataNode {
+class BTREEDataNode 
+{
 public:
 	BTREEDataNode<T>** child;	// Array of pointers to children.
 	RBSUBNODE<T>* key;				// Array of keys
@@ -16,7 +17,8 @@ public:
 };
 
 template <typename T>
-class BTree {
+class BTree 
+{
 public:
 	BTREEDataNode<T>* root;
 	int counter;
@@ -26,56 +28,74 @@ public:
 	void insert(T, string filename, string linenumber);
 	T remove(T);
 	std::pair<BTREEDataNode<T>*, int> search(T);
+	void print();
+
 	void INRANGEROOT(BTREEDataNode<T>* node, vector<string> fields, T start, T end)
 	{
-		for (int i = 0; i < node->size; i++) {
+		for (int i = 0; i < node->size; i++) 
+		{
 			if (node->key[i].val >= start && node->key[i].val <= end)
 				DisplayAllTuples<T>(fields, node->key[i]);
 		}
-		if (!node->leaf) {
-			for (int i = 0; i <= node->size; i++) {
+
+		if (!node->leaf) 
+		{
+			for (int i = 0; i <= node->size; i++) 
+			{
 				INRANGEROOT(node->child[i], fields, start, end);
 			}
 		}
 	}
-	void print();
+	
 	string GetFileName(BTREEDataNode<T>* node)
 	{
 		return fieldname + "_BTREENODE_" + to_string(node->counter);
 	}
+	
 	void printNodeinfile(BTREEDataNode<T>* node)
 	{
 		fstream file;
 		file.open("BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + fieldname + "\\" + GetFileName(node) + ".txt", ios::out);
-		for (int i = 0; i < node->size; i++) {
+		for (int i = 0; i < node->size; i++) 
+		{
 			file << node->key[i].val << ",";
 		}
+		
 		file << endl;
+		
 		for (int i = 0; i < node->size; i++)
 		{
 			node->key[i].printinffile(file);
 		}
-		if (!node->leaf) {
-			for (int i = 0; i <= node->size; i++) {
+		
+		if (!node->leaf) 
+		{
+			for (int i = 0; i <= node->size; i++) 
+			{
 				file << GetFileName(node->child[i]) << endl;
 			}
 		}
+
 		file.close();
-		if (!node->leaf) {
-			for (int i = 0; i <= node->size; i++) {
+		
+		if (!node->leaf) 
+		{
+			for (int i = 0; i <= node->size; i++) 
+			{
 				printNodeinfile(node->child[i]);
 			}
 		}
 	}
+
 	void CreateTreeFile()
 	{
-		if (root != 0 && root != NULL) {
+		if (root != 0 && root != NULL) 
+		{
 			printNodeinfile(root);
 		}
 	}
 
 private:
-
 	// Used for initializing nodes.
 	void initializeNode(BTREEDataNode<T>*);
 
@@ -103,13 +123,6 @@ private:
 	// Recursively prints a subtree.
 	void printNode(BTREEDataNode<T>*, int);
 
-	// Root node.
-
-	// Comparison function used for managing element placement.
-
-	// Function used to print items in the tree.
-	//void (*printKey)(T);
-
 	// Minimum degree of the tree.
 	int  minDegree;
 };
@@ -119,7 +132,8 @@ private:
 // compare is the comparison function used for managing elements within the tree.
 // printK is a function that prints keys.
 template <typename T>
-BTree<T>::BTree(int  t) {
+BTree<T>::BTree(int  t) 
+{
 	counter = 0;
 	minDegree = t;
 	root = new BTREEDataNode<T>;
@@ -127,22 +141,26 @@ BTree<T>::BTree(int  t) {
 	root->leaf = true;
 	root->counter = counter++;
 }
+
 template <typename T>
-BTree<T>::~BTree<T>() {
+BTree<T>::~BTree<T>() 
+{
 	freeNode(root);
-
 }
-template <typename T>
-void BTree<T>::insert(T k, string filename, string linenumber) {
 
+template <typename T>
+void BTree<T>::insert(T k, string filename, string linenumber) 
+{
 	pair<BTREEDataNode<T>*, int > res = search(k);
 	if (res.first != 0 && res.first != NULL)
 	{
 		res.first->key[res.second].AddressList.push_back(AddressLocation(filename, linenumber));
 		return;
 	}
+
 	// Grow upwards if the root is full.
-	if (root->size == 2 * minDegree - 1) {
+	if (root->size == 2 * minDegree - 1)
+	{
 		BTREEDataNode<T>* newRoot = new BTREEDataNode<T>();
 		initializeNode(newRoot);
 		newRoot->leaf = false;
@@ -154,19 +172,23 @@ void BTree<T>::insert(T k, string filename, string linenumber) {
 
 	// Work down the tree.
 	BTREEDataNode<T>* curr = root;
-	while (!curr->leaf) {
+	while (!curr->leaf) 
+	{
 
 		// Find the proper child to go to.
 		int index = curr->size - 1;
-		while (index >= 0 && k < curr->key[index].val) {
+		while (index >= 0 && k < curr->key[index].val) 
+		{
 			index--;
 		}
 		index++;
 
 		// Split child if full.
-		if (curr->child[index]->size == 2 * minDegree - 1) {
+		if (curr->child[index]->size == 2 * minDegree - 1) 
+		{
 			splitChild(curr, index);
-			if ((curr->key[index].val < k)) {
+			if ((curr->key[index].val < k)) 
+			{
 				index++;
 			}
 		}
@@ -176,34 +198,48 @@ void BTree<T>::insert(T k, string filename, string linenumber) {
 	adr.push_back(AddressLocation(filename, linenumber));
 	nodeInsert(curr, k, adr);
 }
+
 template <typename T>
-T BTree<T>::remove(T k) {
+T BTree<T>::remove(T k) 
+{
 	BTREEDataNode<T>* curr = root;
-	while (true) {
+	while (true) 
+	{
 		int  i = findIndex(curr, k);
-		if (i < curr->size && !((curr->key[i].val < k) || (k < curr->key[i].val))) {
+		if (i < curr->size && !((curr->key[i].val < k) || (k < curr->key[i].val))) 
+		{
 			T toReturn = curr->key[i].val;
-			if (curr->leaf) {
+			if (curr->leaf) 
+			{
 				nodeDelete(curr, i);
 			}
-			else {
+			
+			else 
+			{
 				BTREEDataNode<T>* leftKid = curr->child[i];
 				BTREEDataNode<T>* rightKid = curr->child[i + 1];
-				if (leftKid->size >= minDegree) {
-					while (!(leftKid->leaf)) {
+				if (leftKid->size >= minDegree) 
+				{
+					while (!(leftKid->leaf)) 
+					{
 						fixChildSize(leftKid, leftKid->size);
 						leftKid = leftKid->child[leftKid->size];
 					}
 					curr->key[i].val = nodeDelete(leftKid, leftKid->size - 1);
 				}
-				else if (rightKid->size >= minDegree) {
-					while (!(rightKid->leaf)) {
+
+				else if (rightKid->size >= minDegree) 
+				{
+					while (!(rightKid->leaf)) 
+					{
 						fixChildSize(rightKid, 0);
 						rightKid = rightKid->child[0];
 					}
 					curr->key[i].val = nodeDelete(rightKid, 0);
 				}
-				else {
+				
+				else 
+				{
 					mergeChildren(curr, i);
 					curr = leftKid;
 					continue;
@@ -211,73 +247,96 @@ T BTree<T>::remove(T k) {
 			}
 			return toReturn;
 		}
-		else {
-			if (curr->leaf) {
+
+		else 
+		{
+			if (curr->leaf) 
+			{
 				return *(new T);
 			}
+
 			char result = fixChildSize(curr, i);
-			if (result == 2) {
+			
+			if (result == 2) 
+			{
 				curr = root;
 			}
-			else {
+			
+			else 
+			{
 				curr = curr->child[findIndex(curr, k)];
 			}
 		}
 	}
-
 }
+
 template <typename T>
-pair<BTREEDataNode<T>*, int > BTree<T>::search(T k) {
-
+pair<BTREEDataNode<T>*, int > BTree<T>::search(T k) 
+{
 	BTREEDataNode<T>* x = root;
-	while (true) {
-
+	while (true) 
+	{
 		int  i = findIndex(x, k);
 
-		if (i < x->size && !((k < x->key[i].val) || (x->key[i].val < k))) {
+		if (i < x->size && !((k < x->key[i].val) || (x->key[i].val < k))) 
+		{
 			return pair<BTREEDataNode<T>*, int >(x, i);
 		}
 
-		else if (x->leaf) {
+		else if (x->leaf) 
+		{
 			return pair<BTREEDataNode<T>*, int >(0, 1);
 		}
-		else {
+		
+		else 
+		{
 			x = x->child[i];
 		}
 	}
 }
+
 template <typename T>
-void BTree<T>::print() {
-	if (root != 0 && root != NULL) {
+void BTree<T>::print() 
+{
+	if (root != 0 && root != NULL) 
+	{
 		cout << "\n";
 		printNode(root, 0);
 		cout << ("\n");
 	}
 }
+
 template <typename T>
-void BTree<T>::initializeNode(BTREEDataNode<T>* x) {
+void BTree<T>::initializeNode(BTREEDataNode<T>* x) 
+{
 	x->size = 0;
 	x->key = new RBSUBNODE<T>[(2 * minDegree - 1)];
 	x->child = new BTREEDataNode<T>*[2 * minDegree];
 	x->counter = counter++;
 }
+
 template <typename T>
-void BTree<T>::freeNode(BTREEDataNode<T>* x) {
-	if (!x->leaf) {
-		for (int i = 0; i <= x->size; i++) {
-
+void BTree<T>::freeNode(BTREEDataNode<T>* x) 
+{
+	if (!x->leaf) 
+	{
+		for (int i = 0; i <= x->size; i++) 
+		{
 			freeNode(x->child[i]);
-
 		}
 	}
+
 	string path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + fieldname + "\\" + GetFileName(x);
 	remove(path.c_str());
 	delete[] x->child;
 }
+
 template <typename T>
-int  BTree<T>::findIndex(BTREEDataNode<T>* x, T k) {
+int  BTree<T>::findIndex(BTREEDataNode<T>* x, T k) 
+{
 	int  i = 0;
-	while (i < x->size && (x->key[i].val < k)) {
+	while (i < x->size && (x->key[i].val < k)) 
+	{
 		i++;
 	}
 	return i;
@@ -294,11 +353,12 @@ void copyVect(vector<AddressLocation>& vt1, vector<AddressLocation>& vt2)
 	}
 }
 
-
 template <typename T>
-int  BTree<T>::nodeInsert(BTREEDataNode<T>* x, T k, vector<AddressLocation>& list) {
+int  BTree<T>::nodeInsert(BTREEDataNode<T>* x, T k, vector<AddressLocation>& list) 
+{
 	int index;
-	for (index = x->size; index > 0 && (k < x->key[index - 1].val); index--) {
+	for (index = x->size; index > 0 && (k < x->key[index - 1].val); index--) 
+	{
 		x->key[index].val = x->key[index - 1].val;
 		copyVect(x->key[index].AddressList, x->key[index - 1].AddressList);
 
@@ -312,10 +372,12 @@ int  BTree<T>::nodeInsert(BTREEDataNode<T>* x, T k, vector<AddressLocation>& lis
 }
 
 template <typename T>
-T BTree<T>::nodeDelete(BTREEDataNode<T>* x, int  index) {
+T BTree<T>::nodeDelete(BTREEDataNode<T>* x, int  index) 
+{
 	T toReturn = x->key[index].val;
 	x->size--;
-	while (index < x->size) {
+	while (index < x->size) 
+	{
 		x->key[index].val = x->key[index + 1].val;
 		x->key[index].AddressList = x->key[index + 1].AddressList;
 		x->child[index + 1] = x->child[index + 2];
@@ -323,20 +385,26 @@ T BTree<T>::nodeDelete(BTREEDataNode<T>* x, int  index) {
 	}
 	return toReturn;
 }
+
 template <typename T>
-void BTree<T>::splitChild(BTREEDataNode<T>* x, int i) {
+void BTree<T>::splitChild(BTREEDataNode<T>* x, int i) 
+{
 	BTREEDataNode<T>* toSplit = x->child[i];
 	BTREEDataNode<T>* newNode = new BTREEDataNode<T>;
 	newNode->counter = counter++;
 	initializeNode(newNode);
 	newNode->leaf = toSplit->leaf;
 	newNode->size = minDegree - 1;
-	for (int j = 0; j < minDegree - 1; j++) {
+	for (int j = 0; j < minDegree - 1; j++) 
+	{
 		newNode->key[j].val = toSplit->key[j + minDegree].val;
 		newNode->key[j].AddressList = toSplit->key[j + minDegree].AddressList;
 	}
-	if (!toSplit->leaf) {
-		for (int j = 0; j < minDegree; j++) {
+	
+	if (!toSplit->leaf) 
+	{
+		for (int j = 0; j < minDegree; j++) 
+		{
 			newNode->child[j] = toSplit->child[j + minDegree];
 		}
 	}
@@ -344,25 +412,31 @@ void BTree<T>::splitChild(BTREEDataNode<T>* x, int i) {
 	nodeInsert(x, toSplit->key[minDegree - 1].val, toSplit->key[minDegree - 1].AddressList);
 	x->child[i + 1] = newNode;
 }
-template <typename T>
-char BTree<T>::mergeChildren(BTREEDataNode<T>* parent, int  i) {
 
+template <typename T>
+char BTree<T>::mergeChildren(BTREEDataNode<T>* parent, int  i) 
+{
 	BTREEDataNode<T>* leftKid = parent->child[i];
 	BTREEDataNode<T>* rightKid = parent->child[i + 1];
 	leftKid->key[leftKid->size].val = nodeDelete(parent, i);
 	int  j = ++(leftKid->size);
-	for (int k = 0; k < rightKid->size; k++) {
+	
+	for (int k = 0; k < rightKid->size; k++) 
+	{
 		leftKid->key[j + k].val = rightKid->key[k].val;
 		leftKid->key[j + k].AddressList = rightKid->key[k].AddressList;
 
 		leftKid->child[j + k] = rightKid->child[k];
 	}
+	
 	leftKid->size += rightKid->size;
 	leftKid->child[leftKid->size] = rightKid->child[rightKid->size];
 	free(rightKid->child);
 	free(rightKid->key);
 	free(rightKid);
-	if (parent->size == 0) {
+	
+	if (parent->size == 0) 
+	{
 		root = leftKid;
 		free(parent->child);
 		free(parent->key);
@@ -372,22 +446,28 @@ char BTree<T>::mergeChildren(BTREEDataNode<T>* parent, int  i) {
 
 	return 1;
 }
+
 template <typename T>
-char BTree<T>::fixChildSize(BTREEDataNode<T>* parent, int  index) {
+char BTree<T>::fixChildSize(BTREEDataNode<T>* parent, int  index) 
+{
 	BTREEDataNode<T>* kid = parent->child[index];
 
-	if (kid->size < minDegree) {
+	if (kid->size < minDegree) 
+	{
 
-		if (index != 0 && parent->child[index - 1]->size >= minDegree) {
+		if (index != 0 && parent->child[index - 1]->size >= minDegree) 
+		{
 			BTREEDataNode<T>* leftKid = parent->child[index - 1];
-			for (int i = nodeInsert(kid, parent->key[index - 1].val); i != 0; i--) {
+			for (int i = nodeInsert(kid, parent->key[index - 1].val); i != 0; i--) 
+			{
 				kid->child[i] = kid->child[i - 1];
 			}
 			kid->child[0] = leftKid->child[leftKid->size];
 			parent->key[index - 1].val = nodeDelete(leftKid, leftKid->size - 1);
 		}
 
-		else if (index != parent->size && parent->child[index + 1]->size >= minDegree) {
+		else if (index != parent->size && parent->child[index + 1]->size >= minDegree) 
+		{
 			BTREEDataNode<T>* rightKid = parent->child[index + 1];
 			nodeInsert(kid, parent->key[index].val, parent->key[index].AddressList);
 			kid->child[kid->size] = rightKid->child[0];
@@ -395,24 +475,32 @@ char BTree<T>::fixChildSize(BTREEDataNode<T>* parent, int  index) {
 			parent->key[index].val = nodeDelete(rightKid, 0);
 		}
 
-		else if (index != 0) {
+		else if (index != 0) 
+		{
 			return mergeChildren(parent, index - 1);
 		}
-		else {
+		
+		else 
+		{
 			return mergeChildren(parent, index);
 		}
+		
 		return 1;
 	}
 	return 0;
 }
-template <typename T>
-void BTree<T>::printNode(BTREEDataNode<T>* node, int  tab) {
 
-	for (int i = 0; i < tab; i++) {
+template <typename T>
+void BTree<T>::printNode(BTREEDataNode<T>* node, int  tab) 
+{
+
+	for (int i = 0; i < tab; i++) 
+	{
 		cout << ("\t");
 	}
 
-	for (int i = 0; i < node->size; i++) {
+	for (int i = 0; i < node->size; i++) 
+	{
 		cout << node->key[i].val;
 		node->key[i].print();
 		cout << (" ");
@@ -420,16 +508,15 @@ void BTree<T>::printNode(BTREEDataNode<T>* node, int  tab) {
 	cout << ("\n");
 
 	// Print all child nodes.
-	if (!node->leaf) {
+	if (!node->leaf) 
+	{
 		tab++;
-		for (int i = 0; i <= node->size; i++) {
+		for (int i = 0; i <= node->size; i++) 
+		{
 			printNode(node->child[i], tab);
 		}
 	}
 }
-
-
-
 
 BTree<string>& stringCreateBTREE(int index, string typee, string branch)
 {
@@ -458,6 +545,7 @@ BTree<string>& stringCreateBTREE(int index, string typee, string branch)
 
 	return *Tree;
 }
+
 BTree<int>& intCreateBTREE(int index, string typee, string branch)
 {
 	activeBranch4 = branch;
@@ -484,6 +572,7 @@ BTree<int>& intCreateBTREE(int index, string typee, string branch)
 
 	return *Tree;
 }
+
 BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 {
 	activeBranch4 = branch;
@@ -494,7 +583,6 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 
 	fstream file;
 	file.open("FilesToREAD\\" + fileName, ios::in);
-
 
 	vector<string> lineREAD;
 	READLINE(file, lineREAD);
@@ -512,6 +600,7 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 
 	return *Tree;
 }
+
 template<typename T>
 void PointSearch(BTree<T>* R, vector<string> fields, T key)
 {
@@ -520,11 +609,13 @@ void PointSearch(BTree<T>* R, vector<string> fields, T key)
 		return;
 	DisplayAllTuples<T>(fields, res.first->key[res.second]);
 }
+
 template<typename T>
 void RangeSearch(BTree<T>* R, vector<string> fields, T start, T end)
 {
 	R->INRANGEROOT(R->root, fields, start, end);
 }
+
 template<typename T>
 void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 {
@@ -594,20 +685,25 @@ void DeleteTuple(BTree<int>* BT, vector<string> fields)
 			input.erase(0, 1);
 		tags.push_back(input);
 	}
+
 	pair<BTREEDataNode<int>*, int> toDelete = BT->search(stoi(tags[0]));
 	RBSUBNODE<int>* ptr = &toDelete.first->key[toDelete.second];
 	int ind = getFieldIndex(fields, tags[1]);
+	
 	if (ind == -1)
 	{
 		cout << "INCORRECT QUERRY\n";
 		return;
 	}
+	
 	if (toDelete.first == NULL)
 	{
 		cout << "TUPLES NOT FOUND\n";
 		return;
 	}
+	
 	RemoveTupleFromFile<int>(ptr, ind, tags[2]);
+	
 	if (toLower(tags[1]) == toLower(BT->fieldname))
 	{
 		string path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);
@@ -616,6 +712,7 @@ void DeleteTuple(BTree<int>* BT, vector<string> fields)
 		BT->CreateTreeFile();
 	}
 }
+
 void DeleteTuple(BTree<string>* BT, vector<string> fields)
 {
 	string input = "";
@@ -627,26 +724,32 @@ void DeleteTuple(BTree<string>* BT, vector<string> fields)
 	sstream >> input;
 	cout << input << endl;
 	vector<string> tags;
+	
 	while (getline(sstream, input, ','))
 	{
 		if (input[0] == ' ')
 			input.erase(0, 1);
 		tags.push_back(input);
 	}
+	
 	pair<BTREEDataNode<string>*, int> toDelete = BT->search((tags[0]));
 	RBSUBNODE<string>* ptr = &toDelete.first->key[toDelete.second];
+	
 	int ind = getFieldIndex(fields, tags[1]);
 	if (ind == -1)
 	{
 		cout << "INCORRECT QUERRY\n";
 		return;
 	}
+	
 	if (toDelete.first == NULL)
 	{
 		cout << "TUPLES NOT FOUND\n";
 		return;
 	}
+	
 	RemoveTupleFromFile<string>(ptr, ind, tags[2]);
+	
 	if (toLower(tags[1]) == toLower(BT->fieldname))
 	{
 		string path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);
@@ -655,6 +758,7 @@ void DeleteTuple(BTree<string>* BT, vector<string> fields)
 		BT->CreateTreeFile();
 	}
 }
+
 void DeleteTuple(BTree<double>* BT, vector<string> fields)
 {
 	string input = "";
@@ -672,25 +776,31 @@ void DeleteTuple(BTree<double>* BT, vector<string> fields)
 			input.erase(0, 1);
 		tags.push_back(input);
 	}
+
 	if (tags.size() < 4)
 	{
 		cout << "INCORRECT QUERRY\n";
 		return;
 	}
+
 	pair<BTREEDataNode<double>*, int> toDelete = BT->search(stoi(tags[0]));
 	RBSUBNODE<double>* ptr = &toDelete.first->key[toDelete.second];
+	
 	int ind = getFieldIndex(fields, tags[1]);
 	if (ind == -1)
 	{
 		cout << "INCORRECT QUERRY\n";
 		return;
 	}
+
 	if (toDelete.first == NULL)
 	{
 		cout << "TUPLES NOT FOUND\n";
 		return;
 	}
+	
 	RemoveTupleFromFile<double>(ptr, ind, tags[2]);
+	
 	if (toLower(tags[1]) == toLower(BT->fieldname))
 	{
 		string path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);

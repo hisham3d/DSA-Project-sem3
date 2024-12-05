@@ -1,17 +1,9 @@
-﻿//
-// pch.h
-//
-
-// Hisham Abdullah
-// 23I-0693
-// Assignment 2
-
-#pragma once
-
+﻿#pragma once
 #include <iostream>
 using namespace std;
 
-class String {
+class String 
+{
 private:
     char* arr;
     int size;
@@ -56,8 +48,6 @@ public:
     friend std::ostream& operator<<(std::ostream& output, const String& str); // outputs the string
     friend std::istream& operator>>(std::istream& input, String& str); // inputs the string
 };
-
-
 
 String::String() { // default constructor
     arr = NULL;

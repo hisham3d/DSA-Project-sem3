@@ -1,46 +1,55 @@
 #pragma once
-#include"util.h"
+#include"utilities.h"
 #include <filesystem>
 using namespace std;
-namespace fs = std::filesystem;
+namespace fs = filesystem;
 
-bool hasPath(const string& path) {
+bool hasPath(const string& path) 
+{
     struct stat buffer {};
     return (stat(path.c_str(), &buffer) == 0);
 }
-void createFolder(const string& path) {
+
+void createFolder(const string& path) 
+{
     if (hasPath(path))
         return;
+    
     if (_mkdir(path.c_str()) == -1)
     {
         cout << path << endl;
     }
 }
-void createFile(const string& path) {
+
+void createFile(const string& path)
+{
     fstream output(path, ios::out);
     output.close();
 }
 
-void displayBranches() {
-    namespace fs = std::filesystem;
+void displayBranches() 
+{
+    namespace fs = filesystem;
 
     fs::path branchesDir = fs::current_path() / "BRANCHES";
 
-    std::cout << "Existing branches:\n";
-    std::vector<fs::directory_entry> entries;
+    cout << "Existing branches:\n";
+    vector<fs::directory_entry> entries;
 
     // Collect entries using an index-based loop
-    for (auto it = fs::directory_iterator(branchesDir); it != fs::directory_iterator(); ++it) {
+    for (auto it = fs::directory_iterator(branchesDir); it != fs::directory_iterator(); ++it) 
+    {
         entries.push_back(*it);
     }
 
-    for (size_t i = 0; i < entries.size(); ++i) {
-        if (fs::is_directory(entries[i])) {
-            std::cout << "- " << entries[i].path().filename().string() << '\n';
+    for (size_t i = 0; i < entries.size(); ++i) 
+    {
+        if (fs::is_directory(entries[i])) 
+        {
+            cout << "- " << entries[i].path().filename().string() << '\n';
         }
     }
 }
-
 
 void CREATETREEFOLDERS(string branch)
 {
@@ -51,41 +60,49 @@ void CREATETREEFOLDERS(string branch)
     createFolder("BRANCHES\\" + branch + "\\TREES\\BTREE");
 }
 
-void CREATEBRANCHESFOLDERS(string name) {
+void CREATEBRANCHESFOLDERS(string name) 
+{
     createFolder("BRANCHES\\" + name);
     CREATETREEFOLDERS(name);
 }
 
-void copyDirectory(const string& source, const string& destination) {
-    namespace fs = std::filesystem;
+void copyDirectory(const string& source, const string& destination) 
+{
+    namespace fs = filesystem;
 
-    std::vector<fs::directory_entry> entries;
-    for (auto it = fs::recursive_directory_iterator(source); it != fs::recursive_directory_iterator(); ++it) {
+    vector<fs::directory_entry> entries;
+    for (auto it = fs::recursive_directory_iterator(source); it != fs::recursive_directory_iterator(); ++it) 
+    {
         entries.push_back(*it);
     }
 
-    for (size_t i = 0; i < entries.size(); ++i) {
+    for (size_t i = 0; i < entries.size(); ++i) 
+    {
         const auto& path = entries[i].path();
         auto relativePathStr = fs::relative(path, source).string();
-        if (entries[i].is_directory()) {
+        if (entries[i].is_directory()) 
+        {
             fs::create_directories(destination + "\\" + relativePathStr);
         }
-        else if (entries[i].is_regular_file()) {
+        
+        else if (entries[i].is_regular_file()) 
+        {
             fs::copy_file(path, destination + "\\" + relativePathStr, fs::copy_options::overwrite_existing);
         }
     }
 }
 
-
-void deleteBranch() {
-    namespace fs = std::filesystem;
+void deleteBranch() 
+{
+    namespace fs = filesystem;
 
     displayBranches();
 
     char ch;
     cout << "Do you want to delete a branch? (Y/N): ";
     cin >> ch;
-    if (ch == 'N' || ch == 'n') {
+    if (ch == 'N' || ch == 'n') 
+    {
         return;
     }
 
@@ -96,69 +113,90 @@ void deleteBranch() {
     fs::path branchesDir = fs::current_path() / "BRANCHES";
     fs::path branchPath = branchesDir / branchName;
 
-    if (fs::exists(branchPath) && fs::is_directory(branchPath)) {
-        try {
+    if (fs::exists(branchPath) && fs::is_directory(branchPath)) 
+    {
+        try 
+        {
             fs::remove_all(branchPath);
-            std::cout << "Branch '" << branchName << "' has been successfully deleted.\n";
+            cout << "Branch '" << branchName << "' has been successfully deleted.\n";
         }
-        catch (const std::exception& e) {
-            std::cerr << "Error: Could not delete branch '" << branchName << "'. Reason: " << e.what() << '\n';
+        
+        catch (const exception& e) 
+        {
+            cerr << "Error: Could not delete branch '" << branchName << "'. Reason: " << e.what() << '\n';
         }
     }
-    else {
-        std::cout << "Branch '" << branchName << "' does not exist.\n";
+
+    else 
+    {
+        cout << "Branch '" << branchName << "' does not exist.\n";
     }
 }
 
-void mergeBranches(const string& sourceBranch, const string& targetBranch) {
-    namespace fs = std::filesystem;
+void mergeBranches(const string& sourceBranch, const string& targetBranch) 
+{
+    namespace fs = filesystem;
 
     fs::path branchesDir = fs::current_path() / "BRANCHES";
     fs::path sourcePath = branchesDir / sourceBranch;
     fs::path targetPath = branchesDir / targetBranch;
 
-    if (!fs::exists(sourcePath) || !fs::is_directory(sourcePath)) {
+    if (!fs::exists(sourcePath) || !fs::is_directory(sourcePath)) 
+    {
         cout << "Error: Source branch '" << sourceBranch << "' does not exist.\n";
         return;
     }
 
-    if (!fs::exists(targetPath) || !fs::is_directory(targetPath)) {
+    if (!fs::exists(targetPath) || !fs::is_directory(targetPath)) 
+    {
         cout << "Error: Target branch '" << targetBranch << "' does not exist.\n";
         return;
     }
 
-    for (fs::recursive_directory_iterator it(sourcePath), end; it != end; ++it) {
+    for (fs::recursive_directory_iterator it(sourcePath), end; it != end; ++it) 
+    {
         fs::directory_entry entry = *it;
 
         fs::path relativePath = fs::relative(entry.path(), sourcePath);
         fs::path targetFilePath = targetPath / relativePath;
 
-        if (entry.is_directory()) {
-            if (!fs::exists(targetFilePath)) {
+        if (entry.is_directory()) 
+        {
+            if (!fs::exists(targetFilePath)) 
+            {
                 fs::create_directories(targetFilePath);
             }
         }
-        else if (entry.is_regular_file()) {
+        
+        else if (entry.is_regular_file()) 
+        {
             fs::copy_file(entry.path(), targetFilePath, fs::copy_options::overwrite_existing);
         }
     }
 
     cout << "Merged '" << sourceBranch << "' into '" << targetBranch << "' successfully.\n";
 
-    if (fs::exists(sourcePath) && fs::is_directory(sourcePath)) {
-        if (fs::remove_all(sourcePath) > 0) {
+    if (fs::exists(sourcePath) && fs::is_directory(sourcePath)) 
+    {
+        if (fs::remove_all(sourcePath) > 0) 
+        {
             cout << "Source branch '" << sourceBranch << "' deleted successfully.\n";
         }
-        else {
+        
+        else 
+        {
             cout << "Error: Could not delete source branch '" << sourceBranch << "'.\n";
         }
     }
-    else {
+
+    else 
+    {
         cout << "Error: Source branch '" << sourceBranch << "' does not exist or is not a directory.\n";
     }
 }
 
-string branchSelection() {
+string branchSelection() 
+{
     int branchChoice;
     string branchName = "main"; // default branch
     cout << "Select Branch:" << endl;
@@ -167,13 +205,15 @@ string branchSelection() {
     cout << "Enter your choice: ";
     cin >> branchChoice;
 
-    if (branchChoice == 2) {
+    if (branchChoice == 2) 
+    {
         cout << "Enter branch name: ";
         cin.ignore();
         getline(cin, branchName);
 
         string branchPath = "BRANCHES\\" + branchName;
-        if (!hasPath(branchPath)) {
+        if (!hasPath(branchPath)) 
+        {
             cout << "Creating branch: " << branchName << endl;
             fs::create_directories(branchPath);
 
@@ -181,11 +221,15 @@ string branchSelection() {
 
             copyDirectory("BRANCHES\\main", branchPath);
         }
-        else {
+        
+        else 
+        {
             cout << "Switching to existing branch: " << branchName << endl;
         }
     }
-    else {
+
+    else 
+    {
         branchName = "main";
         CREATEBRANCHESFOLDERS(branchName);
     }
