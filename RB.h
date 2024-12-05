@@ -90,11 +90,12 @@ public:
     void GetNodeInfo(fstream& f, RBDataNode<T>* R)
     {
         f << R->value << endl << R->color << endl;
-        for (auto& S : R->AddressList)
-            f << S.filename << endl << S.linenumber << endl;
+        for (size_t i = 0; i < R->AddressList.size(); i++)
+            f << R->AddressList[i].filename << endl << R->AddressList[i].linenumber << endl;
         f << GetNodeFilename(R->left) << endl;
         f << GetNodeFilename(R->right);
     }
+
     void WriteNodeinFile(RBDataNode<T>* R)
     {
         fstream file;
@@ -647,20 +648,20 @@ RedBlackTree<string>& stringCreateRBTree(int index, string typee, string branch)
     RedBlackTree<string>* Tree = new  RedBlackTree<string>();
     vector<string> lineREAD;
 
-        fstream file;
-        file.open("FilesToREAD\\" + fileName, ios::in);
+    fstream file;
+    file.open("FilesToREAD\\" + fileName, ios::in);
+    READLINE(file, lineREAD);
+    int lineNumber = 1;
+    while (!file.eof())
+    {
+        lineREAD.resize(0);
         READLINE(file, lineREAD);
-        int lineNumber = 1;
-        while (!file.eof())
-        {
-            lineREAD.resize(0);
-            READLINE(file, lineREAD);
-            if (lineREAD.size() <= 1)
-                break;
-            Tree->insert(lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
-        }
-        //Tree->printInorder(Tree->root);
-        file.close();
+        if (lineREAD.size() <= 1)
+            break;
+        Tree->insert(lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
+    }
+    //Tree->printInorder(Tree->root);
+    file.close();
 
     return *Tree;
 }
@@ -669,43 +670,43 @@ RedBlackTree<int>& intCreateRBTree(int index, string typee, string branch)
     activeBranch3 = branch;
     RedBlackTree<int>* Tree = new  RedBlackTree<int>();
 
-        fstream file;
-        file.open("FilesToREAD\\" + fileName, ios::in);
-        vector<string> lineREAD;
+    fstream file;
+    file.open("FilesToREAD\\" + fileName, ios::in);
+    vector<string> lineREAD;
+    READLINE(file, lineREAD);
+    int lineNumber = 1;
+    while (!file.eof())
+    {
+        lineREAD.resize(0);
         READLINE(file, lineREAD);
-        int lineNumber = 1;
-        while (!file.eof())
-        {
-            lineREAD.resize(0);
-            READLINE(file, lineREAD);
-            if (lineREAD.size() <= 1)
-                break;
-            Tree->insert(stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
-        }
-        file.close();
+        if (lineREAD.size() <= 1)
+            break;
+        Tree->insert(stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
+    }
+    file.close();
 
     return *Tree;
 }
 RedBlackTree<double>& doubleCreateRBTree(int index, string typee, string branch)
-{   
+{
     activeBranch3 = branch;
     RedBlackTree<double>* Tree = new  RedBlackTree<double>();
 
-        fstream file;
-        file.open("FilesToREAD\\" + fileName, ios::in);
-        vector<string> lineREAD;
+    fstream file;
+    file.open("FilesToREAD\\" + fileName, ios::in);
+    vector<string> lineREAD;
+    READLINE(file, lineREAD);
+    int lineNumber = 1;
+    while (!file.eof())
+    {
+        lineREAD.resize(0);
         READLINE(file, lineREAD);
-        int lineNumber = 1;
-        while (!file.eof())
-        {
-            lineREAD.resize(0);
-            READLINE(file, lineREAD);
-            if (lineREAD.size() <= 1)
-                break;
-            Tree->insert(stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
-        }
-        //Tree->printInorder(Tree->root);
-        file.close();
+        if (lineREAD.size() <= 1)
+            break;
+        Tree->insert(stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
+    }
+    //Tree->printInorder(Tree->root);
+    file.close();
 
     return *Tree;
 }
@@ -781,12 +782,12 @@ template<typename T>
 void RemoveTupleFromFile(RBDataNode<T>* ptr)
 {
     vector<string> tuples;
-    for (auto S : ptr->AddressList)
+    for (size_t i = 0; i < ptr->AddressList.size(); i++)
     {
-        string  str = "";
-        vector<string>temp = GetTuples(S);
-        for (auto Str : temp)
-            str += "," + Str;
+        string str = "";
+        vector<string> temp = GetTuples(ptr->AddressList[i]);
+        for (size_t j = 0; j < temp.size(); j++)
+            str += "," + temp[j];
         str.erase(0, 1);
         //cout << str << endl;
         tuples.push_back(str);
@@ -829,14 +830,14 @@ template<typename T>
 void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string old, string newVal)
 {
     vector<string> tuples;
-    for (auto S : ptr->AddressList)
+    for (size_t i = 0; i < ptr->AddressList.size(); i++)
     {
-        string  str = "";
-        vector<string>temp = GetTuples(S);
+        string str = "";
+        vector<string> temp = GetTuples(ptr->AddressList[i]);
         if (toLower(temp[index]) != toLower(old))
             continue;
-        for (auto Str : temp)
-            str += "," + Str;
+        for (size_t j = 0; j < temp.size(); j++)
+            str += "," + temp[j];
         str.erase(0, 1);
         tuples.push_back(str);
     }
@@ -861,6 +862,7 @@ void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string old, string newVal)
         file.close();
     }
 }
+
 void UpdateTuple(RedBlackTree<int>*& RB, vector<string> fields)
 {
     string input = "";

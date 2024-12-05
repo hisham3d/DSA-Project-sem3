@@ -180,11 +180,15 @@ public:
     void GetNodeInfo(fstream& f, AVLDataNode<T>* R)
     {
         f << R->value << endl;
-        for (auto& S : R->AddressList)
-            f << S.filename << endl << S.linenumber << endl;
+        for (int i = 0; i < R->AddressList.size(); ++i)
+        {
+            f << R->AddressList[i].filename << endl;
+            f << R->AddressList[i].linenumber << endl;
+        }
         f << GetNodeFilename(R->left) << endl;
         f << GetNodeFilename(R->right);
     }
+
     void WriteNodeinFile(AVLDataNode<T>* R)
     {
         fstream file;
@@ -216,21 +220,21 @@ AVL<string>& stringCreateAvlTree(int index, string typee, string branch)
 {
     activeBranch2 = branch;
     AVL<string>* Tree = new  AVL<string>();
-        fstream file;
-        file.open("FilesToREAD\\" + fileName, ios::in);
-        vector<string> lineREAD;
+    fstream file;
+    file.open("FilesToREAD\\" + fileName, ios::in);
+    vector<string> lineREAD;
+    READLINE(file, lineREAD);
+    int lineNumber = 1;
+    while (!file.eof())
+    {
+        lineREAD.resize(0);
         READLINE(file, lineREAD);
-        int lineNumber = 1;
-        while (!file.eof())
-        {
-            lineREAD.resize(0);
-            READLINE(file, lineREAD);
-            if (lineREAD.size() <= 1)
-                break;
-            Tree->root = Tree->insert(Tree->root, lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
-        }
-        //Tree->printInorder(Tree->root);
-        file.close();
+        if (lineREAD.size() <= 1)
+            break;
+        Tree->root = Tree->insert(Tree->root, lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
+    }
+    //Tree->printInorder(Tree->root);
+    file.close();
     return *Tree;
 }
 
@@ -238,22 +242,22 @@ AVL<int>& intCreateAvlTree(int index, string typee, string branch)
 {
     activeBranch2 = branch;
     AVL<int>* Tree = new  AVL<int>();
-    
-        fstream file;
-        file.open("FilesToREAD\\" + fileName, ios::in);
-        vector<string> lineREAD;
+
+    fstream file;
+    file.open("FilesToREAD\\" + fileName, ios::in);
+    vector<string> lineREAD;
+    READLINE(file, lineREAD);
+    int lineNumber = 1;
+    while (!file.eof())
+    {
+        lineREAD.resize(0);
         READLINE(file, lineREAD);
-        int lineNumber = 1;
-        while (!file.eof())
-        {
-            lineREAD.resize(0);
-            READLINE(file, lineREAD);
-            if (lineREAD.size() <= 1)
-                break;
-            Tree->root = Tree->insert(Tree->root, stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
-        }
-        //Tree->printInorder(Tree->root);
-        file.close();
+        if (lineREAD.size() <= 1)
+            break;
+        Tree->root = Tree->insert(Tree->root, stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
+    }
+    //Tree->printInorder(Tree->root);
+    file.close();
 
     return *Tree;
 }
@@ -264,21 +268,21 @@ AVL<double>& doubleCreateAvlTree(int index, string typee, string branch)
     activeBranch2 = branch;
     AVL<double>* Tree = new  AVL<double>();
 
-        fstream file;
-        file.open("FilesToREAD\\" + fileName, ios::in);
-        vector<string> lineREAD;
+    fstream file;
+    file.open("FilesToREAD\\" + fileName, ios::in);
+    vector<string> lineREAD;
+    READLINE(file, lineREAD);
+    int lineNumber = 1;
+    while (!file.eof())
+    {
+        lineREAD.resize(0);
         READLINE(file, lineREAD);
-        int lineNumber = 1;
-        while (!file.eof())
-        {
-            lineREAD.resize(0);
-            READLINE(file, lineREAD);
-            if (lineREAD.size() <= 1)
-                break;
-            Tree->root = Tree->insert(Tree->root, stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
-        }
-        //Tree->printInorder(Tree->root);
-        file.close();
+        if (lineREAD.size() <= 1)
+            break;
+        Tree->root = Tree->insert(Tree->root, stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
+    }
+    //Tree->printInorder(Tree->root);
+    file.close();
 
     return *Tree;
 }
@@ -376,21 +380,24 @@ template<typename T>
 void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string old, string newVal)
 {
     vector<string> tuples;
-    for (auto S : ptr->AddressList)
+    for (size_t i = 0; i < ptr->AddressList.size(); ++i)
     {
-        string  str = "";
-        vector<string>temp = GetTuples(S);
+        string str = "";
+        vector<string> temp = GetTuples(ptr->AddressList[i]);
         cout << "CHECK" << endl;
         if (toLower(temp[index]) != toLower(old))
             continue;
-        for (auto Str : temp)
-            str += "," + Str;
+
+        for (size_t j = 0; j < temp.size(); ++j)
+            str += "," + temp[j];
+
         str.erase(0, 1);
         tuples.push_back(str);
     }
     cout << "DONE" << endl;
+
     stringstream sstream;
-    for (int i = 0; i < ptr->AddressList.size(); i++)
+    for (int i = 0; i < ptr->AddressList.size(); ++i)
     {
         fstream file;
         string line = "";
@@ -521,18 +528,18 @@ template<typename T>
 void RemoveTupleFromFile(AVLDataNode<T>* ptr)
 {
     vector<string> tuples;
-    for (auto S : ptr->AddressList)
+    for (size_t i = 0; i < ptr->AddressList.size(); i++)
     {
         string  str = "";
-        vector<string>temp = GetTuples(S);
-        for (auto Str : temp)
-            str += "," + Str;
+        vector<string> temp = GetTuples(ptr->AddressList[i]);
+        for (size_t j = 0; j < temp.size(); j++)
+            str += "," + temp[j];
         str.erase(0, 1);
         //cout << str << endl;
         tuples.push_back(str);
     }
     stringstream sstream;
-    for (int i = 0; i < ptr->AddressList.size(); i++)
+    for (size_t i = 0; i < ptr->AddressList.size(); i++)
     {
         fstream file;
         string line = "";
@@ -550,6 +557,7 @@ void RemoveTupleFromFile(AVLDataNode<T>* ptr)
         file.close();
     }
 }
+
 template <typename T>
 void DeleteTuple(AVL<T>* Avl, int index, T val)
 {

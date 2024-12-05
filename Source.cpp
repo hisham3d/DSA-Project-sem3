@@ -334,7 +334,7 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 }
 
 int main()
-{	
+{
 	ourNames();
 	cout << "------------------- BRANCHES --------------------" << endl;
 	deleteBranch();

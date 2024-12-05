@@ -29,18 +29,28 @@ public:
 };
 bool alphaCheck(const string& str)
 {
-	for (char s : str)
-		if (s >= 'a' && s <= 'z' || s >= 'A' && s <= 'Z' && (!(s >= '0' && s <= '9') || !(s == '.')))
-			return true;
+	for (size_t i = 0; i < str.size(); ++i)
+	{
+		char s = str[i];
+		if ((s >= 'a' && s <= 'z') || (s >= 'A' && s <= 'Z'))
+		{
+			if (!(s >= '0' && s <= '9') || !(s == '.'))
+				return true;
+		}
+	}
 	return false;
 }
+
 bool DecimalCheck(const string& str)
 {
-	for (char s : str)
-		if (s == '.')
+	for (size_t i = 0; i < str.size(); ++i)
+	{
+		if (str[i] == '.')
 			return true;
+	}
 	return false;
 }
+
 string DetermineDataType(const string& str)
 {
 	if (alphaCheck(str))
@@ -49,23 +59,29 @@ string DetermineDataType(const string& str)
 		return "double";
 	return "int";
 }
+
 vector<string> AllocateDataTypes(vector<string>& Fline)
 {
-	vector<string>  out;
-	for (auto s : Fline) {
-		string dataType = DetermineDataType(s);
+	vector<string> out;
+	for (size_t i = 0; i < Fline.size(); ++i) {
+		string dataType = DetermineDataType(Fline[i]);
 		out.push_back(dataType);
 		//cout << "Storing: " << dataType << endl;
 	}
 	return out;
 }
+
 int countChar(string& str, char ch)
 {
 	int count = 0;
-	for (auto s : str)
-		count += ch == s;
+	for (size_t i = 0; i < str.size(); ++i)
+	{
+		if (str[i] == ch)
+			++count;
+	}
 	return count;
 }
+
 string toLower(string f)
 {
 	string out = "";

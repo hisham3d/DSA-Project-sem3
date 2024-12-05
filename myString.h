@@ -442,7 +442,6 @@ bool String::operator==(const char* str) const { // returns true if the c-string
     }
 }
 
-
 String::~String() {
     delete[] arr;
 };
@@ -463,4 +462,3 @@ std::istream& operator>>(std::istream& input, String& str) { // inputs the strin
     str.arr = temp;
     return input;
 };
-

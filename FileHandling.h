@@ -27,12 +27,20 @@ void displayBranches() {
     fs::path branchesDir = fs::current_path() / "BRANCHES";
 
     std::cout << "Existing branches:\n";
-    for (const auto& entry : fs::directory_iterator(branchesDir)) {
-        if (fs::is_directory(entry)) {
-            std::cout << "- " << entry.path().filename().string() << '\n';
+    std::vector<fs::directory_entry> entries;
+
+    // Collect entries using an index-based loop
+    for (auto it = fs::directory_iterator(branchesDir); it != fs::directory_iterator(); ++it) {
+        entries.push_back(*it);
+    }
+
+    for (size_t i = 0; i < entries.size(); ++i) {
+        if (fs::is_directory(entries[i])) {
+            std::cout << "- " << entries[i].path().filename().string() << '\n';
         }
     }
 }
+
 
 void CREATETREEFOLDERS(string branch)
 {
@@ -49,17 +57,25 @@ void CREATEBRANCHESFOLDERS(string name) {
 }
 
 void copyDirectory(const string& source, const string& destination) {
-    for (const auto& entry : fs::recursive_directory_iterator(source)) {
-        const auto& path = entry.path();
+    namespace fs = std::filesystem;
+
+    std::vector<fs::directory_entry> entries;
+    for (auto it = fs::recursive_directory_iterator(source); it != fs::recursive_directory_iterator(); ++it) {
+        entries.push_back(*it);
+    }
+
+    for (size_t i = 0; i < entries.size(); ++i) {
+        const auto& path = entries[i].path();
         auto relativePathStr = fs::relative(path, source).string();
-        if (entry.is_directory()) {
+        if (entries[i].is_directory()) {
             fs::create_directories(destination + "\\" + relativePathStr);
         }
-        else if (entry.is_regular_file()) {
+        else if (entries[i].is_regular_file()) {
             fs::copy_file(path, destination + "\\" + relativePathStr, fs::copy_options::overwrite_existing);
         }
     }
 }
+
 
 void deleteBranch() {
     namespace fs = std::filesystem;

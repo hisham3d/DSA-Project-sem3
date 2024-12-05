@@ -282,15 +282,18 @@ int  BTree<T>::findIndex(BTREEDataNode<T>* x, T k) {
 	}
 	return i;
 }
+
 void copyVect(vector<AddressLocation>& vt1, vector<AddressLocation>& vt2)
 {
 	vt1.resize(0);
-	for (auto s : vt2)
+	for (size_t i = 0; i < vt2.size(); ++i)
 	{
-		string s1 = s.filename, s2 = s.linenumber;
+		string s1 = vt2[i].filename;
+		string s2 = vt2[i].linenumber;
 		vt1.push_back(AddressLocation(s1, s2));
 	}
 }
+
 
 template <typename T>
 int  BTree<T>::nodeInsert(BTREEDataNode<T>* x, T k, vector<AddressLocation>& list) {
@@ -436,22 +439,22 @@ BTree<string>& stringCreateBTREE(int index, string typee, string branch)
 	cin >> degree;
 	BTree<string>* Tree = new  BTree<string>(degree);
 
-		fstream file;
-		file.open("FilesToREAD\\" + fileName, ios::in);
+	fstream file;
+	file.open("FilesToREAD\\" + fileName, ios::in);
 
-		vector<string> lineREAD;
+	vector<string> lineREAD;
+	READLINE(file, lineREAD);
+	int lineNumber = 1;
+	while (!file.eof())
+	{
+		lineREAD.resize(0);
 		READLINE(file, lineREAD);
-		int lineNumber = 1;
-		while (!file.eof())
-		{
-			lineREAD.resize(0);
-			READLINE(file, lineREAD);
-			if (lineREAD.size() <= 1)
-				break;
-			Tree->insert(lineREAD[index], fileName, to_string(lineNumber++));
-		}
-		//Tree->printInorder(Tree->root);
-		file.close();
+		if (lineREAD.size() <= 1)
+			break;
+		Tree->insert(lineREAD[index], fileName, to_string(lineNumber++));
+	}
+	//Tree->printInorder(Tree->root);
+	file.close();
 
 	return *Tree;
 }
@@ -463,21 +466,21 @@ BTree<int>& intCreateBTREE(int index, string typee, string branch)
 	cin >> degree;
 	BTree<int>* Tree = new  BTree<int>(degree);
 
-		fstream file;
-		file.open("FilesToREAD\\" + fileName, ios::in);
-		vector<string> lineREAD;
+	fstream file;
+	file.open("FilesToREAD\\" + fileName, ios::in);
+	vector<string> lineREAD;
+	READLINE(file, lineREAD);
+	int lineNumber = 1;
+	while (!file.eof())
+	{
+		lineREAD.resize(0);
 		READLINE(file, lineREAD);
-		int lineNumber = 1;
-		while (!file.eof())
-		{
-			lineREAD.resize(0);
-			READLINE(file, lineREAD);
-			if (lineREAD.size() <= 1)
-				break;
-			Tree->insert(stoi(lineREAD[index]), fileName, to_string(lineNumber++));
-		}
-		//Tree->printInorder(Tree->root);
-		file.close();
+		if (lineREAD.size() <= 1)
+			break;
+		Tree->insert(stoi(lineREAD[index]), fileName, to_string(lineNumber++));
+	}
+	//Tree->printInorder(Tree->root);
+	file.close();
 
 	return *Tree;
 }
@@ -489,23 +492,23 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 	cin >> degree;
 	BTree<double>* Tree = new  BTree<double>(degree);
 
-		fstream file;
-		file.open("FilesToREAD\\" + fileName, ios::in);
+	fstream file;
+	file.open("FilesToREAD\\" + fileName, ios::in);
 
 
-		vector<string> lineREAD;
+	vector<string> lineREAD;
+	READLINE(file, lineREAD);
+	int lineNumber = 1;
+	while (!file.eof())
+	{
+		lineREAD.resize(0);
 		READLINE(file, lineREAD);
-		int lineNumber = 1;
-		while (!file.eof())
-		{
-			lineREAD.resize(0);
-			READLINE(file, lineREAD);
-			if (lineREAD.size() <= 1)
-				break;
-			Tree->insert(stod(lineREAD[index]), fileName, to_string(lineNumber++));
-		}
-		//Tree->printInorder(Tree->root);
-		file.close();
+		if (lineREAD.size() <= 1)
+			break;
+		Tree->insert(stod(lineREAD[index]), fileName, to_string(lineNumber++));
+	}
+	//Tree->printInorder(Tree->root);
+	file.close();
 
 	return *Tree;
 }
@@ -528,23 +531,25 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 	vector<string> tuples;
 	set<int> indexis;
 	int i = 0;
-	for (auto S : ptr->AddressList)
-	{
-		i++;
 
-		string  str = "";
-		vector<string>temp = GetTuples(S);
+	// Iterate through ptr->AddressList using an index-based for loop
+	for (size_t i = 0; i < ptr->AddressList.size(); ++i)
+	{
+		string str = "";
+		vector<string> temp = GetTuples(ptr->AddressList[i]);
 		if (toLower(temp[index]) != toLower(valToDel))
 			continue;
-		indexis.insert(i - 1);
-		for (auto Str : temp)
-			str += "," + Str;
+
+		indexis.insert(i);
+		for (size_t j = 0; j < temp.size(); ++j)
+			str += "," + temp[j];
+
 		str.erase(0, 1);
-		//cout << str << endl;
 		tuples.push_back(str);
 	}
+
 	stringstream sstream;
-	for (int i = 0; i < ptr->AddressList.size(); i++)
+	for (size_t i = 0; i < ptr->AddressList.size(); ++i)
 	{
 		fstream file;
 		string line = "";
@@ -561,16 +566,17 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 		file << sstream.rdbuf();
 		file.close();
 	}
+
 	vector<AddressLocation> tempo;
-	for (int i = 0; i < ptr->AddressList.size(); i++)
+	for (size_t i = 0; i < ptr->AddressList.size(); ++i)
 	{
 		if (indexis.find(i) != indexis.end())
 			continue;
 		tempo.push_back(ptr->AddressList[i]);
 	}
 	copyVect(ptr->AddressList, tempo);
-
 }
+
 void DeleteTuple(BTree<int>* BT, vector<string> fields)
 {
 	string input = "";
