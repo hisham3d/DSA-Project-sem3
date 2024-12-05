@@ -1,16 +1,16 @@
 #pragma once
-#include<fstream>
-#include<iostream>
-#include<sstream>
-#include<list>
-#include<vector>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <list>
+#include <vector>
 #include "myString.h"
 #include <filesystem>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include<direct.h>
-#include<stdio.h>
-#include<set>
+#include <direct.h>
+#include <stdio.h>
+#include <set>
 #include <iomanip>
 using namespace std;
 
@@ -73,6 +73,18 @@ string toLower(string f)
 	{
 		if (isupper(f[i]))
 			out += tolower(f[i]);
+		else
+			out += f[i];
+	}
+	return out;
+}
+string toUpper(string f)
+{
+	string out = "";
+	for (int i = 0; i < f.size(); i++)
+	{
+		if (islower(f[i]))
+			out += toupper(f[i]);
 		else
 			out += f[i];
 	}

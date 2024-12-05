@@ -18,7 +18,7 @@ void ourNames() {
 int mainmenu()
 {
 	int choice;
-	cout << "                               MAIN MENU:" << endl;
+	cout << "-------------------- MAIN MENU --------------------" << endl;
 	cout << endl;
 	cout << "Enter the tree you want to use (1-3): " << endl;
 	cout << "[1] AVL Trees" << endl;
@@ -165,7 +165,7 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, vector<string>& Fields)
 void MENURBTREE(vector<string>Fields, vector<string> DataTypes)
 {
 	RedBlackTree<string>* SRBTREE = NULL;
-	RedBlackTree<int>* IRBTREE = new RedBlackTree<int>;
+	RedBlackTree<int>* IRBTREE = NULL;
 	RedBlackTree<double>* DRBTREE = NULL;
 	char ch;
 	do
@@ -267,7 +267,7 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, vector<string>& Fields)
 void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 {
 	AVL<string>* SAVLTREE = NULL;
-	AVL<int>* IAVLTREE = new AVL<int>;
+	AVL<int>* IAVLTREE = NULL;
 	AVL<double>* DAVLTREE = NULL;
 	char ch;
 	do
@@ -288,9 +288,9 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 			SAVLTREE->CreateTreeFile(SAVLTREE->root);
 			do {
 				AVLSUBMENU<string>(SAVLTREE, Fields);
-				SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				/*SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				SAVLTREE->fieldname = Fields[choice - 1];
-				SAVLTREE->CreateTreeFile(SAVLTREE->root);
+				SAVLTREE->CreateTreeFile(SAVLTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -303,8 +303,8 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 			IAVLTREE->CreateTreeFile(IAVLTREE->root);
 			do {
 				AVLSUBMENU<int>(IAVLTREE, Fields);
-				IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
-				IAVLTREE->fieldname = Fields[choice - 1];
+				/*IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				IAVLTREE->fieldname = Fields[choice - 1];*/
 
 				IAVLTREE->CreateTreeFile(IAVLTREE->root);
 				cout << "\nDo you Want to run it again (Y/N): ";
@@ -320,9 +320,9 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 			DAVLTREE->CreateTreeFile(DAVLTREE->root);
 			do {
 				AVLSUBMENU<double>(DAVLTREE, Fields);
-				DAVLTREE = &doubleCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				/*DAVLTREE = &doubleCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				DAVLTREE->fieldname = Fields[choice - 1];
-				DAVLTREE->CreateTreeFile(DAVLTREE->root);
+				DAVLTREE->CreateTreeFile(DAVLTREE->root);*/
 
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
@@ -332,9 +332,11 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 		cin >> ch;
 	} while (ch == 'Y' || ch == 'y');
 }
+
 int main()
 {	
 	ourNames();
+	cout << "------------------- BRANCHES --------------------" << endl;
 	deleteBranch();
 	activeBranch = branchSelection();
 
@@ -343,6 +345,21 @@ int main()
 	vector<string> Fields, Entries, DataTypes;
 	GetFields(arrFileNames[0], Fields, Entries);
 	DataTypes = AllocateDataTypes(Entries);
+
+	char ch;
+	cout << "Do you want to merge a branch? (Y/N): ";
+	cin >> ch;
+	if (ch == 'Y' || ch == 'y') {
+		string sourceBranch, targetBranch;
+
+		cout << "Enter the source branch to merge from: ";
+		cin >> sourceBranch;
+
+		cout << "Enter the target branch to merge into: ";
+		cin >> targetBranch;
+
+		mergeBranches(sourceBranch, targetBranch);
+	}
 
 	int treechoice = mainmenu();
 	if (treechoice == 1) {

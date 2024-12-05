@@ -828,6 +828,7 @@ void DeleteTuple(RedBlackTree<T>* RB, int index, T val)
         remove(RemovePath.c_str());
     RB->CreateTreeFile(RB->root);
 }
+
 template<typename T>
 void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string old, string newVal)
 {
@@ -873,7 +874,6 @@ void UpdateTuple(RedBlackTree<int>*& RB, vector<string> fields)
     stringstream sstream;
     sstream << input;
     sstream >> input;
-    cout << input << endl;
     vector<string> tags;
     while (getline(sstream, input, ','))
     {
