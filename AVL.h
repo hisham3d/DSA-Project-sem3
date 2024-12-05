@@ -250,7 +250,7 @@ AVL<int>& intCreateAvlTree(int index, string typee, string branch)
             READLINE(file, lineREAD);
             if (lineREAD.size() <= 1)
                 break;
-            Tree->root = Tree->insert(Tree->root, stoi(lineREAD[index]), lineREAD[index], fileName, to_string(++lineNumber));
+            Tree->root = Tree->insert(Tree->root, stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
         }
         //Tree->printInorder(Tree->root);
         file.close();
