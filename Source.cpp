@@ -206,9 +206,9 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			SRBTREE->CreateTreeFile(SRBTREE->root);
 			do {
 				RBSUBMENU<string>(SRBTREE, Fields);
-				SRBTREE = &stringCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				/*SRBTREE = &stringCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				SRBTREE->fieldname = Fields[choice - 1];
-				SRBTREE->CreateTreeFile(SRBTREE->root);
+				SRBTREE->CreateTreeFile(SRBTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -222,9 +222,9 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			IRBTREE->CreateTreeFile(IRBTREE->root);
 			do {
 				RBSUBMENU<int>(IRBTREE, Fields);
-				IRBTREE = &intCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				/*IRBTREE = &intCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				IRBTREE->fieldname = Fields[choice - 1];
-				IRBTREE->CreateTreeFile(IRBTREE->root);
+				IRBTREE->CreateTreeFile(IRBTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -238,9 +238,9 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			DRBTREE->CreateTreeFile(DRBTREE->root);
 			do {
 				RBSUBMENU<double>(DRBTREE, Fields);
-				DRBTREE = &doubleCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				/*DRBTREE = &doubleCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				DRBTREE->fieldname = Fields[choice - 1];
-				DRBTREE->CreateTreeFile(DRBTREE->root);
+				DRBTREE->CreateTreeFile(DRBTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -318,9 +318,9 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			SAVLTREE->CreateTreeFile(SAVLTREE->root);
 			do {
 				AVLSUBMENU<string>(SAVLTREE, Fields);
-				SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				/*SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				SAVLTREE->fieldname = Fields[choice - 1];
-				SAVLTREE->CreateTreeFile(SAVLTREE->root);
+				SAVLTREE->CreateTreeFile(SAVLTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -334,10 +334,10 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			IAVLTREE->CreateTreeFile(IAVLTREE->root);
 			do {
 				AVLSUBMENU<int>(IAVLTREE, Fields);
-				IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				/*IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				IAVLTREE->fieldname = Fields[choice - 1];
 
-				IAVLTREE->CreateTreeFile(IAVLTREE->root);
+				IAVLTREE->CreateTreeFile(IAVLTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -351,9 +351,9 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			DAVLTREE->CreateTreeFile(DAVLTREE->root);
 			do {
 				AVLSUBMENU<double>(DAVLTREE, Fields);
-				DAVLTREE = &doubleCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				/*DAVLTREE = &doubleCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				DAVLTREE->fieldname = Fields[choice - 1];
-				DAVLTREE->CreateTreeFile(DAVLTREE->root);
+				DAVLTREE->CreateTreeFile(DAVLTREE->root);*/
 
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;

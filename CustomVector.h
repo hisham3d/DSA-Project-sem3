@@ -27,6 +27,13 @@ public:
         delete[] data;
     }
 
+    CustomVector(const CustomVector& other)
+        : data(new T[other.capacity]), capacity(other.capacity), size(other.size) {
+        for (size_t i = 0; i < size; ++i) {
+            data[i] = other.data[i];
+        }
+    }
+
     void push_back(const T& value) {
         if (size == capacity) {
             expand();
