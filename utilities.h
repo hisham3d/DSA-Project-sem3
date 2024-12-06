@@ -27,6 +27,126 @@ public:
 	}
 };
 
+bool alphaCheck(const string& str)
+{
+    for (size_t i = 0; i < str.size(); ++i)
+    {
+        char s = str[i];
+        if ((s >= 'a' && s <= 'z') || (s >= 'A' && s <= 'Z'))
+        {
+            if (!(s >= '0' && s <= '9') || !(s == '.'))
+                return true;
+        }
+    }
+    return false;
+}
+
+bool DecimalCheck(const string& str)
+{
+    for (size_t i = 0; i < str.size(); ++i)
+    {
+        if (str[i] == '.')
+            return true;
+    }
+    return false;
+}
+
+int countChar(string& str, char ch)
+{
+    int count = 0;
+    for (size_t i = 0; i < str.size(); ++i)
+    {
+        if (str[i] == ch)
+            ++count;
+    }
+    return count;
+}
+
+string toLower(string f)
+{
+    string out = "";
+    for (int i = 0; i < f.size(); i++)
+    {
+        if (isupper(f[i]))
+            out += tolower(f[i]);
+
+        else
+            out += f[i];
+    }
+    return out;
+}
+
+string toUpper(string f)
+{
+    string out = "";
+    for (int i = 0; i < f.size(); i++)
+    {
+        if (islower(f[i]))
+            out += toupper(f[i]);
+
+        else
+            out += f[i];
+    }
+    return out;
+}
+
+string DetermineDataType(const string& str)
+{
+    if (alphaCheck(str))
+        return "string";
+
+    if (DecimalCheck(str))
+        return "double";
+
+    return "int";
+}
+
+int comparestring(string key, string val)
+{
+    if (key == val)
+        return 0;
+
+    if (DetermineDataType(key) == "string")
+    {
+        return strcmp(key.c_str(), val.c_str());
+    }
+
+    else if (DetermineDataType(key) == "int")
+    {
+        if (key.size() < val.size())
+            return -1;
+
+        else if (key.size() > val.size())
+            return 1;
+
+        for (int i = 0; i < key.size(); i++)
+        {
+            if (key[i] < val[i])
+                return -1;
+
+            if (key[i] > val[i])
+                return 1;
+        }
+    }
+
+    else
+    {
+        if (key.find('.') > val.find('.'))
+            return 1;
+
+        if (key.find('.') < val.find('.'))
+            return -1;
+
+        for (int i = 0; i < key.size(); i++)
+        {
+            if (key[i] < val[i])
+                return -1;
+            if (key[i] > val[i])
+                return 1;
+        }
+    }
+}
+
 void AllocateDataTypes(CustomVector<string>& DataType, CustomVector<string>& Fline)
 {
 	//CustomVector<string> out;
