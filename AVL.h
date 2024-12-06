@@ -5,7 +5,7 @@ using namespace std;
 
 string activeBranch2;
 template <class T>
-class AVLDataNode 
+class AVLDataNode
 {
 public:
     T value;
@@ -13,7 +13,7 @@ public:
     AVLDataNode<T>* left;
     AVLDataNode<T>* right;
 
-    AVLDataNode() 
+    AVLDataNode()
     {
         index = "";
         value = *(new T);
@@ -22,8 +22,8 @@ public:
     }
 
     vector <AddressLocation> AddressList;
-    
-    AVLDataNode(T v, string filename, string linenumber, string counter) 
+
+    AVLDataNode(T v, string filename, string linenumber, string counter)
     {
         value = v;
         left = NULL;
@@ -46,32 +46,32 @@ public:
 };
 
 template <class T>
-class AVL 
+class AVL
 {
 public:
     int counter;
     string fieldname;
     AVLDataNode<T>* root;
 
-    AVL() 
+    AVL()
     {
         root = NULL;
         counter = 0;
     }
 
-    bool isTreeEmpty() 
+    bool isTreeEmpty()
     {
         return root == NULL;
     }
 
-    int getBalanceFactor(AVLDataNode<T>* n) 
+    int getBalanceFactor(AVLDataNode<T>* n)
     {
         if (n == NULL)
             return -1;
         return height(n->left) - height(n->right);
     }
 
-    AVLDataNode<T>* rightRotate(AVLDataNode<T>* y) 
+    AVLDataNode<T>* rightRotate(AVLDataNode<T>* y)
     {
         AVLDataNode<T>* x = y->left;
         AVLDataNode<T>* T2 = x->right;
@@ -80,7 +80,7 @@ public:
         return x;
     }
 
-    AVLDataNode<T>* leftRotate(AVLDataNode<T>* x) 
+    AVLDataNode<T>* leftRotate(AVLDataNode<T>* x)
     {
         AVLDataNode<T>* y = x->right;
         AVLDataNode<T>* T2 = y->left;
@@ -89,45 +89,45 @@ public:
         return y;
     }
 
-    AVLDataNode<T>* insert(AVLDataNode<T>* r, T value, string val, string filename, string lineNumber) 
+    AVLDataNode<T>* insert(AVLDataNode<T>* r, T value, string val, string filename, string lineNumber)
     {
-        if (r == NULL) 
+        if (r == NULL)
         {
             r = new AVLDataNode<T>(value, filename, lineNumber, val);
             return r;
         }
 
-        if (value < r->value) 
+        if (value < r->value)
         {
             r->left = insert(r->left, value, val, filename, lineNumber);
         }
-        
-        else if (value > r->value) 
+
+        else if (value > r->value)
         {
             r->right = insert(r->right, value, val, filename, lineNumber);
         }
-        
-        else 
+
+        else
         {
             r->AddressList.push_back(AddressLocation(filename, lineNumber));
             return r;
         }
-        
+
         int bf = getBalanceFactor(r);
 
         if (bf > 1 && value < r->left->value)
             return rightRotate(r);
-        
+
         if (bf < -1 && value > r->right->value)
             return leftRotate(r);
-        
-        if (bf > 1 && value > r->left->value) 
+
+        if (bf > 1 && value > r->left->value)
         {
             r->left = leftRotate(r->left);
             return rightRotate(r);
         }
 
-        if (bf < -1 && value < r->right->value) 
+        if (bf < -1 && value < r->right->value)
         {
             r->right = rightRotate(r->right);
             return leftRotate(r);
@@ -135,50 +135,50 @@ public:
         return r;
     }
 
-    AVLDataNode<T>* minValueNode(AVLDataNode<T>* node) 
+    AVLDataNode<T>* minValueNode(AVLDataNode<T>* node)
     {
         AVLDataNode<T>* current = node;
-        while (current->left != NULL) 
+        while (current->left != NULL)
         {
             current = current->left;
         }
         return current;
     }
 
-    AVLDataNode<T>* deleteNode(AVLDataNode<T>* r, T v) 
+    AVLDataNode<T>* deleteNode(AVLDataNode<T>* r, T v)
     {
-        if (r == NULL) 
+        if (r == NULL)
         {
             return NULL;
         }
-        
-        else if (v < r->value) 
+
+        else if (v < r->value)
         {
             r->left = deleteNode(r->left, v);
         }
-        
-        else if (v > r->value) 
+
+        else if (v > r->value)
         {
             r->right = deleteNode(r->right, v);
         }
-        
-        else 
+
+        else
         {
-            if (r->left == NULL) 
+            if (r->left == NULL)
             {
                 AVLDataNode<T>* temp = r->right;
                 delete r;
                 return temp;
             }
 
-            else if (r->right == NULL) 
+            else if (r->right == NULL)
             {
                 AVLDataNode<T>* temp = r->left;
                 delete r;
                 return temp;
             }
-            
-            else 
+
+            else
             {
                 AVLDataNode<T>* temp = minValueNode(r->right);
                 r->value = temp->value;
@@ -187,20 +187,20 @@ public:
         }
 
         int bf = getBalanceFactor(r);
-        
+
         if (bf == 2 && getBalanceFactor(r->left) >= 0)
             return rightRotate(r);
-        
-        else if (bf == 2 && getBalanceFactor(r->left) == -1) 
+
+        else if (bf == 2 && getBalanceFactor(r->left) == -1)
         {
             r->left = leftRotate(r->left);
             return rightRotate(r);
         }
-        
+
         else if (bf == -2 && getBalanceFactor(r->right) <= -0)
             return leftRotate(r);
-        
-        else if (bf == -2 && getBalanceFactor(r->right) == 1) 
+
+        else if (bf == -2 && getBalanceFactor(r->right) == 1)
         {
             r->right = rightRotate(r->right);
             return leftRotate(r);
@@ -210,7 +210,7 @@ public:
 
     void printInorder(AVLDataNode<T>* r) //  (Left, current node, Right)
     {
-        if (r == NULL) 
+        if (r == NULL)
         {
             return;
         }
@@ -219,11 +219,11 @@ public:
         printInorder(r->right);
     }
 
-    int height(AVLDataNode<T>* r) 
+    int height(AVLDataNode<T>* r)
     {
         if (r == NULL)
             return -1;
-        else 
+        else
         {
             int lheight = height(r->left);
             int rheight = height(r->right);
@@ -270,7 +270,7 @@ public:
         CreateTreeFile(R->right);
     }
 
-    AVLDataNode<T>* recursiveSearch(AVLDataNode<T>* r, T val) 
+    AVLDataNode<T>* recursiveSearch(AVLDataNode<T>* r, T val)
     {
         if (r == NULL || r->value == val)
             return r;
@@ -425,18 +425,18 @@ void RangeSearch(AVLDataNode<string>* ptr, string start, string end, vector<stri
 
 AVLDataNode<string>* PointSearch(AVLDataNode<string>* ptr, string key, vector<string>& fields, string fieldname)
 {
-    if (ptr->value == "NULL") 
+    if (ptr->value == "NULL")
     {
         cout << "\nNot found\n";
         return NULL;
     }
-    
-    if (key == ptr->value) 
+
+    if (key == ptr->value)
     {
         DisplayAllTuples(fields, ptr);
         return ptr;
     }
-    
+
     if (comparestring(key, ptr->value) < 0)
         return PointSearch(&ReadAvlNodeFromFile(fieldname + "\\" + ptr->getLeftchildAddress()), key, fields, fieldname);
 
@@ -460,7 +460,6 @@ void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string old, string newVal
     {
         string str = "";
         vector<string> temp = GetTuples(ptr->AddressList[i]);
-        cout << "CHECK" << endl;
         if (toLower(temp[index]) != toLower(old))
             continue;
 
@@ -482,12 +481,12 @@ void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string old, string newVal
         while (getline(file, line, '\n'))
         {
             int res = getFieldIndex(tuples, line);
-            if (res != i) 
+            if (res != i)
             {
                 sstream << line << endl;
             }
-            
-            else 
+
+            else
             {
                 sstream << UpdatedTuple(tuples[i], old, newVal) << endl;
                 cout << "Tuple updated" << endl;
@@ -523,7 +522,7 @@ void UpdateTuple(AVL<string>*& Avl, vector<string> fields)
     }
 
     AVLDataNode<string>* toDelete = Avl->recursiveSearch(Avl->root, tags[1]);
-    if (toDelete == NULL) 
+    if (toDelete == NULL)
     {
         return;
     }
@@ -560,7 +559,7 @@ void UpdateTuple(AVL<int>*& Avl, vector<string> fields)
     }
 
     AVLDataNode<int>* toDelete = Avl->recursiveSearch(Avl->root, stoi(tags[1]));
-    if (toDelete == NULL) 
+    if (toDelete == NULL)
     {
         cout << "Tuple not found" << endl;
         return;

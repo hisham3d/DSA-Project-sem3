@@ -56,17 +56,17 @@ string DetermineDataType(const string& str)
 {
 	if (alphaCheck(str))
 		return "string";
-	
+
 	if (DecimalCheck(str))
 		return "double";
-	
+
 	return "int";
 }
 
 vector<string> AllocateDataTypes(vector<string>& Fline)
 {
 	vector<string> out;
-	for (size_t i = 0; i < Fline.size(); ++i) 
+	for (size_t i = 0; i < Fline.size(); ++i)
 	{
 		string dataType = DetermineDataType(Fline[i]);
 		out.push_back(dataType);
@@ -93,7 +93,7 @@ string toLower(string f)
 	{
 		if (isupper(f[i]))
 			out += tolower(f[i]);
-		
+
 		else
 			out += f[i];
 	}
@@ -107,7 +107,7 @@ string toUpper(string f)
 	{
 		if (islower(f[i]))
 			out += toupper(f[i]);
-		
+
 		else
 			out += f[i];
 	}
@@ -126,7 +126,7 @@ int comparestring(string key, string val)
 {
 	if (key == val)
 		return 0;
-	
+
 	if (DetermineDataType(key) == "string")
 	{
 		return strcmp(key.c_str(), val.c_str());
@@ -136,28 +136,28 @@ int comparestring(string key, string val)
 	{
 		if (key.size() < val.size())
 			return -1;
-		
+
 		else if (key.size() > val.size())
 			return 1;
-		
+
 		for (int i = 0; i < key.size(); i++)
 		{
 			if (key[i] < val[i])
 				return -1;
-			
+
 			if (key[i] > val[i])
 				return 1;
 		}
 	}
-	
+
 	else
 	{
 		if (key.find('.') > val.find('.'))
 			return 1;
-		
+
 		if (key.find('.') < val.find('.'))
 			return -1;
-		
+
 		for (int i = 0; i < key.size(); i++)
 		{
 			if (key[i] < val[i])
@@ -174,7 +174,7 @@ void READLINE(fstream& file, vector<string>& list)
 	string FirstLine, word = "";
 	getline(file, FirstLine);
 	stringstream Fline(FirstLine);
-	
+
 	while (getline(Fline, word, ','))
 	{
 		if (word.size() < 1)
