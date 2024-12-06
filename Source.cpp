@@ -368,31 +368,17 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 
 int main()
 {
+	
 	ourNames();
-	cout << "------------------- BRANCHES --------------------" << endl;
-	deleteBranch();
-	activeBranch = branchSelection();
-
-	cout << "Working in branch: " << activeBranch << endl;
 
 	vector<string> Fields, Entries, DataTypes;
 	GetFields(fileName, Fields, Entries);
 	DataTypes = AllocateDataTypes(Entries);
 
-	char ch;
-	cout << "Do you want to merge a branch? (Y/N): ";
-	cin >> ch;
-	if (ch == 'Y' || ch == 'y') {
-		string sourceBranch, targetBranch;
+	cout << "------------------- BRANCHES --------------------" << endl;
+	displayBranches();
+	activeBranch = branchSelection();
 
-		cout << "Enter the source branch to merge from: ";
-		cin >> sourceBranch;
-
-		cout << "Enter the target branch to merge into: ";
-		cin >> targetBranch;
-
-		mergeBranches(sourceBranch, targetBranch);
-	}
 
 	int treechoice = mainmenu();
 	if (treechoice == 1)

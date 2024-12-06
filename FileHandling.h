@@ -96,15 +96,8 @@ void deleteBranch()
 {
     namespace fs = filesystem;
 
-    displayBranches();
 
-    char ch;
-    cout << "Do you want to delete a branch? (Y/N): ";
-    cin >> ch;
-    if (ch == 'N' || ch == 'n')
-    {
-        return;
-    }
+   
 
     cout << "\nEnter the name of the branch to delete: ";
     string branchName;
@@ -197,44 +190,84 @@ void mergeBranches(const string& sourceBranch, const string& targetBranch)
 
 string branchSelection()
 {
+    
     int branchChoice;
-    string branchName = "main"; // default branch
-    cout << "Select Branch:" << endl;
+    string branchName; // default branch
+    cout << "Select Choice:" << endl;
     cout << "[1] Main Branch" << endl;
     cout << "[2] Create/Use Another Branch" << endl;
+    cout << "[3] Delete Branch" << endl;
+    cout << "[4] Merge Branches" << endl;
+    cout << "[?] Merge Branches" << endl;
     cout << "Enter your choice: ";
     cin >> branchChoice;
+    while ((branchChoice < 5) && (branchChoice > 0)) {
 
-    if (branchChoice == 2)
-    {
-        cout << "Enter branch name: ";
-        cin.ignore();
-        getline(cin, branchName);
+        if (branchChoice == 1) {
 
-        string branchPath = "BRANCHES\\" + branchName;
-        if (!hasPath(branchPath))
-        {
-            cout << "Creating branch: " << branchName << endl;
-            fs::create_directories(branchPath);
-
+            branchName = "main";
             CREATEBRANCHESFOLDERS(branchName);
-
-            copyDirectory("BRANCHES\\main", branchPath);
         }
 
-        else
+        if (branchChoice == 2)
         {
-            cout << "Switching to existing branch: " << branchName << endl;
+            cout << "Enter branch name: ";
+            cin.ignore();
+            getline(cin, branchName);
+
+            string branchPath = "BRANCHES\\" + branchName;
+            if (!hasPath(branchPath))
+            {
+                cout << "Creating branch: " << branchName << endl;
+                fs::create_directories(branchPath);
+
+                CREATEBRANCHESFOLDERS(branchName);
+
+                copyDirectory("BRANCHES\\main", branchPath);
+            }
+
+            else
+            {
+                cout << "Switching to existing branch: " << branchName << endl;
+            }
         }
-    }
+        if (branchChoice == 3) {
+            deleteBranch();
 
-    else
-    {
-        branchName = "main";
-        CREATEBRANCHESFOLDERS(branchName);
-    }
+        }
+        if (branchChoice == 4) {
 
-    return branchName;
+            string sourceBranch, targetBranch;
+
+            cout << "Enter the source branch to merge from: ";
+            cin >> sourceBranch;
+
+            cout << "Enter the target branch to merge into: ";
+            cin >> targetBranch;
+
+            mergeBranches(sourceBranch, targetBranch);
+
+
+        }
+        cout << endl;
+
+        cout << "Working in branch: " << branchName << endl;
+
+        cout << endl;
+        displayBranches();
+        cout << endl;
+
+        cout << "Select Choice:" << endl;
+        cout << "[1] Main Branch" << endl;
+        cout << "[2] Create/Use Another Branch" << endl;
+        cout << "[3] Delete Branch" << endl;
+        cout << "[4] Merge Branches" << endl;
+        cout << "[?] Enter other number to quit" << endl;
+        cout << "Enter your choice: ";
+        cin >> branchChoice;
+    }
+        return branchName;
+    
 }
 
 void GetFields(string Filename, vector<string>& LINE1, vector<string>& Entries)
