@@ -537,6 +537,8 @@ void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields)
     }
 }
 
+//AVL<int>*& Avl, CustomVector<string>& fields, string fieldname
+
 void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
 {
     string input = "";

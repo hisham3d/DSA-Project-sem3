@@ -252,12 +252,13 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 }
 
 template<typename T>
-void AVLSUBMENU(AVL<T>* IAVLTREE, CustomVector<string>& Fields)
+void AVLSUBMENU(AVL<T>* IAVLTREE, CustomVector<string>& Fields, int choice)
 {
 	int option = submenu();
 	system("cls");
 	if (option == 1)
 	{
+		//UpdateTuple(IAVLTREE, Fields, Fields[choice - 1]);
 		UpdateTuple(IAVLTREE, Fields);
 	}
 
@@ -317,7 +318,7 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			SAVLTREE->fieldname = Fields[choice - 1];
 			SAVLTREE->CreateTreeFile(SAVLTREE->root);
 			do {
-				AVLSUBMENU<string>(SAVLTREE, Fields);
+				AVLSUBMENU<string>(SAVLTREE, Fields, choice);
 				/*SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				SAVLTREE->fieldname = Fields[choice - 1];
 				SAVLTREE->CreateTreeFile(SAVLTREE->root);*/
@@ -333,7 +334,7 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			IAVLTREE->fieldname = Fields[choice - 1];
 			IAVLTREE->CreateTreeFile(IAVLTREE->root);
 			do {
-				AVLSUBMENU<int>(IAVLTREE, Fields);
+				AVLSUBMENU<int>(IAVLTREE, Fields, choice);
 				/*IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				IAVLTREE->fieldname = Fields[choice - 1];
 
@@ -350,7 +351,7 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			DAVLTREE->fieldname = Fields[choice - 1];
 			DAVLTREE->CreateTreeFile(DAVLTREE->root);
 			do {
-				AVLSUBMENU<double>(DAVLTREE, Fields);
+				AVLSUBMENU<double>(DAVLTREE, Fields, choice);
 				/*DAVLTREE = &doubleCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				DAVLTREE->fieldname = Fields[choice - 1];
 				DAVLTREE->CreateTreeFile(DAVLTREE->root);*/
@@ -368,30 +369,15 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 int main()
 {
 	ourNames();
-	cout << "------------------- BRANCHES --------------------" << endl;
-	deleteBranch();
-	activeBranch = branchSelection();
-
-	cout << "Working in branch: " << activeBranch << endl;
 
 	CustomVector<string> Fields, Entries, DataTypes;
 	GetFields(fileName, Fields, Entries);
 	AllocateDataTypes(DataTypes, Entries);
 
-	char ch;
-	cout << "Do you want to merge a branch? (Y/N): ";
-	cin >> ch;
-	if (ch == 'Y' || ch == 'y') {
-		string sourceBranch, targetBranch;
+	cout << "------------------- BRANCHES --------------------" << endl;
+	displayBranches();
+	activeBranch = branchSelection();
 
-		cout << "Enter the source branch to merge from: ";
-		cin >> sourceBranch;
-
-		cout << "Enter the target branch to merge into: ";
-		cin >> targetBranch;
-
-		mergeBranches(sourceBranch, targetBranch);
-	}
 
 	int treechoice = mainmenu();
 	if (treechoice == 1)
