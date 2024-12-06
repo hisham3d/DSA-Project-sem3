@@ -30,7 +30,7 @@ public:
 	std::pair<BTREEDataNode<T>*, int> search(T);
 	void print();
 
-	void INRANGEROOT(BTREEDataNode<T>* node, vector<string> fields, T start, T end)
+	void INRANGEROOT(BTREEDataNode<T>* node, CustomVector<string> fields, T start, T end)
 	{
 		for (int i = 0; i < node->size; i++)
 		{
@@ -106,7 +106,7 @@ private:
 	int  findIndex(BTREEDataNode<T>*, T);
 
 	// Inserts a key into a node.
-	int  nodeInsert(BTREEDataNode<T>*, T, vector<AddressLocation>&);
+	int  nodeInsert(BTREEDataNode<T>*, T, CustomVector<AddressLocation>&);
 
 	// Deletes the key at a given index from a node.
 	T nodeDelete(BTREEDataNode<T>*, int);
@@ -194,7 +194,7 @@ void BTree<T>::insert(T k, string filename, string linenumber)
 		}
 		curr = curr->child[index];
 	}
-	vector<AddressLocation> adr;
+	CustomVector<AddressLocation> adr;
 	adr.push_back(AddressLocation(filename, linenumber));
 	nodeInsert(curr, k, adr);
 }
@@ -342,10 +342,10 @@ int  BTree<T>::findIndex(BTREEDataNode<T>* x, T k)
 	return i;
 }
 
-void copyVect(vector<AddressLocation>& vt1, vector<AddressLocation>& vt2)
+void copyVect(CustomVector<AddressLocation>& vt1, CustomVector<AddressLocation>& vt2)
 {
 	vt1.resize(0);
-	for (size_t i = 0; i < vt2.size(); ++i)
+	for (size_t i = 0; i < vt2.getSize(); ++i)
 	{
 		string s1 = vt2[i].filename;
 		string s2 = vt2[i].linenumber;
@@ -354,7 +354,7 @@ void copyVect(vector<AddressLocation>& vt1, vector<AddressLocation>& vt2)
 }
 
 template <typename T>
-int  BTree<T>::nodeInsert(BTREEDataNode<T>* x, T k, vector<AddressLocation>& list)
+int  BTree<T>::nodeInsert(BTREEDataNode<T>* x, T k, CustomVector<AddressLocation>& list)
 {
 	int index;
 	for (index = x->size; index > 0 && (k < x->key[index - 1].val); index--)
@@ -529,14 +529,14 @@ BTree<string>& stringCreateBTREE(int index, string typee, string branch)
 	fstream file;
 	file.open("FilesToREAD\\" + fileName, ios::in);
 
-	vector<string> lineREAD;
+	CustomVector<string> lineREAD;
 	READLINE(file, lineREAD);
 	int lineNumber = 1;
 	while (!file.eof())
 	{
 		lineREAD.resize(0);
 		READLINE(file, lineREAD);
-		if (lineREAD.size() <= 1)
+		if (lineREAD.getSize() <= 1)
 			break;
 		Tree->insert(lineREAD[index], fileName, to_string(lineNumber++));
 	}
@@ -556,14 +556,14 @@ BTree<int>& intCreateBTREE(int index, string typee, string branch)
 
 	fstream file;
 	file.open("FilesToREAD\\" + fileName, ios::in);
-	vector<string> lineREAD;
+	CustomVector<string> lineREAD;
 	READLINE(file, lineREAD);
 	int lineNumber = 1;
 	while (!file.eof())
 	{
 		lineREAD.resize(0);
 		READLINE(file, lineREAD);
-		if (lineREAD.size() <= 1)
+		if (lineREAD.getSize() <= 1)
 			break;
 		Tree->insert(stoi(lineREAD[index]), fileName, to_string(lineNumber++));
 	}
@@ -584,14 +584,14 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 	fstream file;
 	file.open("FilesToREAD\\" + fileName, ios::in);
 
-	vector<string> lineREAD;
+	CustomVector<string> lineREAD;
 	READLINE(file, lineREAD);
 	int lineNumber = 1;
 	while (!file.eof())
 	{
 		lineREAD.resize(0);
 		READLINE(file, lineREAD);
-		if (lineREAD.size() <= 1)
+		if (lineREAD.getSize() <= 1)
 			break;
 		Tree->insert(stod(lineREAD[index]), fileName, to_string(lineNumber++));
 	}
@@ -602,7 +602,7 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 }
 
 template<typename T>
-void PointSearch(BTree<T>* R, vector<string> fields, T key)
+void PointSearch(BTree<T>* R, CustomVector<string> fields, T key)
 {
 	pair<BTREEDataNode<T>*, int> res = R->search(key);
 	if (!res.first)
@@ -611,7 +611,7 @@ void PointSearch(BTree<T>* R, vector<string> fields, T key)
 }
 
 template<typename T>
-void RangeSearch(BTree<T>* R, vector<string> fields, T start, T end)
+void RangeSearch(BTree<T>* R, CustomVector<string> fields, T start, T end)
 {
 	R->INRANGEROOT(R->root, fields, start, end);
 }
@@ -619,20 +619,20 @@ void RangeSearch(BTree<T>* R, vector<string> fields, T start, T end)
 template<typename T>
 void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 {
-	vector<string> tuples;
+	CustomVector<string> tuples;
 	set<int> indexis;
 	int i = 0;
 
 	// Iterate through ptr->AddressList using an index-based for loop
-	for (size_t i = 0; i < ptr->AddressList.size(); ++i)
+	for (size_t i = 0; i < ptr->AddressList.getSize(); ++i)
 	{
 		string str = "";
-		vector<string> temp = GetTuples(ptr->AddressList[i]);
+		CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
 		if (toLower(temp[index]) != toLower(valToDel))
 			continue;
 
 		indexis.insert(i);
-		for (size_t j = 0; j < temp.size(); ++j)
+		for (size_t j = 0; j < temp.getSize(); ++j)
 			str += "," + temp[j];
 
 		str.erase(0, 1);
@@ -640,7 +640,7 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 	}
 
 	stringstream sstream;
-	for (size_t i = 0; i < ptr->AddressList.size(); ++i)
+	for (size_t i = 0; i < ptr->AddressList.getSize(); ++i)
 	{
 		fstream file;
 		string line = "";
@@ -658,8 +658,8 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 		file.close();
 	}
 
-	vector<AddressLocation> tempo;
-	for (size_t i = 0; i < ptr->AddressList.size(); ++i)
+	CustomVector<AddressLocation> tempo;
+	for (size_t i = 0; i < ptr->AddressList.getSize(); ++i)
 	{
 		if (indexis.find(i) != indexis.end())
 			continue;
@@ -668,7 +668,7 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 	copyVect(ptr->AddressList, tempo);
 }
 
-void DeleteTuple(BTree<int>* BT, vector<string> fields)
+void DeleteTuple(BTree<int>* BT, CustomVector<string> fields)
 {
 	string input = "";
 	cout << "\nEnter Delete Query (Delete id, state , michigan): ";
@@ -678,7 +678,7 @@ void DeleteTuple(BTree<int>* BT, vector<string> fields)
 	sstream << input;
 	sstream >> input;
 	cout << input << endl;
-	vector<string> tags;
+	CustomVector<string> tags;
 	while (getline(sstream, input, ','))
 	{
 		if (input[0] == ' ')
@@ -713,7 +713,7 @@ void DeleteTuple(BTree<int>* BT, vector<string> fields)
 	}
 }
 
-void DeleteTuple(BTree<string>* BT, vector<string> fields)
+void DeleteTuple(BTree<string>* BT, CustomVector<string> fields)
 {
 	string input = "";
 	cout << "\nEnter Delete Query (Delete id, state , michigan): ";
@@ -723,7 +723,7 @@ void DeleteTuple(BTree<string>* BT, vector<string> fields)
 	sstream << input;
 	sstream >> input;
 	cout << input << endl;
-	vector<string> tags;
+	CustomVector<string> tags;
 
 	while (getline(sstream, input, ','))
 	{
@@ -759,7 +759,7 @@ void DeleteTuple(BTree<string>* BT, vector<string> fields)
 	}
 }
 
-void DeleteTuple(BTree<double>* BT, vector<string> fields)
+void DeleteTuple(BTree<double>* BT, CustomVector<string> fields)
 {
 	string input = "";
 	cout << "\nEnter Delete Query (Delete id, state , michigan): ";
@@ -769,7 +769,7 @@ void DeleteTuple(BTree<double>* BT, vector<string> fields)
 	sstream << input;
 	sstream >> input;
 	cout << input << endl;
-	vector<string> tags;
+	CustomVector<string> tags;
 	while (getline(sstream, input, ','))
 	{
 		if (input[0] == ' ')
@@ -777,7 +777,7 @@ void DeleteTuple(BTree<double>* BT, vector<string> fields)
 		tags.push_back(input);
 	}
 
-	if (tags.size() < 4)
+	if (tags.getSize() < 4)
 	{
 		cout << "INCORRECT QUERRY\n";
 		return;

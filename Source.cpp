@@ -1,5 +1,6 @@
 #pragma once
 #include"BTREE.h"
+#include "CustomVector.h"
 #include <iostream>
 using namespace std;
 
@@ -50,7 +51,7 @@ int submenu()
 }
 
 template<typename T>
-void subMENUBTREE(BTree<T>* IBTREE, vector<string> Fields)
+void subMENUBTREE(BTree<T>* IBTREE, CustomVector<string> Fields)
 {
 	char ch;
 	do
@@ -89,7 +90,7 @@ void subMENUBTREE(BTree<T>* IBTREE, vector<string> Fields)
 	} while (ch == 'Y' || ch == 'y');
 }
 
-void MENUBTREE(vector<string>Fields, vector<string> DataTypes)
+void MENUBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 {
 	BTree<string>* SBTREE = NULL;
 	BTree<int>* IBTREE = NULL;
@@ -99,7 +100,7 @@ void MENUBTREE(vector<string>Fields, vector<string> DataTypes)
 	{
 		system("cls");
 		int choice = 0;
-		for (int i = 0; i < Fields.size(); i++)
+		for (int i = 0; i < Fields.getSize(); i++)
 		{
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
@@ -140,7 +141,7 @@ void MENUBTREE(vector<string>Fields, vector<string> DataTypes)
 }
 
 template<typename T>
-void RBSUBMENU(RedBlackTree <T>* IRBTREE, vector<string>& Fields)
+void RBSUBMENU(RedBlackTree <T>* IRBTREE, CustomVector<string>& Fields)
 {
 	system("cls");
 	int option = submenu();
@@ -155,7 +156,6 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, vector<string>& Fields)
 		cout << "\nENTER THE VALUE YOU WANT TO DELETE : ";
 		cin >> obj;
 		DeleteTuple<T>(IRBTREE, getFieldIndex(Fields, IRBTREE->fieldname), obj);
-
 	}
 
 	if (option == 3)
@@ -180,7 +180,7 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, vector<string>& Fields)
 	}
 }
 
-void MENURBTREE(vector<string>Fields, vector<string> DataTypes)
+void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 {
 	RedBlackTree<string>* SRBTREE = NULL;
 	RedBlackTree<int>* IRBTREE = NULL;
@@ -190,7 +190,7 @@ void MENURBTREE(vector<string>Fields, vector<string> DataTypes)
 	{
 		system("cls");
 		int choice = 0;
-		for (int i = 0; i < Fields.size(); i++)
+		for (int i = 0; i < Fields.getSize(); i++)
 		{
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
@@ -252,7 +252,7 @@ void MENURBTREE(vector<string>Fields, vector<string> DataTypes)
 }
 
 template<typename T>
-void AVLSUBMENU(AVL<T>* IAVLTREE, vector<string>& Fields)
+void AVLSUBMENU(AVL<T>* IAVLTREE, CustomVector<string>& Fields)
 {
 	int option = submenu();
 	system("cls");
@@ -276,7 +276,6 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, vector<string>& Fields)
 		cout << "\nENTER THE INDEX YOU WANT TO SEARCH: ";
 		getline(cin, obj, '\n');
 		PointSearch(&ReadAvlNodeFromFile(IAVLTREE->fieldname + "\\" + IAVLTREE->GetNodeFilename(IAVLTREE->root)), obj, Fields, IAVLTREE->fieldname);
-
 	}
 
 	if (option == 4)
@@ -292,7 +291,7 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, vector<string>& Fields)
 	}
 }
 
-void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
+void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 {
 	AVL<string>* SAVLTREE = NULL;
 	AVL<int>* IAVLTREE = NULL;
@@ -303,7 +302,7 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 		system("cls");
 		int choice = 0;
 
-		for (int i = 0; i < Fields.size(); i++)
+		for (int i = 0; i < Fields.getSize(); i++)
 		{
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
@@ -319,9 +318,9 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 			SAVLTREE->CreateTreeFile(SAVLTREE->root);
 			do {
 				AVLSUBMENU<string>(SAVLTREE, Fields);
-				/*SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				SAVLTREE->fieldname = Fields[choice - 1];
-				SAVLTREE->CreateTreeFile(SAVLTREE->root);*/
+				SAVLTREE->CreateTreeFile(SAVLTREE->root);
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -335,8 +334,8 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 			IAVLTREE->CreateTreeFile(IAVLTREE->root);
 			do {
 				AVLSUBMENU<int>(IAVLTREE, Fields);
-				/*IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
-				IAVLTREE->fieldname = Fields[choice - 1];*/
+				IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				IAVLTREE->fieldname = Fields[choice - 1];
 
 				IAVLTREE->CreateTreeFile(IAVLTREE->root);
 				cout << "\nDo you Want to run it again (Y/N): ";
@@ -352,9 +351,9 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 			DAVLTREE->CreateTreeFile(DAVLTREE->root);
 			do {
 				AVLSUBMENU<double>(DAVLTREE, Fields);
-				/*DAVLTREE = &doubleCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				DAVLTREE = &doubleCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				DAVLTREE->fieldname = Fields[choice - 1];
-				DAVLTREE->CreateTreeFile(DAVLTREE->root);*/
+				DAVLTREE->CreateTreeFile(DAVLTREE->root);
 
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
@@ -368,17 +367,31 @@ void MENUAVLTREE(vector<string>Fields, vector<string> DataTypes)
 
 int main()
 {
-	
 	ourNames();
-
-	vector<string> Fields, Entries, DataTypes;
-	GetFields(fileName, Fields, Entries);
-	DataTypes = AllocateDataTypes(Entries);
-
 	cout << "------------------- BRANCHES --------------------" << endl;
-	displayBranches();
+	deleteBranch();
 	activeBranch = branchSelection();
 
+	cout << "Working in branch: " << activeBranch << endl;
+
+	CustomVector<string> Fields, Entries, DataTypes;
+	GetFields(fileName, Fields, Entries);
+	AllocateDataTypes(DataTypes, Entries);
+
+	char ch;
+	cout << "Do you want to merge a branch? (Y/N): ";
+	cin >> ch;
+	if (ch == 'Y' || ch == 'y') {
+		string sourceBranch, targetBranch;
+
+		cout << "Enter the source branch to merge from: ";
+		cin >> sourceBranch;
+
+		cout << "Enter the target branch to merge into: ";
+		cin >> targetBranch;
+
+		mergeBranches(sourceBranch, targetBranch);
+	}
 
 	int treechoice = mainmenu();
 	if (treechoice == 1)

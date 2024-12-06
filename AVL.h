@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include "CustomVector.h"
 #include"FileHandling.h"
 using namespace std;
 
@@ -21,7 +22,7 @@ public:
         right = NULL;
     }
 
-    vector <AddressLocation> AddressList;
+    CustomVector<AddressLocation> AddressList;
 
     AVLDataNode(T v, string filename, string linenumber, string counter)
     {
@@ -35,13 +36,13 @@ public:
     string getLeftchildAddress()
     {
         // last index stores the left child 
-        return AddressList[AddressList.size() - 1].filename;
+        return AddressList[AddressList.getSize() - 1].filename;
     }
 
     string getRightChildAddress()
     {
         // last index stores the right child
-        return AddressList[AddressList.size() - 1].linenumber;
+        return AddressList[AddressList.getSize() - 1].linenumber;
     }
 };
 
@@ -244,7 +245,7 @@ public:
     void GetNodeInfo(fstream& f, AVLDataNode<T>* R)
     {
         f << R->value << endl;
-        for (int i = 0; i < R->AddressList.size(); ++i)
+        for (int i = 0; i < R->AddressList.getSize(); ++i)
         {
             f << R->AddressList[i].filename << endl;
             f << R->AddressList[i].linenumber << endl;
@@ -288,14 +289,14 @@ AVL<string>& stringCreateAvlTree(int index, string typee, string branch)
 
     fstream file;
     file.open("FilesToREAD\\" + fileName, ios::in);
-    vector<string> lineREAD;
+    CustomVector<string> lineREAD;
     READLINE(file, lineREAD);
     int lineNumber = 1;
     while (!file.eof())
     {
         lineREAD.resize(0);
         READLINE(file, lineREAD);
-        if (lineREAD.size() <= 1)
+        if (lineREAD.getSize() <= 1)
             break;
         Tree->root = Tree->insert(Tree->root, lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
     }
@@ -312,14 +313,14 @@ AVL<int>& intCreateAvlTree(int index, string typee, string branch)
 
     fstream file;
     file.open("FilesToREAD\\" + fileName, ios::in);
-    vector<string> lineREAD; //
+    CustomVector<string> lineREAD; //
     READLINE(file, lineREAD);
     int lineNumber = 1;
     while (!file.eof())
     {
         lineREAD.resize(0);
         READLINE(file, lineREAD);
-        if (lineREAD.size() <= 1)
+        if (lineREAD.getSize() <= 1)
             break;
         Tree->root = Tree->insert(Tree->root, stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
     }
@@ -336,14 +337,14 @@ AVL<double>& doubleCreateAvlTree(int index, string typee, string branch)
 
     fstream file;
     file.open("FilesToREAD\\" + fileName, ios::in);
-    vector<string> lineREAD; //
+    CustomVector<string> lineREAD; //
     READLINE(file, lineREAD);
     int lineNumber = 1;
     while (!file.eof())
     {
         lineREAD.resize(0);
         READLINE(file, lineREAD);
-        if (lineREAD.size() <= 1)
+        if (lineREAD.getSize() <= 1)
             break;
         Tree->root = Tree->insert(Tree->root, stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
     }
@@ -365,9 +366,9 @@ AVLDataNode<string>& ReadAvlNodeFromFile(string filename)
     if (filename.find("txt") == string::npos)
         filename = filename + ".txt";
     file.open("BRANCHES\\" + activeBranch2 + "\\TREES\\AVL\\" + filename, ios::in);
-    vector<string> vtLine;
+    CustomVector<string> vtLine;
     READLINE(file, vtLine);
-    //cout << vtLine[0] << endl;
+    cout << vtLine[0] << endl;
     AVLNode->value = vtLine[0];
     while (!file.eof())
     {
@@ -382,11 +383,11 @@ AVLDataNode<string>& ReadAvlNodeFromFile(string filename)
     return *AVLNode;
 }
 
-vector<string> GetTuples(AddressLocation& adr)
+CustomVector<string> GetTuples(AddressLocation& adr)
 {
     fstream file;
     file.open("FilesToREAD\\" + adr.filename);
-    vector<string> tuples;
+    CustomVector<string> tuples;
     if (file.is_open())
     {
         int linenumber = 0;
@@ -400,18 +401,18 @@ vector<string> GetTuples(AddressLocation& adr)
     return tuples;
 }
 
-void DisplayAllTuples(vector<string>& Fields, AVLDataNode<string>* ptr)
+void DisplayAllTuples(CustomVector<string>& Fields, AVLDataNode<string>* ptr)
 {
-    for (int i = 0; i < ptr->AddressList.size() - 1; i++)
+    for (int i = 0; i < ptr->AddressList.getSize() - 1; i++)
     {
-        vector <string > lt = GetTuples(ptr->AddressList[i]);
-        for (int i = 0; i < lt.size(); i++)
+        CustomVector <string> lt = GetTuples(ptr->AddressList[i]);
+        for (int i = 0; i < lt.getSize(); i++)
             cout << left << setw(30) << Fields[i] << ":  " << "                  " << lt[i] << endl;
         cout << "---------------------------------------------------------------------------------\n";
     }
 }
 
-void RangeSearch(AVLDataNode<string>* ptr, string start, string end, vector<string>& fields, string fieldname)
+void RangeSearch(AVLDataNode<string>* ptr, string start, string end, CustomVector<string>& fields, string fieldname)
 {
     if (ptr->value == "NULL")
         return;
@@ -423,7 +424,7 @@ void RangeSearch(AVLDataNode<string>* ptr, string start, string end, vector<stri
         RangeSearch(&ReadAvlNodeFromFile(fieldname + "\\" + ptr->getRightChildAddress()), start, end, fields, fieldname);
 }
 
-AVLDataNode<string>* PointSearch(AVLDataNode<string>* ptr, string key, vector<string>& fields, string fieldname)
+AVLDataNode<string>* PointSearch(AVLDataNode<string>* ptr, string key, CustomVector<string>& fields, string fieldname)
 {
     if (ptr->value == "NULL")
     {
@@ -433,7 +434,7 @@ AVLDataNode<string>* PointSearch(AVLDataNode<string>* ptr, string key, vector<st
 
     if (key == ptr->value)
     {
-        DisplayAllTuples(fields, ptr);
+        //DisplayAllTuples(fields, ptr);
         return ptr;
     }
 
@@ -455,15 +456,15 @@ string UpdatedTuple(string tup, string old, string newval)
 template<typename T>
 void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string old, string newVal)
 {
-    vector<string> tuples;
-    for (size_t i = 0; i < ptr->AddressList.size(); ++i)
+    CustomVector<string> tuples;
+    for (size_t i = 0; i < ptr->AddressList.getSize(); ++i)
     {
         string str = "";
-        vector<string> temp = GetTuples(ptr->AddressList[i]);
+        CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
         if (toLower(temp[index]) != toLower(old))
             continue;
 
-        for (size_t j = 0; j < temp.size(); ++j)
+        for (size_t j = 0; j < temp.getSize(); ++j)
             str += "," + temp[j];
 
         str.erase(0, 1);
@@ -472,7 +473,7 @@ void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string old, string newVal
     cout << "DONE" << endl;
 
     stringstream sstream;
-    for (int i = 0; i < ptr->AddressList.size(); ++i)
+    for (int i = 0; i < ptr->AddressList.getSize(); ++i)
     {
         fstream file;
         string line = "";
@@ -499,7 +500,7 @@ void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string old, string newVal
     }
 }
 
-void UpdateTuple(AVL<string>*& Avl, vector<string> fields)
+void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields)
 {
     string input = "";
     cin.ignore();
@@ -507,7 +508,7 @@ void UpdateTuple(AVL<string>*& Avl, vector<string> fields)
     getline(cin, input, '\n');
     stringstream sstream(input);
 
-    vector<string> tags;
+    CustomVector<string> tags;
     while (getline(sstream, input, ','))
     {
         if (input[0] == ' ')
@@ -515,7 +516,7 @@ void UpdateTuple(AVL<string>*& Avl, vector<string> fields)
         tags.push_back(input);
     }
 
-    if (tags.size() < 3)
+    if (tags.getSize() < 3)
     {
         cout << "INCORRECT QUERY" << endl;
         return;
@@ -536,7 +537,7 @@ void UpdateTuple(AVL<string>*& Avl, vector<string> fields)
     }
 }
 
-void UpdateTuple(AVL<int>*& Avl, vector<string> fields)
+void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
 {
     string input = "";
     cin.ignore();
@@ -544,7 +545,7 @@ void UpdateTuple(AVL<int>*& Avl, vector<string> fields)
     getline(cin, input, '\n');
     stringstream sstream(input);
 
-    vector<string> tags;
+    CustomVector<string> tags;
     while (getline(sstream, input, ','))
     {
         if (input[0] == ' ')
@@ -552,7 +553,7 @@ void UpdateTuple(AVL<int>*& Avl, vector<string> fields)
         tags.push_back(input);
     }
 
-    if (tags.size() < 3)
+    if (tags.getSize() < 3)
     {
         cout << "INCORRECT QUERY" << endl;
         return;
@@ -574,7 +575,7 @@ void UpdateTuple(AVL<int>*& Avl, vector<string> fields)
     }
 }
 
-void UpdateTuple(AVL<double>*& Avl, vector<string> fields)
+void UpdateTuple(AVL<double>*& Avl, CustomVector<string> fields)
 {
     string input = "";
     cin.ignore();
@@ -582,7 +583,7 @@ void UpdateTuple(AVL<double>*& Avl, vector<string> fields)
     getline(cin, input, '\n');
     stringstream sstream(input);
 
-    vector<string> tags;
+    CustomVector<string> tags;
     while (getline(sstream, input, ','))
     {
         if (input[0] == ' ')
@@ -590,7 +591,7 @@ void UpdateTuple(AVL<double>*& Avl, vector<string> fields)
         tags.push_back(input);
     }
 
-    if (tags.size() < 4)
+    if (tags.getSize() < 4)
     {
         cout << "INCORRECT QUERY" << endl;
         return;
@@ -610,19 +611,19 @@ void UpdateTuple(AVL<double>*& Avl, vector<string> fields)
 template<typename T>
 void RemoveTupleFromFile(AVLDataNode<T>* ptr)
 {
-    vector<string> tuples;
-    for (size_t i = 0; i < ptr->AddressList.size(); i++)
+    CustomVector<string> tuples;
+    for (size_t i = 0; i < ptr->AddressList.getSize(); i++)
     {
         string  str = "";
-        vector<string> temp = GetTuples(ptr->AddressList[i]);
-        for (size_t j = 0; j < temp.size(); j++)
+        CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
+        for (size_t j = 0; j < temp.getSize(); j++)
             str += "," + temp[j];
         str.erase(0, 1);
         //cout << str << endl;
         tuples.push_back(str);
     }
     stringstream sstream;
-    for (size_t i = 0; i < ptr->AddressList.size(); i++)
+    for (size_t i = 0; i < ptr->AddressList.getSize(); i++)
     {
         fstream file;
         string line = "";

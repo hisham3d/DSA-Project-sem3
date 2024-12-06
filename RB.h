@@ -25,7 +25,7 @@ public:
         parent = NULL;
     }
 
-    vector <AddressLocation> AddressList;
+    CustomVector <AddressLocation> AddressList;
 
     RBDataNode(T v, string filename, string linenumber, string counter)
     {
@@ -40,13 +40,13 @@ public:
     string getLeftchildAddress()
     {
         // last index stores the left child 
-        return AddressList[AddressList.size() - 1].filename;
+        return AddressList[AddressList.getSize() - 1].filename;
     }
 
     string getRightChildAddress()
     {
         // last index stores the right child
-        return AddressList[AddressList.size() - 1].linenumber;
+        return AddressList[AddressList.getSize() - 1].linenumber;
     }
 };
 
@@ -55,28 +55,28 @@ class RBSUBNODE
 {
 public:
     T val;
-    vector <AddressLocation> AddressList;
+    CustomVector <AddressLocation> AddressList;
     void print()
     {
-        for (int i = 0; i < AddressList.size(); i++)
+        for (int i = 0; i < AddressList.getSize(); i++)
             cout << AddressList[i].filename << "  " << AddressList[i].linenumber << endl;
     }
 
     void printinffile(fstream& file)
     {
-        for (int i = 0; i < AddressList.size(); i++)
+        for (int i = 0; i < AddressList.getSize(); i++)
             file << AddressList[i].filename << "\n" << AddressList[i].linenumber << endl;
     }
 };
 
 template<typename T>
-void DisplayAllTuples(vector<string>& Fields, RBSUBNODE <T>& ptr)
+void DisplayAllTuples(CustomVector<string>& Fields, RBSUBNODE <T>& ptr)
 {
-    for (int i = 0; i < ptr.AddressList.size(); i++)
+    for (int i = 0; i < ptr.AddressList.getSize(); i++)
     {
-        vector <string > lt = GetTuples(ptr.AddressList[i]);
+        CustomVector<string> lt = GetTuples(ptr.AddressList[i]);
 
-        for (int i = 0; i < lt.size(); i++)
+        for (int i = 0; i < lt.getSize(); i++)
             cout << left << setw(30) << Fields[i] << ":  " << "                  " << lt[i] << endl;
 
         cout << "---------------------------------------------------------------------------------\n";
@@ -102,7 +102,7 @@ public:
     void GetNodeInfo(fstream& f, RBDataNode<T>* R)
     {
         f << R->value << endl << R->color << endl;
-        for (size_t i = 0; i < R->AddressList.size(); i++)
+        for (size_t i = 0; i < R->AddressList.getSize(); i++)
             f << R->AddressList[i].filename << endl << R->AddressList[i].linenumber << endl;
         f << GetNodeFilename(R->left) << endl;
         f << GetNodeFilename(R->right);
@@ -664,8 +664,8 @@ public:
 RedBlackTree<string>& stringCreateRBTree(int index, string typee, string branch)
 {
     activeBranch3 = branch;
-    RedBlackTree<string>* Tree = new  RedBlackTree<string>();
-    vector<string> lineREAD;
+    RedBlackTree<string>* Tree = new RedBlackTree<string>();
+    CustomVector<string> lineREAD;
 
     fstream file;
     file.open("FilesToREAD\\" + fileName, ios::in);
@@ -676,7 +676,7 @@ RedBlackTree<string>& stringCreateRBTree(int index, string typee, string branch)
     {
         lineREAD.resize(0);
         READLINE(file, lineREAD);
-        if (lineREAD.size() <= 1)
+        if (lineREAD.getSize() <= 1)
             break;
         Tree->insert(lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
     }
@@ -693,7 +693,7 @@ RedBlackTree<int>& intCreateRBTree(int index, string typee, string branch)
 
     fstream file;
     file.open("FilesToREAD\\" + fileName, ios::in);
-    vector<string> lineREAD;
+    CustomVector<string> lineREAD;
     READLINE(file, lineREAD);
 
     int lineNumber = 1;
@@ -701,7 +701,7 @@ RedBlackTree<int>& intCreateRBTree(int index, string typee, string branch)
     {
         lineREAD.resize(0);
         READLINE(file, lineREAD);
-        if (lineREAD.size() <= 1)
+        if (lineREAD.getSize() <= 1)
             break;
         Tree->insert(stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
     }
@@ -717,7 +717,7 @@ RedBlackTree<double>& doubleCreateRBTree(int index, string typee, string branch)
 
     fstream file;
     file.open("FilesToREAD\\" + fileName, ios::in);
-    vector<string> lineREAD;
+    CustomVector<string> lineREAD;
     READLINE(file, lineREAD);
 
     int lineNumber = 1;
@@ -726,7 +726,7 @@ RedBlackTree<double>& doubleCreateRBTree(int index, string typee, string branch)
         lineREAD.resize(0);
         READLINE(file, lineREAD);
 
-        if (lineREAD.size() <= 1)
+        if (lineREAD.getSize() <= 1)
             break;
 
         Tree->insert(stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
@@ -753,7 +753,7 @@ RBDataNode<string>& ReadRBNodeFromFile(string filename)
         filename = filename + ".txt";
 
     file.open("BRANCHES\\" + activeBranch3 + "\\TREES\\RB\\" + filename, ios::in);
-    vector<string> vtLine;
+    CustomVector<string> vtLine;
     READLINE(file, vtLine);
     //cout << vtLine[0] << endl;
     RBNode->value = vtLine[0];
@@ -774,20 +774,20 @@ RBDataNode<string>& ReadRBNodeFromFile(string filename)
     return *RBNode;
 }
 
-void DisplayAllTuples(vector<string>& Fields, RBDataNode<string>* ptr)
+void DisplayAllTuples(CustomVector<string>& Fields, RBDataNode<string>* ptr)
 {
-    for (int i = 0; i < ptr->AddressList.size() - 1; i++)
+    for (int i = 0; i < ptr->AddressList.getSize() - 1; i++)
     {
-        vector <string> lt = GetTuples(ptr->AddressList[i]);
+        CustomVector<string> lt = GetTuples(ptr->AddressList[i]);
 
-        for (int i = 0; i < lt.size(); i++)
+        for (int i = 0; i < lt.getSize(); i++)
             cout << left << setw(30) << Fields[i] << ":  " << "                  " << lt[i] << endl;
 
         cout << "---------------------------------------------------------------------------------\n";
     }
 }
 
-RBDataNode<string>* PointSearch(RBDataNode<string>* ptr, string key, vector<string>& fields, string fieldname)
+RBDataNode<string>* PointSearch(RBDataNode<string>* ptr, string key, CustomVector<string>& fields, string fieldname)
 {
     if (ptr->value == "NULL")
     {
@@ -808,7 +808,7 @@ RBDataNode<string>* PointSearch(RBDataNode<string>* ptr, string key, vector<stri
         return PointSearch(&ReadRBNodeFromFile(fieldname + "\\" + ptr->getRightChildAddress()), key, fields, fieldname);
 }
 
-void RangeSearch(RBDataNode<string>* ptr, string start, string end, vector<string>& fields, string fieldname)
+void RangeSearch(RBDataNode<string>* ptr, string start, string end, CustomVector<string>& fields, string fieldname)
 {
     if (ptr->value == "NULL")
         return;
@@ -826,13 +826,13 @@ void RangeSearch(RBDataNode<string>* ptr, string start, string end, vector<strin
 template<typename T>
 void RemoveTupleFromFile(RBDataNode<T>* ptr)
 {
-    vector<string> tuples;
-    for (size_t i = 0; i < ptr->AddressList.size(); i++)
+    CustomVector<string> tuples;
+    for (size_t i = 0; i < ptr->AddressList.getSize(); i++)
     {
         string str = "";
-        vector<string> temp = GetTuples(ptr->AddressList[i]);
+        CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
 
-        for (size_t j = 0; j < temp.size(); j++)
+        for (size_t j = 0; j < temp.getSize(); j++)
             str += "," + temp[j];
 
         str.erase(0, 1);
@@ -842,7 +842,7 @@ void RemoveTupleFromFile(RBDataNode<T>* ptr)
 
     stringstream sstream;
 
-    for (int i = 0; i < ptr->AddressList.size(); i++)
+    for (int i = 0; i < ptr->AddressList.getSize(); i++)
     {
         fstream file;
         string line = "";
@@ -884,14 +884,14 @@ void DeleteTuple(RedBlackTree<T>* RB, int index, T val)
 template<typename T>
 void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string old, string newVal)
 {
-    vector<string> tuples;
-    for (size_t i = 0; i < ptr->AddressList.size(); i++)
+    CustomVector<string> tuples;
+    for (size_t i = 0; i < ptr->AddressList.getSize(); i++)
     {
         string str = "";
-        vector<string> temp = GetTuples(ptr->AddressList[i]);
+        CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
         if (toLower(temp[index]) != toLower(old))
             continue;
-        for (size_t j = 0; j < temp.size(); j++)
+        for (size_t j = 0; j < temp.getSize(); j++)
             str += "," + temp[j];
         str.erase(0, 1);
         tuples.push_back(str);
@@ -899,7 +899,7 @@ void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string old, string newVal)
 
     stringstream sstream;
 
-    for (int i = 0; i < ptr->AddressList.size(); i++)
+    for (int i = 0; i < ptr->AddressList.getSize(); i++)
     {
         fstream file;
         string line = "";
@@ -920,7 +920,7 @@ void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string old, string newVal)
     }
 }
 
-void UpdateTuple(RedBlackTree<int>*& RB, vector<string> fields)
+void UpdateTuple(RedBlackTree<int>*& RB, CustomVector<string> fields)
 {
     string input = "";
     cin.ignore();
@@ -929,7 +929,7 @@ void UpdateTuple(RedBlackTree<int>*& RB, vector<string> fields)
     stringstream sstream;
     sstream << input;
     sstream >> input;
-    vector<string> tags;
+    CustomVector<string> tags;
     while (getline(sstream, input, ','))
     {
         if (input[0] == ' ')
@@ -937,7 +937,7 @@ void UpdateTuple(RedBlackTree<int>*& RB, vector<string> fields)
         tags.push_back(input);
     }
 
-    if (tags.size() < 4)
+    if (tags.getSize() < 4)
     {
         cout << "INCORRECT QUERRY\n";
         return;
@@ -958,14 +958,14 @@ void UpdateTuple(RedBlackTree<int>*& RB, vector<string> fields)
     }
 }
 
-void UpdateTuple(RedBlackTree<double>*& RB, vector<string> fields)
+void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<string> fields)
 {
     string input = "";
     cin.ignore();
     cout << "\nEnter the update query: ";
     getline(cin, input, '\n');
     stringstream sstream(input);
-    vector<string> tags;
+    CustomVector<string> tags;
     while (getline(sstream, input, ','))
     {
         if (input[0] == ' ')
@@ -973,7 +973,7 @@ void UpdateTuple(RedBlackTree<double>*& RB, vector<string> fields)
         tags.push_back(input);
     }
 
-    if (tags.size() < 4)
+    if (tags.getSize() < 4)
     {
         cout << "INCORRECT QUERRY\n";
         return;
@@ -993,7 +993,7 @@ void UpdateTuple(RedBlackTree<double>*& RB, vector<string> fields)
     }
 }
 
-void UpdateTuple(RedBlackTree<string>*& RB, vector<string> fields)
+void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields)
 {
     string input = "";
     cin.ignore();
@@ -1003,7 +1003,7 @@ void UpdateTuple(RedBlackTree<string>*& RB, vector<string> fields)
     sstream << input;
     sstream >> input;
     cout << input << endl;
-    vector<string> tags;
+    CustomVector<string> tags;
     while (getline(sstream, input, ','))
     {
         if (input[0] == ' ')
@@ -1011,7 +1011,7 @@ void UpdateTuple(RedBlackTree<string>*& RB, vector<string> fields)
         tags.push_back(input);
     }
 
-    if (tags.size() < 4)
+    if (tags.getSize() < 4)
     {
         cout << "INCORRECT QUERRY\n";
         return;
