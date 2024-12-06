@@ -345,7 +345,7 @@ int  BTree<T>::findIndex(BTREEDataNode<T>* x, T k)
 void copyVect(CustomVector<AddressLocation>& vt1, CustomVector<AddressLocation>& vt2)
 {
 	vt1.resize(0);
-	for (size_t i = 0; i < vt2.getSize(); ++i)
+	for (int i = 0; i < vt2.getSize(); ++i)
 	{
 		string s1 = vt2[i].filename;
 		string s2 = vt2[i].linenumber;
@@ -624,7 +624,7 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 	int i = 0;
 
 	// Iterate through ptr->AddressList using an index-based for loop
-	for (size_t i = 0; i < ptr->AddressList.getSize(); ++i)
+	for (int i = 0; i < ptr->AddressList.getSize(); ++i)
 	{
 		string str = "";
 		CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
@@ -632,7 +632,7 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 			continue;
 
 		indexis.insert(i);
-		for (size_t j = 0; j < temp.getSize(); ++j)
+		for (int j = 0; j < temp.getSize(); ++j)
 			str += "," + temp[j];
 
 		str.erase(0, 1);
@@ -640,7 +640,7 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 	}
 
 	stringstream sstream;
-	for (size_t i = 0; i < ptr->AddressList.getSize(); ++i)
+	for (int i = 0; i < ptr->AddressList.getSize(); ++i)
 	{
 		fstream file;
 		string line = "";
@@ -659,7 +659,7 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 	}
 
 	CustomVector<AddressLocation> tempo;
-	for (size_t i = 0; i < ptr->AddressList.getSize(); ++i)
+	for (int i = 0; i < ptr->AddressList.getSize(); ++i)
 	{
 		if (indexis.find(i) != indexis.end())
 			continue;
@@ -671,7 +671,7 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 void DeleteTuple(BTree<int>* BT, CustomVector<string> fields)
 {
 	string input = "";
-	cout << "\nEnter Delete Query (Delete id, state , michigan): ";
+	cout << "\nEnter Delete Query: ";
 	cin.ignore();
 	getline(cin, input, '\n');
 	stringstream sstream;
@@ -716,7 +716,7 @@ void DeleteTuple(BTree<int>* BT, CustomVector<string> fields)
 void DeleteTuple(BTree<string>* BT, CustomVector<string> fields)
 {
 	string input = "";
-	cout << "\nEnter Delete Query (Delete id, state , michigan): ";
+	cout << "\nEnter Delete Query: ";
 	cin.ignore();
 	getline(cin, input, '\n');
 	stringstream sstream;
@@ -762,7 +762,7 @@ void DeleteTuple(BTree<string>* BT, CustomVector<string> fields)
 void DeleteTuple(BTree<double>* BT, CustomVector<string> fields)
 {
 	string input = "";
-	cout << "\nEnter Delete Query (Delete id, state , michigan): ";
+	cout << "\nEnter Delete Query: ";
 	cin.ignore();
 	getline(cin, input, '\n');
 	stringstream sstream;

@@ -102,7 +102,7 @@ public:
     void GetNodeInfo(fstream& f, RBDataNode<T>* R)
     {
         f << R->value << endl << R->color << endl;
-        for (size_t i = 0; i < R->AddressList.getSize(); i++)
+        for (int i = 0; i < R->AddressList.getSize(); i++)
             f << R->AddressList[i].filename << endl << R->AddressList[i].linenumber << endl;
         f << GetNodeFilename(R->left) << endl;
         f << GetNodeFilename(R->right);
@@ -827,12 +827,12 @@ template<typename T>
 void RemoveTupleFromFile(RBDataNode<T>* ptr)
 {
     CustomVector<string> tuples;
-    for (size_t i = 0; i < ptr->AddressList.getSize(); i++)
+    for (int i = 0; i < ptr->AddressList.getSize(); i++)
     {
         string str = "";
         CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
 
-        for (size_t j = 0; j < temp.getSize(); j++)
+        for (int j = 0; j < temp.getSize(); j++)
             str += "," + temp[j];
 
         str.erase(0, 1);
@@ -882,152 +882,138 @@ void DeleteTuple(RedBlackTree<T>* RB, int index, T val)
 }
 
 template<typename T>
-void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string old, string newVal)
-{
-    CustomVector<string> tuples;
-    for (size_t i = 0; i < ptr->AddressList.getSize(); i++)
-    {
-        string str = "";
-        CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
-        if (toLower(temp[index]) != toLower(old))
-            continue;
-        for (size_t j = 0; j < temp.getSize(); j++)
-            str += "," + temp[j];
-        str.erase(0, 1);
-        tuples.push_back(str);
+void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string newVal, int fieldIndex) {
+    string path = "FilesToREAD\\" + ptr->AddressList[0].filename;
+
+    // read all rows into vector
+    fstream file(path, ios::in);
+    CustomVector<string> rows;
+    string line;
+    while (getline(file, line)) {
+        rows.push_back(line);
+    }
+    file.close();
+
+    CustomVector<string> fields = split(rows[index], ','); // split row into field columns
+    if (fieldIndex >= 0 && fieldIndex < fields.getSize()) {
+        fields[fieldIndex] = newVal; // Update the field value
+        rows[index] = join(fields, ','); // Rejoin fields into the updated row
     }
 
-    stringstream sstream;
-
-    for (int i = 0; i < ptr->AddressList.getSize(); i++)
-    {
-        fstream file;
-        string line = "";
-        string path = "FilesToREAD\\" + ptr->AddressList[0].filename;
-        file.open(path, ios::in);
-        while (getline(file, line, '\n'))
-        {
-            int res = getFieldIndex(tuples, line);
-            if (res != i)
-                sstream << line << endl;
-            else
-                sstream << UpdatedTuple(tuples[i], old, newVal) << endl;
-        }
-        file.close();
-        file.open(path, ios::out);
-        file << sstream.rdbuf() << endl;
-        file.close();
+    file.open(path, ios::out | ios::trunc);
+    for (const string& row : rows) {
+        file << row << endl;
     }
+    file.close();
+
+    cout << "Tuple successfully updated." << endl;
 }
 
-void UpdateTuple(RedBlackTree<int>*& RB, CustomVector<string> fields)
-{
+void UpdateTuple(RedBlackTree<int>*& RB, CustomVector<string> fields) {
+    int fieldIndex = getFieldIndex(fields, RB->fieldname);
+
     string input = "";
     cin.ignore();
-    cout << "Enter the update querry\n";
+    cout << "\nEnter the update query (Serial #, Old value, New value): ";
     getline(cin, input, '\n');
-    stringstream sstream;
-    sstream << input;
-    sstream >> input;
+    stringstream sstream(input);
+
     CustomVector<string> tags;
-    while (getline(sstream, input, ','))
-    {
-        if (input[0] == ' ')
+    while (getline(sstream, input, ',')) {
+        if (input[0] == ' ') {
             input.erase(0, 1);
+        }
         tags.push_back(input);
     }
 
-    if (tags.getSize() < 4)
-    {
-        cout << "INCORRECT QUERRY\n";
+    if (tags.getSize() < 3) {
+        cout << "INCORRECT QUERY" << endl;
         return;
     }
 
     RBDataNode<int>* toDelete = RB->search(RB->root, stoi(tags[0]));
-    cout << toDelete->value;
-
-    if (toDelete == NULL)
+    if (toDelete == NULL) {
+        cout << "Node not found" << endl;
         return;
-
-    UpdateTupleInfile(toDelete, getFieldIndex(fields, tags[1]), tags[2], tags[3]);
-
-    if (toLower(tags[1]) == toLower(RB->fieldname))
-    {
-        RB = &intCreateRBTree(getFieldIndex(fields, RB->fieldname), "int", activeBranch3);
-        RB->CreateTreeFile(RB->root);
     }
+
+    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[2], fieldIndex);
+
+    RB = &intCreateRBTree(getFieldIndex(fields, RB->fieldname), "int", activeBranch3);
+    RB->fieldname = fields[fieldIndex];
+    RB->CreateTreeFile(RB->root);
+    cout << "Tree created again with updated data." << endl;
 }
 
-void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<string> fields)
-{
+void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields) {
+    int fieldIndex = getFieldIndex(fields, RB->fieldname);
+
     string input = "";
     cin.ignore();
-    cout << "\nEnter the update query: ";
+    cout << "\nEnter the update query (Serial #, Old value, New value): ";
     getline(cin, input, '\n');
     stringstream sstream(input);
+
     CustomVector<string> tags;
-    while (getline(sstream, input, ','))
-    {
-        if (input[0] == ' ')
+    while (getline(sstream, input, ',')) {
+        if (input[0] == ' ') {
             input.erase(0, 1);
+        }
         tags.push_back(input);
     }
 
-    if (tags.getSize() < 4)
-    {
-        cout << "INCORRECT QUERRY\n";
+    if (tags.getSize() < 3) {
+        cout << "INCORRECT QUERY" << endl;
+        return;
+    }
+
+    RBDataNode<string>* toDelete = RB->search(RB->root, tags[0]);
+    if (toDelete == NULL) {
+        cout << "Node not found" << endl;
+        return;
+    }
+
+    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[2], fieldIndex);
+
+    RB = &stringCreateRBTree(getFieldIndex(fields, RB->fieldname), "string", activeBranch3);
+    RB->fieldname = fields[fieldIndex];
+    RB->CreateTreeFile(RB->root);
+    cout << "Tree created again with updated data." << endl;
+}
+
+
+void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<string> fields) {
+    int fieldIndex = getFieldIndex(fields, RB->fieldname);
+
+    string input = "";
+    cin.ignore();
+    cout << "\nEnter the update query (Serial #, Old value, New value): ";
+    getline(cin, input, '\n');
+    stringstream sstream(input);
+
+    CustomVector<string> tags;
+    while (getline(sstream, input, ',')) {
+        if (input[0] == ' ') {
+            input.erase(0, 1);
+        }
+        tags.push_back(input);
+    }
+
+    if (tags.getSize() < 3) {
+        cout << "INCORRECT QUERY" << endl;
         return;
     }
 
     RBDataNode<double>* toDelete = RB->search(RB->root, stod(tags[0]));
-    cout << toDelete->value;
-
-    if (toDelete == NULL)
-        return;
-
-    UpdateTupleInfile(toDelete, getFieldIndex(fields, tags[1]), tags[2], tags[3]);
-    if (toLower(tags[1]) == toLower(RB->fieldname))
-    {
-        RB = &doubleCreateRBTree(getFieldIndex(fields, RB->fieldname), "int", activeBranch3);
-        RB->CreateTreeFile(RB->root);
-    }
-}
-
-void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields)
-{
-    string input = "";
-    cin.ignore();
-    cout << "Enter the update querry\n";
-    getline(cin, input, '\n');
-    stringstream sstream;
-    sstream << input;
-    sstream >> input;
-    cout << input << endl;
-    CustomVector<string> tags;
-    while (getline(sstream, input, ','))
-    {
-        if (input[0] == ' ')
-            input.erase(0, 1);
-        tags.push_back(input);
-    }
-
-    if (tags.getSize() < 4)
-    {
-        cout << "INCORRECT QUERRY\n";
+    if (toDelete == NULL) {
+        cout << "Node not found" << endl;
         return;
     }
 
-    RBDataNode<string>* toDelete = RB->search(RB->root, (tags[0]));
-    cout << toDelete->value;
+    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[2], fieldIndex);
 
-    if (toDelete == NULL)
-        return;
-
-    UpdateTupleInfile(toDelete, getFieldIndex(fields, tags[1]), tags[2], tags[3]);
-
-    if (toLower(tags[1]) == toLower(RB->fieldname))
-    {
-        RB = &stringCreateRBTree(getFieldIndex(fields, RB->fieldname), "int", activeBranch3);
-        RB->CreateTreeFile(RB->root);
-    }
+    RB = &doubleCreateRBTree(getFieldIndex(fields, RB->fieldname), "double", activeBranch3);
+    RB->fieldname = fields[fieldIndex];
+    RB->CreateTreeFile(RB->root);
+    cout << "Tree created again with updated data." << endl;
 }

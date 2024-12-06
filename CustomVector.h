@@ -7,13 +7,13 @@ template <typename T>
 class CustomVector {
 private:
     T* data;
-    size_t capacity;
-    size_t size;
+    int capacity;
+    int size;
 
     void expand() {
         capacity = (capacity == 0) ? 1 : capacity * 2;
         T* newData = new T[capacity];
-        for (size_t i = 0; i < size; ++i) {
+        for (int i = 0; i < size; ++i) {
             newData[i] = std::move(data[i]); // Use move semantics to avoid copying
         }
         delete[] data;
@@ -29,7 +29,7 @@ public:
 
     CustomVector(const CustomVector& other)
         : data(new T[other.capacity]), capacity(other.capacity), size(other.size) {
-        for (size_t i = 0; i < size; ++i) {
+        for (int i = 0; i < size; ++i) {
             data[i] = other.data[i];
         }
     }
@@ -41,22 +41,22 @@ public:
         data[size++] = value;
     }
 
-    size_t getSize() const {
+    int getSize() const {
         return size;
     }
 
-    size_t getCapacity() const {
+    int getCapacity() const {
         return capacity;
     }
 
-    T& operator[](size_t index) {
+    T& operator[](int index) {
         if (index >= size) {
             throw std::out_of_range("Index out of range");
         }
         return data[index];
     }
 
-    const T& operator[](size_t index) const {
+    const T& operator[](int index) const {
         if (index >= size) {
             throw std::out_of_range("Index out of range");
         }
@@ -67,13 +67,13 @@ public:
         size = 0;
     }
 
-    void resize(size_t newSize, const T& defaultValue = T()) {
+    void resize(int newSize, const T& defaultValue = T()) {
         if (newSize > capacity) {
             while (capacity < newSize) {
                 expand();
             }
         }
-        for (size_t i = size; i < newSize; ++i) {
+        for (int i = size; i < newSize; ++i) {
             data[i] = defaultValue;
         }
         size = newSize;

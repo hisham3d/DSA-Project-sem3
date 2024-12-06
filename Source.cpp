@@ -153,7 +153,7 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, CustomVector<string>& Fields)
 	if (option == 2)
 	{
 		T obj;
-		cout << "\nENTER THE VALUE YOU WANT TO DELETE : ";
+		cout << "\nENTER THE VALUE YOU WANT TO DELETE: ";
 		cin >> obj;
 		DeleteTuple<T>(IRBTREE, getFieldIndex(Fields, IRBTREE->fieldname), obj);
 	}
@@ -162,7 +162,7 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, CustomVector<string>& Fields)
 	{
 		string obj;
 		cin.ignore();
-		cout << "\nENTER THE INDEX YOU WANT TO SEARCH : ";
+		cout << "\nENTER THE INDEX YOU WANT TO SEARCH: ";
 		getline(cin, obj, '\n');
 		PointSearch(&ReadRBNodeFromFile(IRBTREE->fieldname + "\\" + IRBTREE->GetNodeFilename(IRBTREE->root)), obj, Fields, IRBTREE->fieldname);
 	}
@@ -171,10 +171,10 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, CustomVector<string>& Fields)
 	{
 		string n1, n2;
 		cin.ignore();
-		cout << "\nENTER THE STARTING VALUE FOR SEARCH : ";
+		cout << "\nENTER THE STARTING VALUE FOR SEARCH: ";
 		getline(cin, n1, '\n');
 		cin.ignore();
-		cout << "\nENTER THE END VALUE FOR SEARCH : ";
+		cout << "\nENTER THE END VALUE FOR SEARCH: ";
 		getline(cin, n2, '\n');
 		RangeSearch(&ReadRBNodeFromFile(IRBTREE->fieldname + "\\" + IRBTREE->GetNodeFilename(IRBTREE->root)), n1, n2, Fields, IRBTREE->fieldname);
 	}
@@ -195,7 +195,7 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
 
-		cout << "Enter your choice : ";
+		cout << "Enter your choice: ";
 		cin >> choice;
 
 		if (DataTypes[choice - 1] == "string")
@@ -375,8 +375,8 @@ int main()
 	AllocateDataTypes(DataTypes, Entries);
 
 	cout << "------------------- BRANCHES --------------------" << endl;
-	displayBranches();
-	activeBranch = branchSelection();
+	activeBranch = "main";
+	activeBranch = branchSelection(activeBranch);
 
 
 	int treechoice = mainmenu();

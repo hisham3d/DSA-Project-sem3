@@ -454,96 +454,42 @@ string UpdatedTuple(string tup, string old, string newval)
 }
 
 template<typename T>
-void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string old, string newVal)
-{
-    CustomVector<string> tuples;
-    for (size_t i = 0; i < ptr->AddressList.getSize(); ++i)
-    {
-        string str = "";
-        CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
-        if (toLower(temp[index]) != toLower(old))
-            continue;
+void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string newVal, int fieldIndex) {
+    //index--;
 
-        for (size_t j = 0; j < temp.getSize(); ++j)
-            str += "," + temp[j];
+    // Get the file path from the node's AddressList
+    string path = "FilesToREAD\\" + ptr->AddressList[0].filename;
 
-        str.erase(0, 1);
-        tuples.push_back(str);
+    fstream file(path, ios::in);
+    CustomVector<string> rows;
+    string line;
+    while (getline(file, line)) {
+        rows.push_back(line);
     }
-    cout << "DONE" << endl;
+    file.close();
 
-    stringstream sstream;
-    for (int i = 0; i < ptr->AddressList.getSize(); ++i)
-    {
-        fstream file;
-        string line = "";
-        string path = "FilesToREAD\\" + ptr->AddressList[0].filename;
-        file.open(path, ios::in);
-        while (getline(file, line, '\n'))
-        {
-            int res = getFieldIndex(tuples, line);
-            if (res != i)
-            {
-                sstream << line << endl;
-            }
-
-            else
-            {
-                sstream << UpdatedTuple(tuples[i], old, newVal) << endl;
-                cout << "Tuple updated" << endl;
-            }
-        }
-        file.close();
-        file.open(path, ios::out);
-        file << sstream.rdbuf() << endl;
-        file.close();
+    CustomVector<string> fields = split(rows[index], ','); // split row into field columns
+    if (fieldIndex >= 0 && fieldIndex < fields.getSize()) {
+        fields[fieldIndex] = newVal; // update the field
+        rows[index] = join(fields, ','); // rejoin the updated fields into a row
     }
+
+    file.open(path, ios::out | ios::trunc);
+    for (const string& row : rows) {
+        file << row << endl;
+    }
+    file.close();
+
+    cout << "Tuple successfully updated." << endl;
 }
-
-void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields)
-{
-    string input = "";
-    cin.ignore();
-    cout << "\nEnter the update query: ";
-    getline(cin, input, '\n');
-    stringstream sstream(input);
-
-    CustomVector<string> tags;
-    while (getline(sstream, input, ','))
-    {
-        if (input[0] == ' ')
-            input.erase(0, 1);
-        tags.push_back(input);
-    }
-
-    if (tags.getSize() < 3)
-    {
-        cout << "INCORRECT QUERY" << endl;
-        return;
-    }
-
-    AVLDataNode<string>* toDelete = Avl->recursiveSearch(Avl->root, tags[1]);
-    if (toDelete == NULL)
-    {
-        return;
-    }
-    cout << toDelete->value;
-    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[1], tags[2]);
-    if (toLower(tags[1]) == toLower(Avl->fieldname))
-    {
-        cout << "IF CONDITION" << endl;
-        Avl = &stringCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "string", activeBranch2);
-        Avl->CreateTreeFile(Avl->root);
-    }
-}
-
-//AVL<int>*& Avl, CustomVector<string>& fields, string fieldname
 
 void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
 {
+    int fieldIndex = getFieldIndex(fields, Avl->fieldname);
+
     string input = "";
     cin.ignore();
-    cout << "\nEnter the update query: ";
+    cout << "\nEnter the update query (Serial #, Old value, New value): ";
     getline(cin, input, '\n');
     stringstream sstream(input);
 
@@ -564,68 +510,104 @@ void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
     AVLDataNode<int>* toDelete = Avl->recursiveSearch(Avl->root, stoi(tags[1]));
     if (toDelete == NULL)
     {
-        cout << "Tuple not found" << endl;
+        cout << "Node not found" << endl;
         return;
     }
 
-    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[1], tags[2]);
-    if (toLower(tags[1]) == toLower(Avl->fieldname))
-    {
-        Avl = &intCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "int", activeBranch2);
-        Avl->CreateTreeFile(Avl->root);
-        cout << "Tree created again" << endl;
-    }
+    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[2], getFieldIndex(fields, Avl->fieldname));
+
+    Avl = &intCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "int", activeBranch2);
+    Avl->fieldname = fields[fieldIndex];
+    Avl->CreateTreeFile(Avl->root);
+    cout << "Tree created again with updated data." << endl;
 }
 
-void UpdateTuple(AVL<double>*& Avl, CustomVector<string> fields)
-{
+void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields) {
+    int fieldIndex = getFieldIndex(fields, Avl->fieldname);
+
     string input = "";
     cin.ignore();
-    cout << "\nEnter the update query: ";
+    cout << "\nEnter the update query (Serial #, Old value, New value): ";
     getline(cin, input, '\n');
     stringstream sstream(input);
 
     CustomVector<string> tags;
-    while (getline(sstream, input, ','))
-    {
+    while (getline(sstream, input, ',')) {
         if (input[0] == ' ')
             input.erase(0, 1);
         tags.push_back(input);
     }
 
-    if (tags.getSize() < 4)
-    {
+    if (tags.getSize() < 3) {
         cout << "INCORRECT QUERY" << endl;
         return;
     }
-    AVLDataNode<double>* toDelete = Avl->recursiveSearch(Avl->root, stod(tags[0]));
-    cout << toDelete->value;
-    if (toDelete == NULL)
+
+    AVLDataNode<string>* toDelete = Avl->recursiveSearch(Avl->root, tags[1]);
+    if (toDelete == NULL) {
+        cout << "Node not found" << endl;
         return;
-    UpdateTupleInfile(toDelete, getFieldIndex(fields, tags[1]), tags[2], tags[3]);
-    if (toLower(tags[1]) == toLower(Avl->fieldname))
-    {
-        Avl = &doubleCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "double", activeBranch2);
-        Avl->CreateTreeFile(Avl->root);
     }
+
+    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[2], getFieldIndex(fields, Avl->fieldname));
+
+    Avl = &stringCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "string", activeBranch2);
+    Avl->fieldname = fields[fieldIndex];
+    Avl->CreateTreeFile(Avl->root);
+    cout << "Tree created again with updated data." << endl;
+}
+
+void UpdateTuple(AVL<double>*& Avl, CustomVector<string> fields) {
+    int fieldIndex = getFieldIndex(fields, Avl->fieldname);
+
+    string input = "";
+    cin.ignore();
+    cout << "\nEnter the update query (Serial #, Old value, New value): ";
+    getline(cin, input, '\n');
+    stringstream sstream(input);
+
+    CustomVector<string> tags;
+    while (getline(sstream, input, ',')) {
+        if (input[0] == ' ')
+            input.erase(0, 1);
+        tags.push_back(input);
+    }
+
+    if (tags.getSize() < 3) {
+        cout << "INCORRECT QUERY" << endl;
+        return;
+    }
+
+    AVLDataNode<double>* toDelete = Avl->recursiveSearch(Avl->root, stod(tags[1]));
+    if (toDelete == NULL) {
+        cout << "Node not found" << endl;
+        return;
+    }
+
+    UpdateTupleInfile(toDelete, stoi(tags[0]), tags[2], getFieldIndex(fields, Avl->fieldname));
+
+    Avl = &doubleCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "double", activeBranch2);
+    Avl->fieldname = fields[fieldIndex];
+    Avl->CreateTreeFile(Avl->root);
+    cout << "Tree created again with updated data." << endl;
 }
 
 template<typename T>
 void RemoveTupleFromFile(AVLDataNode<T>* ptr)
 {
     CustomVector<string> tuples;
-    for (size_t i = 0; i < ptr->AddressList.getSize(); i++)
+    for (int i = 0; i < ptr->AddressList.getSize(); i++)
     {
         string  str = "";
         CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
-        for (size_t j = 0; j < temp.getSize(); j++)
+        for (int j = 0; j < temp.getSize(); j++)
             str += "," + temp[j];
         str.erase(0, 1);
         //cout << str << endl;
         tuples.push_back(str);
     }
     stringstream sstream;
-    for (size_t i = 0; i < ptr->AddressList.getSize(); i++)
+    for (int i = 0; i < ptr->AddressList.getSize(); i++)
     {
         fstream file;
         string line = "";
@@ -655,4 +637,6 @@ void DeleteTuple(AVL<T>* Avl, int index, T val)
     Avl->root = Avl->deleteNode(Avl->root, val);
     if (hasPath(RemovePath))
         remove(RemovePath.c_str());
+
+    cout << "Node successfully deleted and data deleted from file." << endl;
 }

@@ -29,7 +29,7 @@ public:
 
 bool alphaCheck(const string& str)
 {
-    for (size_t i = 0; i < str.size(); ++i)
+    for (int i = 0; i < str.size(); ++i)
     {
         char s = str[i];
         if ((s >= 'a' && s <= 'z') || (s >= 'A' && s <= 'Z'))
@@ -43,7 +43,7 @@ bool alphaCheck(const string& str)
 
 bool DecimalCheck(const string& str)
 {
-    for (size_t i = 0; i < str.size(); ++i)
+    for (int i = 0; i < str.size(); ++i)
     {
         if (str[i] == '.')
             return true;
@@ -54,7 +54,7 @@ bool DecimalCheck(const string& str)
 int countChar(string& str, char ch)
 {
     int count = 0;
-    for (size_t i = 0; i < str.size(); ++i)
+    for (int i = 0; i < str.size(); ++i)
     {
         if (str[i] == ch)
             ++count;
@@ -147,10 +147,30 @@ int comparestring(string key, string val)
     }
 }
 
+CustomVector<string> split(const string& str, char delimiter) {
+    CustomVector<string> result;
+    stringstream sstream(str);
+    string token;
+    while (getline(sstream, token, delimiter)) {
+        result.push_back(token);
+    }
+    return result;
+}
+
+string join(const CustomVector<string>& fields, char delimiter) {
+    string result;
+    for (int i = 0; i < fields.getSize(); i++) {
+        if (i > 0) result += delimiter; // Add delimiter between fields
+        result += fields[i];
+    }
+    return result;
+}
+
+
 void AllocateDataTypes(CustomVector<string>& DataType, CustomVector<string>& Fline)
 {
 	//CustomVector<string> out;
-	for (size_t i = 0; i < Fline.getSize(); ++i)
+	for (int i = 0; i < Fline.getSize(); ++i)
 	{
 		string dataType = DetermineDataType(Fline[i]);
 		DataType.push_back(dataType);
