@@ -4,13 +4,13 @@
 using namespace std;
 namespace fs = filesystem;
 
-bool hasPath(const string& path)
+bool hasPath(const String& path)
 {
     struct stat buffer {};
     return (stat(path.c_str(), &buffer) == 0);
 }
 
-void createFolder(const string& path)
+void createFolder(const String& path)
 {
     if (hasPath(path))
         return;
@@ -21,13 +21,13 @@ void createFolder(const string& path)
     }
 }
 
-void createFile(const string& path)
+void createFile(String& path)
 {
-    fstream output(path, ios::out);
+    fstream output(path.toStdString(), ios::out);
     output.close();
 }
 
-void displayBranches(string activeBranch)
+void displayBranches(String activeBranch)
 {
     namespace fs = filesystem;
 
@@ -46,7 +46,7 @@ void displayBranches(string activeBranch)
         if (fs::is_directory(entries[i]))
         {
             cout << "- " << entries[i].path().filename().string();
-            if (entries[i].path().filename().string() == activeBranch) {
+            if (activeBranch == entries[i].path().filename().string()) {
                 cout << " (active branch)";
             }
             cout << endl;
@@ -54,7 +54,7 @@ void displayBranches(string activeBranch)
     }
 }
 
-void CREATETREEFOLDERS(string branch)
+void CREATETREEFOLDERS(String branch)
 {
     //cout << "creating tree folders" << endl;
     createFolder("BRANCHES\\" + branch + "\\TREES");
@@ -63,18 +63,18 @@ void CREATETREEFOLDERS(string branch)
     createFolder("BRANCHES\\" + branch + "\\TREES\\BTREE");
 }
 
-void CREATEBRANCHESFOLDERS(string name)
+void CREATEBRANCHESFOLDERS(String name)
 {
     createFolder("BRANCHES\\" + name);
     CREATETREEFOLDERS(name);
 }
 
-void copyDirectory(const string& source, const string& destination)
+void copyDirectory(String& source, String& destination)
 {
     namespace fs = filesystem;
 
     vector<fs::directory_entry> entries;
-    for (auto it = fs::recursive_directory_iterator(source); it != fs::recursive_directory_iterator(); ++it)
+    for (auto it = fs::recursive_directory_iterator(source.toStdString()); it != fs::recursive_directory_iterator(); ++it)
     {
         entries.push_back(*it);
     }
@@ -82,15 +82,15 @@ void copyDirectory(const string& source, const string& destination)
     for (int i = 0; i < entries.size(); ++i)
     {
         const auto& path = entries[i].path();
-        auto relativePathStr = fs::relative(path, source).string();
+        auto relativePathStr = fs::relative(path, source.toStdString()).string();
         if (entries[i].is_directory())
         {
-            fs::create_directories(destination + "\\" + relativePathStr);
+            fs::create_directories(destination.toStdString() + "\\" + relativePathStr);
         }
 
         else if (entries[i].is_regular_file())
         {
-            fs::copy_file(path, destination + "\\" + relativePathStr, fs::copy_options::overwrite_existing);
+            fs::copy_file(path, destination.toStdString() + "\\" + relativePathStr, fs::copy_options::overwrite_existing);
         }
     }
 }
@@ -100,7 +100,7 @@ void deleteBranch()
     namespace fs = filesystem;
 
     cout << "\nEnter the name of the branch to delete: ";
-    string branchName;
+    String branchName;
     cin >> branchName;
 
     if (branchName == "main") {
@@ -109,7 +109,7 @@ void deleteBranch()
     }
 
     fs::path branchesDir = fs::current_path() / "BRANCHES";
-    fs::path branchPath = branchesDir / branchName;
+    fs::path branchPath = branchesDir / branchName.toStdString();
 
     if (fs::exists(branchPath) && fs::is_directory(branchPath))
     {
@@ -131,13 +131,13 @@ void deleteBranch()
     }
 }
 
-void mergeBranches(const string& sourceBranch, const string& targetBranch)
+void mergeBranches(String& sourceBranch, String& targetBranch)
 {
     namespace fs = filesystem;
 
     fs::path branchesDir = fs::current_path() / "BRANCHES";
-    fs::path sourcePath = branchesDir / sourceBranch;
-    fs::path targetPath = branchesDir / targetBranch;
+    fs::path sourcePath = branchesDir / sourceBranch.toStdString();
+    fs::path targetPath = branchesDir / targetBranch.toStdString();
 
     if (!fs::exists(sourcePath) || !fs::is_directory(sourcePath))
     {
@@ -193,10 +193,10 @@ void mergeBranches(const string& sourceBranch, const string& targetBranch)
     }
 }
 
-string branchSelection(string& activeBranch)
+String branchSelection(String& activeBranch)
 {
     int branchChoice;
-    string branchName;
+    String branchName;
     do
     {
         cout << endl;
@@ -221,17 +221,19 @@ string branchSelection(string& activeBranch)
         {
             cout << "Enter branch name: ";
             cin.ignore();
-            getline(cin, branchName);
+            getline(cin, branchName.toStdString());
 
-            string branchPath = "BRANCHES\\" + branchName;
+            String branchPath = "BRANCHES\\" + branchName;
             if (!hasPath(branchPath))
             {
                 cout << "Creating branch: " << branchName << endl;
-                fs::create_directories(branchPath);
+                fs::create_directories(branchPath.toStdString());
 
                 CREATEBRANCHESFOLDERS(branchName);
 
-                copyDirectory("BRANCHES\\main", branchPath);
+                String name = "BRANCHES\\main";
+
+                copyDirectory(name, branchPath);
 
                 activeBranch = branchName;
             }
@@ -252,7 +254,7 @@ string branchSelection(string& activeBranch)
         if (branchChoice == 4)
         {
 
-            string sourceBranch, targetBranch;
+            String sourceBranch, targetBranch;
 
             cout << "Enter the source branch to merge from: ";
             cin >> sourceBranch;
@@ -272,11 +274,11 @@ string branchSelection(string& activeBranch)
     return branchName;
 }
 
-void GetFields(string Filename, CustomVector<string>& LINE1, CustomVector<string>& Entries)
+void GetFields(String Filename, CustomVector<String>& LINE1, CustomVector<String>& Entries)
 {
     fstream file;
     //file.open("FilesToREAD\\" + filename);
-    file.open("FilesToREAD\\" + Filename);
+    file.open("FilesToREAD\\" + Filename.toStdString());
     READLINE(file, LINE1);
     READLINE(file, Entries);
     file.close();

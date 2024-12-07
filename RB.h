@@ -2,15 +2,16 @@
 #include <iostream>
 using namespace std;
 #include"AVL.h"
+#include <string>
 
-string activeBranch3;
+String activeBranch3;
 
 template <class T>
 class RBDataNode
 {
 public:
     T value;
-    string index;
+    String index;
     int color;
     RBDataNode* parent;
     RBDataNode* left;
@@ -27,7 +28,7 @@ public:
 
     CustomVector <AddressLocation> AddressList;
 
-    RBDataNode(T v, string filename, string linenumber, string counter)
+    RBDataNode(T v, String filename, String linenumber, String counter)
     {
         value = v;
         left = NULL;
@@ -37,13 +38,13 @@ public:
         AddressList.push_back(AddressLocation(filename, linenumber));
     }
 
-    string getLeftchildAddress()
+    String getLeftchildAddress()
     {
         // last index stores the left child 
         return AddressList[AddressList.getSize() - 1].filename;
     }
 
-    string getRightChildAddress()
+    String getRightChildAddress()
     {
         // last index stores the right child
         return AddressList[AddressList.getSize() - 1].linenumber;
@@ -70,11 +71,11 @@ public:
 };
 
 template<typename T>
-void DisplayAllTuples(CustomVector<string>& Fields, RBSUBNODE <T>& ptr)
+void DisplayAllTuples(CustomVector<String>& Fields, RBSUBNODE <T>& ptr)
 {
     for (int i = 0; i < ptr.AddressList.getSize(); i++)
     {
-        CustomVector<string> lt = GetTuples(ptr.AddressList[i]);
+        CustomVector<String> lt = GetTuples(ptr.AddressList[i]);
 
         for (int i = 0; i < lt.getSize(); i++)
             cout << left << setw(30) << Fields[i] << ":  " << "                  " << lt[i] << endl;
@@ -87,11 +88,11 @@ template <class T>
 class RedBlackTree
 {
 public:
-    string fieldname;
+    String fieldname;
     RBDataNode<T>* root;
     RBDataNode<T>* end;
 
-    string GetNodeFilename(RBDataNode<T>* R)
+    String GetNodeFilename(RBDataNode<T>* R)
     {
         if (R == NULL || R == end)
             return "NULL";
@@ -111,7 +112,7 @@ public:
     void WriteNodeinFile(RBDataNode<T>* R)
     {
         fstream file;
-        file.open("BRANCHES\\" + activeBranch3 + "\\TREES\\RB\\" + fieldname + "\\" + GetNodeFilename(R) + ".txt", ios::out);
+        file.open("BRANCHES\\" + activeBranch3.toStdString() + "\\TREES\\RB\\" + fieldname.toStdString() + "\\" + GetNodeFilename(R).toStdString() + ".txt", ios::out);
         GetNodeInfo(file, R);
         file.close();
     }
@@ -429,7 +430,7 @@ public:
 
     }
 
-    void print(RBDataNode<T>* root, string indent, bool last)
+    void print(RBDataNode<T>* root, String indent, bool last)
     {
         if (root != end)
         {
@@ -446,7 +447,7 @@ public:
                 indent += "|  ";
             }
 
-            string sColor = root->color ? "RED" : "BLACK";
+            String sColor = root->color ? "RED" : "BLACK";
             cout << root->value << "(" << sColor << ")" << endl;
             print(root->left, indent, false);
             print(root->right, indent, true);
@@ -582,7 +583,7 @@ public:
     }
 
     // Inserting a RBDataNode
-    void insert(T val, string vals, string filename, string lineNumber)
+    void insert(T val, String vals, String filename, String lineNumber)
     {
         RBDataNode<T>* cur = search(root, val);
         if (cur != end && cur != NULL)
@@ -605,7 +606,7 @@ public:
         while (temp1 != end)
         {
             temp = temp1;
-
+            //cout << n->value << "CHECK" << temp1->value << endl;
             if (n->value < temp1->value)
             {
                 temp1 = temp1->left;
@@ -661,14 +662,14 @@ public:
     }
 };
 
-RedBlackTree<string>& stringCreateRBTree(int index, string typee, string branch)
+RedBlackTree<String>& stringCreateRBTree(int index, String typee, String branch)
 {
     activeBranch3 = branch;
-    RedBlackTree<string>* Tree = new RedBlackTree<string>();
-    CustomVector<string> lineREAD;
+    RedBlackTree<String>* Tree = new RedBlackTree<String>();
+    CustomVector<String> lineREAD;
 
     fstream file;
-    file.open("FilesToREAD\\" + fileName, ios::in);
+    file.open("FilesToREAD\\" + fileName.toStdString(), ios::in);
     READLINE(file, lineREAD);
 
     int lineNumber = 1;
@@ -678,7 +679,7 @@ RedBlackTree<string>& stringCreateRBTree(int index, string typee, string branch)
         READLINE(file, lineREAD);
         if (lineREAD.getSize() <= 1)
             break;
-        Tree->insert(lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
+        Tree->insert(lineREAD[index], lineREAD[index], fileName, tostring(lineNumber++));
     }
     //Tree->printInorder(Tree->root);
     file.close();
@@ -686,14 +687,14 @@ RedBlackTree<string>& stringCreateRBTree(int index, string typee, string branch)
     return *Tree;
 }
 
-RedBlackTree<int>& intCreateRBTree(int index, string typee, string branch)
+RedBlackTree<int>& intCreateRBTree(int index, String typee, String branch)
 {
     activeBranch3 = branch;
     RedBlackTree<int>* Tree = new  RedBlackTree<int>();
 
     fstream file;
-    file.open("FilesToREAD\\" + fileName, ios::in);
-    CustomVector<string> lineREAD;
+    file.open("FilesToREAD\\" + fileName.toStdString(), ios::in);
+    CustomVector<String> lineREAD;
     READLINE(file, lineREAD);
 
     int lineNumber = 1;
@@ -703,21 +704,21 @@ RedBlackTree<int>& intCreateRBTree(int index, string typee, string branch)
         READLINE(file, lineREAD);
         if (lineREAD.getSize() <= 1)
             break;
-        Tree->insert(stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
+        Tree->insert(stoi(lineREAD[index]), lineREAD[index], fileName, tostring(lineNumber++));
     }
     file.close();
 
     return *Tree;
 }
 
-RedBlackTree<double>& doubleCreateRBTree(int index, string typee, string branch)
+RedBlackTree<double>& doubleCreateRBTree(int index, String typee, String branch)
 {
     activeBranch3 = branch;
     RedBlackTree<double>* Tree = new  RedBlackTree<double>();
 
     fstream file;
-    file.open("FilesToREAD\\" + fileName, ios::in);
-    CustomVector<string> lineREAD;
+    file.open("FilesToREAD\\" + fileName.toStdString(), ios::in);
+    CustomVector<String> lineREAD;
     READLINE(file, lineREAD);
 
     int lineNumber = 1;
@@ -729,7 +730,7 @@ RedBlackTree<double>& doubleCreateRBTree(int index, string typee, string branch)
         if (lineREAD.getSize() <= 1)
             break;
 
-        Tree->insert(stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
+        Tree->insert(stod(lineREAD[index]), lineREAD[index], fileName, tostring(lineNumber++));
     }
     //Tree->printInorder(Tree->root);
     file.close();
@@ -737,23 +738,23 @@ RedBlackTree<double>& doubleCreateRBTree(int index, string typee, string branch)
     return *Tree;
 }
 
-RBDataNode<string>& ReadRBNodeFromFile(string filename)
+RBDataNode<String>& ReadRBNodeFromFile(String filename)
 {
-    RBDataNode<string>* RBNode = new RBDataNode<string>();
+    RBDataNode<String>* RBNode = new RBDataNode<String>();
     RBNode->value = "NULL";
 
     if (filename.find("NULL") != string::npos)
         return *RBNode;
 
-    string line;
+    String line;
     fstream file;
     RBNode->index = (filename.substr(filename.find_last_of('_') + 1));
 
     if (filename.find("txt") == string::npos)
         filename = filename + ".txt";
 
-    file.open("BRANCHES\\" + activeBranch3 + "\\TREES\\RB\\" + filename, ios::in);
-    CustomVector<string> vtLine;
+    file.open("BRANCHES\\" + activeBranch3.toStdString() + "\\TREES\\RB\\" + filename.toStdString(), ios::in);
+    CustomVector<String> vtLine;
     READLINE(file, vtLine);
     //cout << vtLine[0] << endl;
     RBNode->value = vtLine[0];
@@ -762,10 +763,10 @@ RBDataNode<string>& ReadRBNodeFromFile(string filename)
 
     while (!file.eof())
     {
-        string f, l;
-        getline(file, line);
+        String f, l;
+        getline(file, line.toStdString());
         f = line;
-        getline(file, line);
+        getline(file, line.toStdString());
         l = line;
         RBNode->AddressList.push_back(AddressLocation(f, l));
     }
@@ -774,11 +775,11 @@ RBDataNode<string>& ReadRBNodeFromFile(string filename)
     return *RBNode;
 }
 
-void DisplayAllTuples(CustomVector<string>& Fields, RBDataNode<string>* ptr)
+void DisplayAllTuples(CustomVector<String>& Fields, RBDataNode<String>* ptr)
 {
     for (int i = 0; i < ptr->AddressList.getSize() - 1; i++)
     {
-        CustomVector<string> lt = GetTuples(ptr->AddressList[i]);
+        CustomVector<String> lt = GetTuples(ptr->AddressList[i]);
 
         for (int i = 0; i < lt.getSize(); i++)
             cout << left << setw(30) << Fields[i] << ":  " << "                  " << lt[i] << endl;
@@ -787,7 +788,7 @@ void DisplayAllTuples(CustomVector<string>& Fields, RBDataNode<string>* ptr)
     }
 }
 
-RBDataNode<string>* PointSearch(RBDataNode<string>* ptr, string key, CustomVector<string>& fields, string fieldname)
+RBDataNode<String>* PointSearch(RBDataNode<String>* ptr, String key, CustomVector<String>& fields, String fieldname)
 {
     if (ptr->value == "NULL")
     {
@@ -808,7 +809,7 @@ RBDataNode<string>* PointSearch(RBDataNode<string>* ptr, string key, CustomVecto
         return PointSearch(&ReadRBNodeFromFile(fieldname + "\\" + ptr->getRightChildAddress()), key, fields, fieldname);
 }
 
-void RangeSearch(RBDataNode<string>* ptr, string start, string end, CustomVector<string>& fields, string fieldname)
+void RangeSearch(RBDataNode<String>* ptr, String start, String end, CustomVector<String>& fields, String fieldname)
 {
     if (ptr->value == "NULL")
         return;
@@ -826,11 +827,11 @@ void RangeSearch(RBDataNode<string>* ptr, string start, string end, CustomVector
 template<typename T>
 void RemoveTupleFromFile(RBDataNode<T>* ptr)
 {
-    CustomVector<string> tuples;
+    CustomVector<String> tuples;
     for (int i = 0; i < ptr->AddressList.getSize(); i++)
     {
-        string str = "";
-        CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
+        String str = "";
+        CustomVector<String> temp = GetTuples(ptr->AddressList[i]);
 
         for (int j = 0; j < temp.getSize(); j++)
             str += "," + temp[j];
@@ -845,11 +846,11 @@ void RemoveTupleFromFile(RBDataNode<T>* ptr)
     for (int i = 0; i < ptr->AddressList.getSize(); i++)
     {
         fstream file;
-        string line = "";
-        string path = "FilesToREAD\\" + ptr->AddressList[0].filename;
-        file.open(path, ios::in);
+        String line = "";
+        String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
+        file.open(path.toStdString(), ios::in);
 
-        while (getline(file, line, '\n'))
+        while (getline(file, line.toStdString(), '\n'))
         {
             int res = getFieldIndex(tuples, line);
             if (res == -1)
@@ -857,7 +858,7 @@ void RemoveTupleFromFile(RBDataNode<T>* ptr)
         }
 
         file.close();
-        file.open(path, ios::out);
+        file.open(path.toStdString(), ios::out);
         file << sstream.rdbuf();
         file.close();
     }
@@ -872,7 +873,7 @@ void DeleteTuple(RedBlackTree<T>* RB, int index, T val)
         return;
 
     RemoveTupleFromFile<T>(toDelete);
-    string RemovePath = "BRANCHES\\" + activeBranch3 + "\\TREES\\RB\\" + RB->fieldname + "\\" + RB->GetNodeFilename(toDelete) + ".txt";
+    String RemovePath = "BRANCHES\\" + activeBranch3 + "\\TREES\\RB\\" + RB->fieldname + "\\" + RB->GetNodeFilename(toDelete) + ".txt";
     RB->deleteRBDataNode(val);
 
     if (hasPath(RemovePath))
@@ -882,26 +883,26 @@ void DeleteTuple(RedBlackTree<T>* RB, int index, T val)
 }
 
 template<typename T>
-void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string newVal, int fieldIndex) {
-    string path = "FilesToREAD\\" + ptr->AddressList[0].filename;
+void UpdateTupleInfile(RBDataNode<T>* ptr, int index, String newVal, int fieldIndex) {
+    String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
 
     // read all rows into vector
-    fstream file(path, ios::in);
-    CustomVector<string> rows;
-    string line;
-    while (getline(file, line)) {
+    fstream file(path.toStdString(), ios::in);
+    CustomVector<String> rows;
+    String line;
+    while (getline(file, line.toStdString())) {
         rows.push_back(line);
     }
     file.close();
 
-    CustomVector<string> fields = split(rows[index], ','); // split row into field columns
+    CustomVector<String> fields = split(rows[index], ','); // split row into field columns
     if (fieldIndex >= 0 && fieldIndex < fields.getSize()) {
         fields[fieldIndex] = newVal; // Update the field value
         rows[index] = join(fields, ','); // Rejoin fields into the updated row
     }
 
-    file.open(path, ios::out | ios::trunc);
-    for (const string& row : rows) {
+    file.open(path.toStdString(), ios::out | ios::trunc); //
+    for (const String& row : rows) {
         file << row << endl;
     }
     file.close();
@@ -909,17 +910,17 @@ void UpdateTupleInfile(RBDataNode<T>* ptr, int index, string newVal, int fieldIn
     cout << "Tuple successfully updated." << endl;
 }
 
-void UpdateTuple(RedBlackTree<int>*& RB, CustomVector<string> fields) {
+void UpdateTuple(RedBlackTree<int>*& RB, CustomVector<String> fields) {
     int fieldIndex = getFieldIndex(fields, RB->fieldname);
 
-    string input = "";
+    String input = "";
     cin.ignore();
     cout << "\nEnter the update query (Serial #, Old value, New value): ";
-    getline(cin, input, '\n');
-    stringstream sstream(input);
+    getline(cin, input.toStdString(), '\n');
+    stringstream sstream(input.toStdString());
 
-    CustomVector<string> tags;
-    while (getline(sstream, input, ',')) {
+    CustomVector<String> tags;
+    while (getline(sstream, input.toStdString(), ',')) {
         if (input[0] == ' ') {
             input.erase(0, 1);
         }
@@ -945,17 +946,17 @@ void UpdateTuple(RedBlackTree<int>*& RB, CustomVector<string> fields) {
     cout << "Tree created again with updated data." << endl;
 }
 
-void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields) {
+void UpdateTuple(RedBlackTree<String>*& RB, CustomVector<String> fields) {
     int fieldIndex = getFieldIndex(fields, RB->fieldname);
 
-    string input = "";
+    String input = "";
     cin.ignore();
     cout << "\nEnter the update query (Serial #, Old value, New value): ";
-    getline(cin, input, '\n');
-    stringstream sstream(input);
+    getline(cin, input.toStdString(), '\n');
+    stringstream sstream(input.toStdString());
 
-    CustomVector<string> tags;
-    while (getline(sstream, input, ',')) {
+    CustomVector<String> tags;
+    while (getline(sstream, input.toStdString(), ',')) {
         if (input[0] == ' ') {
             input.erase(0, 1);
         }
@@ -967,7 +968,7 @@ void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields) {
         return;
     }
 
-    RBDataNode<string>* toDelete = RB->search(RB->root, tags[0]);
+    RBDataNode<String>* toDelete = RB->search(RB->root, tags[0]);
     if (toDelete == NULL) {
         cout << "Node not found" << endl;
         return;
@@ -982,17 +983,17 @@ void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields) {
 }
 
 
-void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<string> fields) {
+void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<String> fields) {
     int fieldIndex = getFieldIndex(fields, RB->fieldname);
 
-    string input = "";
+    String input = "";
     cin.ignore();
     cout << "\nEnter the update query (Serial #, Old value, New value): ";
-    getline(cin, input, '\n');
-    stringstream sstream(input);
+    getline(cin, input.toStdString(), '\n');
+    stringstream sstream(input.toStdString());
 
-    CustomVector<string> tags;
-    while (getline(sstream, input, ',')) {
+    CustomVector<String> tags;
+    while (getline(sstream, input.toStdString(), ',')) {
         if (input[0] == ' ') {
             input.erase(0, 1);
         }

@@ -5,13 +5,14 @@
 #include "Commit_Log.h"
 using namespace std;
 
-string activeBranch2;
+String activeBranch2;
+
 template <class T>
 class AVLDataNode
 {
 public:
     T value;
-    string index;
+    String index;
     AVLDataNode<T>* left;
     AVLDataNode<T>* right;
 
@@ -25,7 +26,7 @@ public:
 
     CustomVector<AddressLocation> AddressList;
 
-    AVLDataNode(T v, string filename, string linenumber, string counter)
+    AVLDataNode(T v, String filename, String linenumber, String counter)
     {
         value = v;
         left = NULL;
@@ -34,13 +35,13 @@ public:
         AddressList.push_back(AddressLocation(filename, linenumber));
     }
 
-    string getLeftchildAddress()
+    String getLeftchildAddress()
     {
         // last index stores the left child 
         return AddressList[AddressList.getSize() - 1].filename;
     }
 
-    string getRightChildAddress()
+    String getRightChildAddress()
     {
         // last index stores the right child
         return AddressList[AddressList.getSize() - 1].linenumber;
@@ -52,7 +53,7 @@ class AVL
 {
 public:
     int counter;
-    string fieldname;
+    String fieldname;
     AVLDataNode<T>* root;
 
     AVL()
@@ -91,7 +92,7 @@ public:
         return y;
     }
 
-    AVLDataNode<T>* insert(AVLDataNode<T>* r, T value, string val, string filename, string lineNumber)
+    AVLDataNode<T>* insert(AVLDataNode<T>* r, T value, String val, String filename, String lineNumber)
     {
         if (r == NULL)
         {
@@ -235,7 +236,7 @@ public:
         }
     }
 
-    string GetNodeFilename(AVLDataNode<T>* R)
+    String GetNodeFilename(AVLDataNode<T>* R)
     {
         if (R == NULL)
             return "NULL";
@@ -258,7 +259,7 @@ public:
     void WriteNodeinFile(AVLDataNode<T>* R)
     {
         fstream file;
-        file.open("BRANCHES\\" + activeBranch2 + "\\TREES\\AVL\\" + fieldname + "\\" + GetNodeFilename(R) + ".txt", ios::out);
+        file.open("BRANCHES\\" + activeBranch2.toStdString() + "\\TREES\\AVL\\" + fieldname.toStdString() + "\\" + GetNodeFilename(R).toStdString() + ".txt", ios::out);
         GetNodeInfo(file, R);
         file.close();
     }
@@ -283,14 +284,14 @@ public:
     }
 };
 
-AVL<string>& stringCreateAvlTree(int index, string typee, string branch)
+AVL<String>& stringCreateAvlTree(int index, String typee, String branch)
 {
     activeBranch2 = branch;
-    AVL<string>* Tree = new  AVL<string>();
+    AVL<String>* Tree = new  AVL<String>();
 
     fstream file;
-    file.open("FilesToREAD\\" + fileName, ios::in);
-    CustomVector<string> lineREAD;
+    file.open("FilesToREAD\\" + fileName.toStdString(), ios::in);
+    CustomVector<String> lineREAD;
     READLINE(file, lineREAD);
     int lineNumber = 1;
     while (!file.eof())
@@ -299,7 +300,7 @@ AVL<string>& stringCreateAvlTree(int index, string typee, string branch)
         READLINE(file, lineREAD);
         if (lineREAD.getSize() <= 1)
             break;
-        Tree->root = Tree->insert(Tree->root, lineREAD[index], lineREAD[index], fileName, to_string(lineNumber++));
+        Tree->root = Tree->insert(Tree->root, lineREAD[index], lineREAD[index], fileName, tostring(lineNumber++));
     }
     //Tree->printInorder(Tree->root);
     file.close();
@@ -307,14 +308,14 @@ AVL<string>& stringCreateAvlTree(int index, string typee, string branch)
     return *Tree;
 }
 
-AVL<int>& intCreateAvlTree(int index, string typee, string branch)
+AVL<int>& intCreateAvlTree(int index, String typee, String branch)
 {
     activeBranch2 = branch;
     AVL<int>* Tree = new  AVL<int>();
 
     fstream file;
-    file.open("FilesToREAD\\" + fileName, ios::in);
-    CustomVector<string> lineREAD; //
+    file.open("FilesToREAD\\" + fileName.toStdString(), ios::in);
+    CustomVector<String> lineREAD; //
     READLINE(file, lineREAD);
     int lineNumber = 1;
     while (!file.eof())
@@ -323,7 +324,7 @@ AVL<int>& intCreateAvlTree(int index, string typee, string branch)
         READLINE(file, lineREAD);
         if (lineREAD.getSize() <= 1)
             break;
-        Tree->root = Tree->insert(Tree->root, stoi(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
+        Tree->root = Tree->insert(Tree->root, stoi(lineREAD[index]), lineREAD[index], fileName, tostring(lineNumber++));
     }
     //Tree->printInorder(Tree->root);
     file.close();
@@ -331,14 +332,14 @@ AVL<int>& intCreateAvlTree(int index, string typee, string branch)
     return *Tree;
 }
 
-AVL<double>& doubleCreateAvlTree(int index, string typee, string branch)
+AVL<double>& doubleCreateAvlTree(int index, String typee, String branch)
 {
     activeBranch2 = branch;
     AVL<double>* Tree = new  AVL<double>();
 
     fstream file;
-    file.open("FilesToREAD\\" + fileName, ios::in);
-    CustomVector<string> lineREAD; //
+    file.open("FilesToREAD\\" + fileName.toStdString(), ios::in);
+    CustomVector<String> lineREAD; //
     READLINE(file, lineREAD);
     int lineNumber = 1;
     while (!file.eof())
@@ -347,7 +348,7 @@ AVL<double>& doubleCreateAvlTree(int index, string typee, string branch)
         READLINE(file, lineREAD);
         if (lineREAD.getSize() <= 1)
             break;
-        Tree->root = Tree->insert(Tree->root, stod(lineREAD[index]), lineREAD[index], fileName, to_string(lineNumber++));
+        Tree->root = Tree->insert(Tree->root, stod(lineREAD[index]), lineREAD[index], fileName, tostring(lineNumber++));
     }
     //Tree->printInorder(Tree->root);
     file.close();
@@ -355,28 +356,28 @@ AVL<double>& doubleCreateAvlTree(int index, string typee, string branch)
     return *Tree;
 }
 
-AVLDataNode<string>& ReadAvlNodeFromFile(string filename)
+AVLDataNode<String>& ReadAvlNodeFromFile(String filename)
 {
-    AVLDataNode<string>* AVLNode = new AVLDataNode<string>();
+    AVLDataNode<String>* AVLNode = new AVLDataNode<String>();
     AVLNode->value = "NULL";
     if (filename.find("NULL") != string::npos)
         return *AVLNode;
-    string line;
+    String line;
     fstream file;
     AVLNode->index = (filename.substr(filename.find_last_of('_') + 1));
     if (filename.find("txt") == string::npos)
         filename = filename + ".txt";
-    file.open("BRANCHES\\" + activeBranch2 + "\\TREES\\AVL\\" + filename, ios::in);
-    CustomVector<string> vtLine;
+    file.open("BRANCHES\\" + activeBranch2.toStdString() + "\\TREES\\AVL\\" + filename.toStdString(), ios::in);
+    CustomVector<String> vtLine;
     READLINE(file, vtLine);
     cout << vtLine[0] << endl;
     AVLNode->value = vtLine[0];
     while (!file.eof())
     {
-        string f, l;
-        getline(file, line);
+        String f, l;
+        getline(file, line.toStdString());
         f = line;
-        getline(file, line);
+        getline(file, line.toStdString());
         l = line;
         AVLNode->AddressList.push_back(AddressLocation(f, l));
     }
@@ -384,11 +385,11 @@ AVLDataNode<string>& ReadAvlNodeFromFile(string filename)
     return *AVLNode;
 }
 
-CustomVector<string> GetTuples(AddressLocation& adr)
+CustomVector<String> GetTuples(AddressLocation& adr)
 {
     fstream file;
-    file.open("FilesToREAD\\" + adr.filename);
-    CustomVector<string> tuples;
+    file.open("FilesToREAD\\" + adr.filename.toStdString());
+    CustomVector<String> tuples;
     if (file.is_open())
     {
         int linenumber = 0;
@@ -402,18 +403,18 @@ CustomVector<string> GetTuples(AddressLocation& adr)
     return tuples;
 }
 
-void DisplayAllTuples(CustomVector<string>& Fields, AVLDataNode<string>* ptr)
+void DisplayAllTuples(CustomVector<String>& Fields, AVLDataNode<String>* ptr)
 {
     for (int i = 0; i < ptr->AddressList.getSize() - 1; i++)
     {
-        CustomVector <string> lt = GetTuples(ptr->AddressList[i]);
+        CustomVector <String> lt = GetTuples(ptr->AddressList[i]);
         for (int i = 0; i < lt.getSize(); i++)
             cout << left << setw(30) << Fields[i] << ":  " << "                  " << lt[i] << endl;
         cout << "---------------------------------------------------------------------------------\n";
     }
 }
 
-void RangeSearch(AVLDataNode<string>* ptr, string start, string end, CustomVector<string>& fields, string fieldname)
+void RangeSearch(AVLDataNode<String>* ptr, String start, String end, CustomVector<String>& fields, String fieldname)
 {
     if (ptr->value == "NULL")
         return;
@@ -425,7 +426,7 @@ void RangeSearch(AVLDataNode<string>* ptr, string start, string end, CustomVecto
         RangeSearch(&ReadAvlNodeFromFile(fieldname + "\\" + ptr->getRightChildAddress()), start, end, fields, fieldname);
 }
 
-AVLDataNode<string>* PointSearch(AVLDataNode<string>* ptr, string key, CustomVector<string>& fields, string fieldname)
+AVLDataNode<String>* PointSearch(AVLDataNode<String>* ptr, String key, CustomVector<String>& fields, String fieldname)
 {
     if (ptr->value == "NULL")
     {
@@ -435,7 +436,7 @@ AVLDataNode<string>* PointSearch(AVLDataNode<string>* ptr, string key, CustomVec
 
     if (key == ptr->value)
     {
-        //DisplayAllTuples(fields, ptr);
+        DisplayAllTuples(fields, ptr);
         return ptr;
     }
 
@@ -446,37 +447,37 @@ AVLDataNode<string>* PointSearch(AVLDataNode<string>* ptr, string key, CustomVec
         return PointSearch(&ReadAvlNodeFromFile(fieldname + "\\" + ptr->getRightChildAddress()), key, fields, fieldname);
 }
 
-string UpdatedTuple(string tup, string old, string newval)
+String UpdatedTuple(String tup, String old, String newval)
 {
     tup = toLower(tup);
     old = toLower(old);
     newval = toLower(newval);
-    return tup.substr(0, tup.find(old)) + newval + tup.substr(tup.find(old) + old.size());
+    return tup.substr(0, tup.find(old)) + newval + tup.substr(tup.find(old) + old.getsize());
 }
 
 template<typename T>
-void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string newVal, int fieldIndex) {
+void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, String newVal, int fieldIndex) {
     //index--;
 
     // Get the file path from the node's AddressList
-    string path = "FilesToREAD\\" + ptr->AddressList[0].filename;
+    String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
 
-    fstream file(path, ios::in);
-    CustomVector<string> rows;
-    string line;
-    while (getline(file, line)) {
+    fstream file(path.toStdString(), ios::in);
+    CustomVector<String> rows;
+    String line;
+    while (getline(file, line.toStdString())) {
         rows.push_back(line);
     }
     file.close();
 
-    CustomVector<string> fields = split(rows[index], ','); // split row into field columns
+    CustomVector<String> fields = split(rows[index], ','); // split row into field columns
     if (fieldIndex >= 0 && fieldIndex < fields.getSize()) {
         fields[fieldIndex] = newVal; // update the field
         rows[index] = join(fields, ','); // rejoin the updated fields into a row
     }
 
-    file.open(path, ios::out | ios::trunc);
-    for (const string& row : rows) {
+    file.open(path.toStdString(), ios::out | ios::trunc);
+    for (const String& row : rows) {
         file << row << endl;
     }
     file.close();
@@ -484,18 +485,18 @@ void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, string newVal, int fieldI
     cout << "Tuple successfully updated." << endl;
 }
 
-void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
+void UpdateTuple(AVL<int>*& Avl, CustomVector<String> fields)
 {
     int fieldIndex = getFieldIndex(fields, Avl->fieldname);
 
-    string input = "";
+    String input = "";
     cin.ignore();
     cout << "\nEnter the update query (Serial #, Old value, New value): ";
-    getline(cin, input, '\n');
-    stringstream sstream(input);
+    getline(cin, input.toStdString(), '\n');
+    stringstream sstream(input.toStdString());
 
-    CustomVector<string> tags;
-    while (getline(sstream, input, ','))
+    CustomVector<String> tags;
+    while (getline(sstream, input.toStdString(), ','))
     {
         if (input[0] == ' ')
             input.erase(0, 1);
@@ -522,10 +523,10 @@ void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
     Avl->CreateTreeFile(Avl->root);
     cout << "Tree created again with updated data." << endl;
 
-    CustomVector<string> LogMessage;
+    CustomVector<String> LogMessage;
     LogMessage.push_back("AVL");
 
-    string concatenatedTags;
+    String concatenatedTags;
     for (int i = 0; i < tags.getSize(); i++) {
         if (i > 0) {
             concatenatedTags += ", ";
@@ -537,17 +538,17 @@ void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
     addCommit1(activeBranch2, LogMessage);
 }
 
-void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields) {
+void UpdateTuple(AVL<String>*& Avl, CustomVector<String> fields) {
     int fieldIndex = getFieldIndex(fields, Avl->fieldname);
 
-    string input = "";
+    String input = "";
     cin.ignore();
     cout << "\nEnter the update query (Serial #, Old value, New value): ";
-    getline(cin, input, '\n');
-    stringstream sstream(input);
+    getline(cin, input.toStdString(), '\n');
+    stringstream sstream(input.toStdString());
 
-    CustomVector<string> tags;
-    while (getline(sstream, input, ',')) {
+    CustomVector<String> tags;
+    while (getline(sstream, input.toStdString(), ',')) {
         if (input[0] == ' ')
             input.erase(0, 1);
         tags.push_back(input);
@@ -558,7 +559,7 @@ void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields) {
         return;
     }
 
-    AVLDataNode<string>* toDelete = Avl->recursiveSearch(Avl->root, tags[1]);
+    AVLDataNode<String>* toDelete = Avl->recursiveSearch(Avl->root, tags[1]);
     if (toDelete == NULL) {
         cout << "Node not found" << endl;
         return;
@@ -572,17 +573,17 @@ void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields) {
     cout << "Tree created again with updated data." << endl;
 }
 
-void UpdateTuple(AVL<double>*& Avl, CustomVector<string> fields) {
+void UpdateTuple(AVL<double>*& Avl, CustomVector<String> fields) {
     int fieldIndex = getFieldIndex(fields, Avl->fieldname);
 
-    string input = "";
+    String input = "";
     cin.ignore();
     cout << "\nEnter the update query (Serial #, Old value, New value): ";
-    getline(cin, input, '\n');
-    stringstream sstream(input);
+    getline(cin, input.toStdString(), '\n');
+    stringstream sstream(input.toStdString());
 
-    CustomVector<string> tags;
-    while (getline(sstream, input, ',')) {
+    CustomVector<String> tags;
+    while (getline(sstream, input.toStdString(), ',')) {
         if (input[0] == ' ')
             input.erase(0, 1);
         tags.push_back(input);
@@ -610,11 +611,11 @@ void UpdateTuple(AVL<double>*& Avl, CustomVector<string> fields) {
 template<typename T>
 void RemoveTupleFromFile(AVLDataNode<T>* ptr)
 {
-    CustomVector<string> tuples;
+    CustomVector<String> tuples;
     for (int i = 0; i < ptr->AddressList.getSize(); i++)
     {
-        string  str = "";
-        CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
+        String  str = "";
+        CustomVector<String> temp = GetTuples(ptr->AddressList[i]);
         for (int j = 0; j < temp.getSize(); j++)
             str += "," + temp[j];
         str.erase(0, 1);
@@ -625,17 +626,17 @@ void RemoveTupleFromFile(AVLDataNode<T>* ptr)
     for (int i = 0; i < ptr->AddressList.getSize(); i++)
     {
         fstream file;
-        string line = "";
-        string path = "FilesToREAD\\" + ptr->AddressList[0].filename;
-        file.open(path, ios::in);
-        while (getline(file, line, '\n'))
+        String line = "";
+        String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
+        file.open(path.toStdString(), ios::in);
+        while (getline(file, line.toStdString(), '\n'))
         {
             int res = getFieldIndex(tuples, line);
             if (res == -1)
                 sstream << line << endl;
         }
         file.close();
-        file.open(path, ios::out);
+        file.open(path.toStdString(), ios::out);
         file << sstream.rdbuf();
         file.close();
     }
@@ -648,7 +649,7 @@ void DeleteTuple(AVL<T>* Avl, int index, T val)
     if (toDelete == NULL)
         return;
     RemoveTupleFromFile<T>(toDelete);
-    string RemovePath = "BRANCHES\\" + activeBranch2 + "\\TREES\\AVL\\" + Avl->fieldname + "\\" + Avl->GetNodeFilename(toDelete) + ".txt";
+    String RemovePath = "BRANCHES\\" + activeBranch2 + "\\TREES\\AVL\\" + Avl->fieldname + "\\" + Avl->GetNodeFilename(toDelete) + ".txt";
     Avl->root = Avl->deleteNode(Avl->root, val);
     if (hasPath(RemovePath))
         remove(RemovePath.c_str());

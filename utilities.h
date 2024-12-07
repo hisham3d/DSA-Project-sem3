@@ -13,23 +13,23 @@
 #include <iomanip>
 using namespace std;
 
-string fileName = "healthcare_dataset.csv";
+String fileName = "healthcare_dataset.csv";
 class AddressLocation
 {
 public:
-    string filename;
-    string linenumber;
+    String filename;
+    String linenumber;
     AddressLocation() {};
-    AddressLocation(string f, string l)
+    AddressLocation(String f, String l)
     {
         filename = f;
         linenumber = l;
     }
 };
 
-bool alphaCheck(const string& str)
+bool alphaCheck(String& str)
 {
-    for (int i = 0; i < str.size(); ++i)
+    for (int i = 0; i < str.getsize(); ++i)
     {
         char s = str[i];
         if ((s >= 'a' && s <= 'z') || (s >= 'A' && s <= 'Z'))
@@ -41,9 +41,9 @@ bool alphaCheck(const string& str)
     return false;
 }
 
-bool DecimalCheck(const string& str)
+bool DecimalCheck(String& str)
 {
-    for (int i = 0; i < str.size(); ++i)
+    for (int i = 0; i < str.getsize(); ++i)
     {
         if (str[i] == '.')
             return true;
@@ -51,10 +51,10 @@ bool DecimalCheck(const string& str)
     return false;
 }
 
-int countChar(string& str, char ch)
+int countChar(String& str, char ch)
 {
     int count = 0;
-    for (int i = 0; i < str.size(); ++i)
+    for (int i = 0; i < str.getsize(); ++i)
     {
         if (str[i] == ch)
             ++count;
@@ -62,10 +62,10 @@ int countChar(string& str, char ch)
     return count;
 }
 
-string toLower(string f)
+String toLower(String f)
 {
-    string out = "";
-    for (int i = 0; i < f.size(); i++)
+    String out = "";
+    for (int i = 0; i < f.getsize(); i++)
     {
         if (isupper(f[i]))
             out += tolower(f[i]);
@@ -76,10 +76,10 @@ string toLower(string f)
     return out;
 }
 
-string toUpper(string f)
+String toUpper(String f)
 {
-    string out = "";
-    for (int i = 0; i < f.size(); i++)
+    String out = "";
+    for (int i = 0; i < f.getsize(); i++)
     {
         if (islower(f[i]))
             out += toupper(f[i]);
@@ -90,7 +90,7 @@ string toUpper(string f)
     return out;
 }
 
-string DetermineDataType(const string& str)
+String DetermineDataType(String& str)
 {
     if (alphaCheck(str))
         return "string";
@@ -101,7 +101,7 @@ string DetermineDataType(const string& str)
     return "int";
 }
 
-int comparestring(string key, string val)
+int comparestring(String key, String val)
 {
     if (key == val)
         return 0;
@@ -113,13 +113,13 @@ int comparestring(string key, string val)
 
     else if (DetermineDataType(key) == "int")
     {
-        if (key.size() < val.size())
+        if (key.getsize() < val.getsize())
             return -1;
 
-        else if (key.size() > val.size())
+        else if (key.getsize() > val.getsize())
             return 1;
 
-        for (int i = 0; i < key.size(); i++)
+        for (int i = 0; i < key.getsize(); i++)
         {
             if (key[i] < val[i])
                 return -1;
@@ -137,7 +137,7 @@ int comparestring(string key, string val)
         if (key.find('.') < val.find('.'))
             return -1;
 
-        for (int i = 0; i < key.size(); i++)
+        for (int i = 0; i < key.getsize(); i++)
         {
             if (key[i] < val[i])
                 return -1;
@@ -147,18 +147,18 @@ int comparestring(string key, string val)
     }
 }
 
-CustomVector<string> split(const string& str, char delimiter) {
-    CustomVector<string> result;
-    stringstream sstream(str);
-    string token;
-    while (getline(sstream, token, delimiter)) {
+CustomVector<String> split(String& str, char delimiter) {
+    CustomVector<String> result;
+    stringstream sstream(str.toStdString());
+    String token;
+    while (getline(sstream, token.toStdString(), delimiter)) {
         result.push_back(token);
     }
     return result;
 }
 
-string join(const CustomVector<string>& fields, char delimiter) {
-    string result;
+String join(const CustomVector<String>& fields, char delimiter) {
+    String result;
     for (int i = 0; i < fields.getSize(); i++) {
         if (i > 0) result += delimiter; // Add delimiter between fields
         result += fields[i];
@@ -167,19 +167,19 @@ string join(const CustomVector<string>& fields, char delimiter) {
 }
 
 
-void AllocateDataTypes(CustomVector<string>& DataType, CustomVector<string>& Fline)
+void AllocateDataTypes(CustomVector<String>& DataType, CustomVector<String>& Fline)
 {
-    //CustomVector<string> out;
+    //CustomVector<String> out;
     for (int i = 0; i < Fline.getSize(); ++i)
     {
-        string dataType = DetermineDataType(Fline[i]);
+        String dataType = DetermineDataType(Fline[i]);
         DataType.push_back(dataType);
     }
 
     //return out;
 }
 
-int getFieldIndex(CustomVector<string>& fields, string fName)
+int getFieldIndex(CustomVector<String>& fields, String fName)
 {
     for (int i = 0; i < fields.getSize(); i++)
         if (toLower(fName) == toLower(fields[i]))
@@ -187,21 +187,21 @@ int getFieldIndex(CustomVector<string>& fields, string fName)
     return -1;
 }
 
-void READLINE(fstream& file, CustomVector<string>& list)
+void READLINE(fstream& file, CustomVector<String>& list)
 {
     list.resize(0);
-    string FirstLine, word = "";
-    getline(file, FirstLine);
-    stringstream Fline(FirstLine);
+    String FirstLine, word = "";
+    getline(file, FirstLine.toStdString());
+    stringstream Fline(FirstLine.toStdString());
 
-    while (getline(Fline, word, ','))
+    while (getline(Fline, word.toStdString(), ','))
     {
-        if (word.size() < 1)
+        if (word.getsize() < 1)
             continue;
         if (countChar(word, '"') % 2 == 1)
         {
-            string temp;
-            getline(Fline, temp, '"');
+            String temp;
+            getline(Fline, temp.toStdString(), '"');
             word += "," + temp + "\"";
         }
         list.push_back(word);
