@@ -94,4 +94,30 @@ public:
     const T* end() const {
         return data + size;
     }
+
+    template <typename... Args>
+    void emplace_back(Args&&... args) {
+        if (size == capacity) {
+            expand();
+        }
+        data[size++] = T(std::forward<Args>(args)...);
+    }
+
+    bool empty() const {
+        return size == 0;
+    }
+
+    T& back() {
+        if (empty()) {
+            throw std::out_of_range("Vector is empty");
+        }
+        return data[size - 1];
+    }
+
+    const T& back() const {
+        if (empty()) {
+            throw std::out_of_range("Vector is empty");
+        }
+        return data[size - 1];
+    }
 };
