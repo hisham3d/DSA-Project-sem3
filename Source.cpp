@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 
-string activeBranch;
+String activeBranch;
 
 void ourNames()
 {
@@ -51,7 +51,7 @@ int submenu()
 }
 
 template<typename T>
-void subMENUBTREE(BTree<T>* IBTREE, CustomVector<string> Fields)
+void subMENUBTREE(BTree<T>* IBTREE, CustomVector<String> Fields)
 {
 	char ch;
 	do
@@ -90,9 +90,9 @@ void subMENUBTREE(BTree<T>* IBTREE, CustomVector<string> Fields)
 	} while (ch == 'Y' || ch == 'y');
 }
 
-void MENUBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
+void MENUBTREE(CustomVector<String>Fields, CustomVector<String> DataTypes)
 {
-	BTree<string>* SBTREE = NULL;
+	BTree<String>* SBTREE = NULL;
 	BTree<int>* IBTREE = NULL;
 	BTree<double>* DBTREE = NULL;
 	char ch;
@@ -141,7 +141,7 @@ void MENUBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 }
 
 template<typename T>
-void RBSUBMENU(RedBlackTree <T>* IRBTREE, CustomVector<string>& Fields)
+void RBSUBMENU(RedBlackTree <T>* IRBTREE, CustomVector<String>& Fields)
 {
 	system("cls");
 	int option = submenu();
@@ -160,29 +160,29 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, CustomVector<string>& Fields)
 
 	if (option == 3)
 	{
-		string obj;
+		String obj;
 		cin.ignore();
 		cout << "\nENTER THE INDEX YOU WANT TO SEARCH: ";
-		getline(cin, obj, '\n');
+		getline(cin, obj.toStdString(), '\n');
 		PointSearch(&ReadRBNodeFromFile(IRBTREE->fieldname + "\\" + IRBTREE->GetNodeFilename(IRBTREE->root)), obj, Fields, IRBTREE->fieldname);
 	}
 
 	if (option == 4)
 	{
-		string n1, n2;
+		String n1, n2;
 		cin.ignore();
 		cout << "\nENTER THE STARTING VALUE FOR SEARCH: ";
-		getline(cin, n1, '\n');
+		getline(cin, n1.toStdString(), '\n');
 		cin.ignore();
 		cout << "\nENTER THE END VALUE FOR SEARCH: ";
-		getline(cin, n2, '\n');
+		getline(cin, n2.toStdString(), '\n');
 		RangeSearch(&ReadRBNodeFromFile(IRBTREE->fieldname + "\\" + IRBTREE->GetNodeFilename(IRBTREE->root)), n1, n2, Fields, IRBTREE->fieldname);
 	}
 }
 
-void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
+void MENURBTREE(CustomVector<String>Fields, CustomVector<String> DataTypes)
 {
-	RedBlackTree<string>* SRBTREE = NULL;
+	RedBlackTree<String>* SRBTREE = NULL;
 	RedBlackTree<int>* IRBTREE = NULL;
 	RedBlackTree<double>* DRBTREE = NULL;
 	char ch;
@@ -205,7 +205,7 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			SRBTREE->fieldname = Fields[choice - 1];
 			SRBTREE->CreateTreeFile(SRBTREE->root);
 			do {
-				RBSUBMENU<string>(SRBTREE, Fields);
+				RBSUBMENU<String>(SRBTREE, Fields);
 				/*SRBTREE = &stringCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				SRBTREE->fieldname = Fields[choice - 1];
 				SRBTREE->CreateTreeFile(SRBTREE->root);*/
@@ -252,7 +252,7 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 }
 
 template<typename T>
-void AVLSUBMENU(AVL<T>* IAVLTREE, CustomVector<string>& Fields, int choice)
+void AVLSUBMENU(AVL<T>* IAVLTREE, CustomVector<String>& Fields, int choice)
 {
 	int option = submenu();
 	system("cls");
@@ -272,29 +272,29 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, CustomVector<string>& Fields, int choice)
 
 	if (option == 3)
 	{
-		string obj;
+		String obj;
 		cin.ignore();
 		cout << "\nENTER THE INDEX YOU WANT TO SEARCH: ";
-		getline(cin, obj, '\n');
+		getline(cin, obj.toStdString(), '\n');
 		PointSearch(&ReadAvlNodeFromFile(IAVLTREE->fieldname + "\\" + IAVLTREE->GetNodeFilename(IAVLTREE->root)), obj, Fields, IAVLTREE->fieldname);
 	}
 
 	if (option == 4)
 	{
-		string n1, n2;
+		String n1, n2;
 		cin.ignore();
 		cout << "\nENTER THE STARTING VALUE FOR SEARCH: ";
-		getline(cin, n1, '\n');
+		getline(cin, n1.toStdString(), '\n');
 		cin.ignore();
 		cout << "\nENTER THE END VALUE FOR SEARCH: ";
-		getline(cin, n2, '\n');
+		getline(cin, n2.toStdString(), '\n');
 		RangeSearch(&ReadAvlNodeFromFile(IAVLTREE->fieldname + "\\" + IAVLTREE->GetNodeFilename(IAVLTREE->root)), n1, n2, Fields, IAVLTREE->fieldname);
 	}
 }
 
-void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
+void MENUAVLTREE(CustomVector<String>Fields, CustomVector<String> DataTypes)
 {
-	AVL<string>* SAVLTREE = NULL;
+	AVL<String>* SAVLTREE = NULL;
 	AVL<int>* IAVLTREE = NULL;
 	AVL<double>* DAVLTREE = NULL;
 	char ch;
@@ -318,7 +318,7 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			SAVLTREE->fieldname = Fields[choice - 1];
 			SAVLTREE->CreateTreeFile(SAVLTREE->root);
 			do {
-				AVLSUBMENU<string>(SAVLTREE, Fields, choice);
+				AVLSUBMENU<String>(SAVLTREE, Fields, choice);
 				/*SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 				SAVLTREE->fieldname = Fields[choice - 1];
 				SAVLTREE->CreateTreeFile(SAVLTREE->root);*/
@@ -366,7 +366,7 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 	} while (ch == 'Y' || ch == 'y');
 }
 
-void mainMenu(CustomVector<string>& Fields, CustomVector<string>& Entries, CustomVector<string>& DataTypes) {
+void mainMenu(CustomVector<String>& Fields, CustomVector<String>& Entries, CustomVector<String>& DataTypes) {
 	system("cls");
 	ourNames();
 	cout << "------------------- BRANCHES --------------------" << endl;
@@ -397,7 +397,7 @@ int main()
 {
 	char ch = '1';
 
-	CustomVector<string> Fields, Entries, DataTypes;
+	CustomVector<String> Fields, Entries, DataTypes;
 	GetFields(fileName, Fields, Entries);
 	AllocateDataTypes(DataTypes, Entries);
 

@@ -8,29 +8,29 @@ using namespace std;
 
 struct Commit_Log {
     int commitNumber;
-    string message;
-    string timestamp;
+    String message;
+    String timestamp;
 
     Commit_Log() : commitNumber(0), message(""), timestamp("") {}
 
-    Commit_Log(int num, const string& msg, const string& time)
+    Commit_Log(int num, const String& msg, const String& time)
         : commitNumber(num), message(msg), timestamp(time) {}
 };
 
-CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
+CustomVector<Commit_Log> parseCommitHistory1(const String& branchName) {
     CustomVector<Commit_Log> history;
-    string path = "BRANCHES\\" + branchName + "\\commit_log.txt";
-    ifstream file(path);
+    String path = "BRANCHES\\" + branchName + "\\commit_log.txt";
+    ifstream file(path.toStdString());
 
     if (!file.is_open()) {
         cout << "No commit history found for branch '" << branchName << "'.\n";
         return history;
     }
 
-    string line;
-    while (getline(file, line)) {
+    String line;
+    while (getline(file, line.toStdString())) {
         int commitNumber;
-        string message, timestamp;
+        String message, timestamp;
         size_t pos1 = line.find(':');
         size_t pos2 = line.find_last_of(':');
 
@@ -46,7 +46,7 @@ CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
     return history;
 }
 
-void displayCommitHistory1(const string& branchName) {
+void displayCommitHistory1(const String& branchName) {
     CustomVector<Commit_Log> history = parseCommitHistory1(branchName);
 
     if (history.empty()) {
@@ -62,7 +62,7 @@ void displayCommitHistory1(const string& branchName) {
     cout << endl;
 }
 
-string getCurrentTimestamp1() {
+String getCurrentTimestamp1() {
 
     auto now = chrono::system_clock::now();
     time_t timeT = chrono::system_clock::to_time_t(now);
@@ -72,13 +72,16 @@ string getCurrentTimestamp1() {
 
     stringstream ss;
     ss << put_time(&localTime, "%Y-%m-%d %H:%M:%S"); // Format: YYYY-MM-DD HH:MM:SS
-    return ss.str();
-}
-void addCommit1(const string& branchName, const CustomVector<string>& LogMessage) {
-    string path = "BRANCHES\\" + branchName + "\\commit_log.txt";
-    ofstream file(path, ios::app);
 
-    string timestamp = getCurrentTimestamp1();
+    // Convert std::string to custom String class
+    return String(ss.str().c_str());
+}
+
+void addCommit1(const String& branchName, const CustomVector<String>& LogMessage) {
+    String path = "BRANCHES\\" + branchName + "\\commit_log.txt";
+    ofstream file(path.toStdString(), ios::app);
+
+    String timestamp = getCurrentTimestamp1();
 
     CustomVector<Commit_Log> history = parseCommitHistory1(branchName);
     int nextCommitNumber = history.empty() ? 1 : history.back().commitNumber + 1;
