@@ -55,7 +55,7 @@ public:
 	void printNodeinfile(BTREEDataNode<T>* node)
 	{
 		fstream file;
-		file.open("BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + fieldname + "\\" + GetFileName(node) + ".txt", ios::out);
+		file.open("BRANCHES\\" + activeBranch4.toStdString() + "\\TREES\\BTREE\\" + fieldname.toStdString() + "\\" + GetFileName(node).toStdString() + ".txt", ios::out);
 		for (int i = 0; i < node->size; i++)
 		{
 			file << node->key[i].val << ",";
@@ -326,7 +326,7 @@ void BTree<T>::freeNode(BTREEDataNode<T>* x)
 		}
 	}
 
-	String path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + fieldname + "\\" + GetFileName(x);
+	String path = "BRANCHES\\" + activeBranch4.toStdString() + "\\TREES\\BTREE\\" + fieldname.toStdString() + "\\" + GetFileName(x);
 	remove(path.c_str());
 	delete[] x->child;
 }
@@ -645,7 +645,7 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, String valToDel)
 		fstream file;
 		String line = "";
 		String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
-		file.open(path, ios::in);
+		file.open(path.toStdString(), ios::in);
 		while (getline(file, line.toStdString(), '\n'))
 		{
 			int res = getFieldIndex(tuples, line);
@@ -653,7 +653,7 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, String valToDel)
 				sstream << line << endl;
 		}
 		file.close();
-		file.open(path, ios::out);
+		file.open(path.toStdString(), ios::out);
 		file << sstream.rdbuf();
 		file.close();
 	}

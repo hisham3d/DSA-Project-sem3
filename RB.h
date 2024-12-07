@@ -2,6 +2,7 @@
 #include <iostream>
 using namespace std;
 #include"AVL.h"
+#include <string>
 
 String activeBranch3;
 
@@ -111,7 +112,7 @@ public:
     void WriteNodeinFile(RBDataNode<T>* R)
     {
         fstream file;
-        file.open("BRANCHES\\" + activeBranch3 + "\\TREES\\RB\\" + fieldname + "\\" + GetNodeFilename(R) + ".txt", ios::out);
+        file.open("BRANCHES\\" + activeBranch3.toStdString() + "\\TREES\\RB\\" + fieldname.toStdString() + "\\" + GetNodeFilename(R).toStdString() + ".txt", ios::out);
         GetNodeInfo(file, R);
         file.close();
     }
@@ -605,7 +606,7 @@ public:
         while (temp1 != end)
         {
             temp = temp1;
-
+            //cout << n->value << "CHECK" << temp1->value << endl;
             if (n->value < temp1->value)
             {
                 temp1 = temp1->left;
@@ -847,7 +848,7 @@ void RemoveTupleFromFile(RBDataNode<T>* ptr)
         fstream file;
         String line = "";
         String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
-        file.open(path, ios::in);
+        file.open(path.toStdString(), ios::in);
 
         while (getline(file, line.toStdString(), '\n'))
         {
@@ -857,7 +858,7 @@ void RemoveTupleFromFile(RBDataNode<T>* ptr)
         }
 
         file.close();
-        file.open(path, ios::out);
+        file.open(path.toStdString(), ios::out);
         file << sstream.rdbuf();
         file.close();
     }
@@ -886,10 +887,10 @@ void UpdateTupleInfile(RBDataNode<T>* ptr, int index, String newVal, int fieldIn
     String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
 
     // read all rows into vector
-    fstream file(path, ios::in);
+    fstream file(path.toStdString(), ios::in);
     CustomVector<String> rows;
     String line;
-    while (getline(file, line)) {
+    while (getline(file, line.toStdString())) {
         rows.push_back(line);
     }
     file.close();
@@ -900,7 +901,7 @@ void UpdateTupleInfile(RBDataNode<T>* ptr, int index, String newVal, int fieldIn
         rows[index] = join(fields, ','); // Rejoin fields into the updated row
     }
 
-    file.open(path, ios::out | ios::trunc); //
+    file.open(path.toStdString(), ios::out | ios::trunc); //
     for (const String& row : rows) {
         file << row << endl;
     }

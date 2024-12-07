@@ -41,6 +41,8 @@ public:
     int operator()(const String&) const; // returns the first index of the String being searched
     int operator()(const char*) const; // returns the index of the c-string being searched
 
+
+
     int getsize();
     // Conversion Operator
     //operator int() const; // returns the length of string
@@ -51,6 +53,22 @@ public:
     // btree
     const char* c_str() const {
         return arr;
+    }
+
+    bool operator<(const String& other) const {
+        return strcmp(this->arr, other.arr) < 0;
+    }
+
+    bool operator<=(const String& other) const {
+        return strcmp(this->arr, other.arr) <= 0;
+    }
+
+    bool operator>(const String& other) const {
+        return strcmp(this->arr, other.arr) > 0;
+    }
+
+    bool operator>=(const String& other) const {
+        return strcmp(this->arr, other.arr) >= 0;
     }
 
     String& operator=(string& str) {
@@ -317,7 +335,6 @@ public:
         }
         arr[size] = '\0'; // Null-terminate the string
     }
-
 };
 
 String::String() { // default constructor

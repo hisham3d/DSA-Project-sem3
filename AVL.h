@@ -259,7 +259,7 @@ public:
     void WriteNodeinFile(AVLDataNode<T>* R)
     {
         fstream file;
-        file.open("BRANCHES\\" + activeBranch2 + "\\TREES\\AVL\\" + fieldname + "\\" + GetNodeFilename(R) + ".txt", ios::out);
+        file.open("BRANCHES\\" + activeBranch2.toStdString() + "\\TREES\\AVL\\" + fieldname.toStdString() + "\\" + GetNodeFilename(R).toStdString() + ".txt", ios::out);
         GetNodeInfo(file, R);
         file.close();
     }
@@ -462,10 +462,10 @@ void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, String newVal, int fieldI
     // Get the file path from the node's AddressList
     String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
 
-    fstream file(path, ios::in);
+    fstream file(path.toStdString(), ios::in);
     CustomVector<String> rows;
     String line;
-    while (getline(file, line)) {
+    while (getline(file, line.toStdString())) {
         rows.push_back(line);
     }
     file.close();
@@ -476,7 +476,7 @@ void UpdateTupleInfile(AVLDataNode<T>* ptr, int index, String newVal, int fieldI
         rows[index] = join(fields, ','); // rejoin the updated fields into a row
     }
 
-    file.open(path, ios::out | ios::trunc);
+    file.open(path.toStdString(), ios::out | ios::trunc);
     for (const String& row : rows) {
         file << row << endl;
     }
@@ -628,7 +628,7 @@ void RemoveTupleFromFile(AVLDataNode<T>* ptr)
         fstream file;
         String line = "";
         String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
-        file.open(path, ios::in);
+        file.open(path.toStdString(), ios::in);
         while (getline(file, line.toStdString(), '\n'))
         {
             int res = getFieldIndex(tuples, line);
@@ -636,7 +636,7 @@ void RemoveTupleFromFile(AVLDataNode<T>* ptr)
                 sstream << line << endl;
         }
         file.close();
-        file.open(path, ios::out);
+        file.open(path.toStdString(), ios::out);
         file << sstream.rdbuf();
         file.close();
     }
