@@ -2,8 +2,8 @@
 #include<iostream>
 #include"RB.h"
 using namespace std;
-// getline and to_string
-String activeBranch4;
+
+string activeBranch4;
 
 template <typename T>
 class BTREEDataNode
@@ -22,15 +22,15 @@ class BTree
 public:
 	BTREEDataNode<T>* root;
 	int counter;
-	String fieldname;
+	string fieldname;
 	BTree(int);
 	~BTree<T>();
-	void insert(T, String filename, String linenumber);
+	void insert(T, string filename, string linenumber);
 	T remove(T);
 	std::pair<BTREEDataNode<T>*, int> search(T);
 	void print();
 
-	void INRANGEROOT(BTREEDataNode<T>* node, CustomVector<String> fields, T start, T end)
+	void INRANGEROOT(BTREEDataNode<T>* node, CustomVector<string> fields, T start, T end)
 	{
 		for (int i = 0; i < node->size; i++)
 		{
@@ -47,7 +47,7 @@ public:
 		}
 	}
 
-	String GetFileName(BTREEDataNode<T>* node)
+	string GetFileName(BTREEDataNode<T>* node)
 	{
 		return fieldname + "_BTREENODE_" + to_string(node->counter);
 	}
@@ -55,7 +55,7 @@ public:
 	void printNodeinfile(BTREEDataNode<T>* node)
 	{
 		fstream file;
-		file.open("BRANCHES\\" + activeBranch4.toStdString() + "\\TREES\\BTREE\\" + fieldname.toStdString() + "\\" + GetFileName(node).toStdString() + ".txt", ios::out);
+		file.open("BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + fieldname + "\\" + GetFileName(node) + ".txt", ios::out);
 		for (int i = 0; i < node->size; i++)
 		{
 			file << node->key[i].val << ",";
@@ -149,7 +149,7 @@ BTree<T>::~BTree<T>()
 }
 
 template <typename T>
-void BTree<T>::insert(T k, String filename, String linenumber)
+void BTree<T>::insert(T k, string filename, string linenumber)
 {
 	pair<BTREEDataNode<T>*, int > res = search(k);
 	if (res.first != 0 && res.first != NULL)
@@ -326,7 +326,7 @@ void BTree<T>::freeNode(BTREEDataNode<T>* x)
 		}
 	}
 
-	String path = "BRANCHES\\" + activeBranch4.toStdString() + "\\TREES\\BTREE\\" + fieldname.toStdString() + "\\" + GetFileName(x);
+	string path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + fieldname + "\\" + GetFileName(x);
 	remove(path.c_str());
 	delete[] x->child;
 }
@@ -347,8 +347,8 @@ void copyVect(CustomVector<AddressLocation>& vt1, CustomVector<AddressLocation>&
 	vt1.resize(0);
 	for (int i = 0; i < vt2.getSize(); ++i)
 	{
-		String s1 = vt2[i].filename;
-		String s2 = vt2[i].linenumber;
+		string s1 = vt2[i].filename;
+		string s2 = vt2[i].linenumber;
 		vt1.push_back(AddressLocation(s1, s2));
 	}
 }
@@ -518,18 +518,18 @@ void BTree<T>::printNode(BTREEDataNode<T>* node, int  tab)
 	}
 }
 
-BTree<String>& stringCreateBTREE(int index, String typee, String branch)
+BTree<string>& stringCreateBTREE(int index, string typee, string branch)
 {
 	activeBranch4 = branch;
 	int degree;
 	cout << "Enter the minimum degree : ";
 	cin >> degree;
-	BTree<String>* Tree = new  BTree<String>(degree);
+	BTree<string>* Tree = new  BTree<string>(degree);
 
 	fstream file;
-	file.open("FilesToREAD\\" + fileName.toStdString(), ios::in);
+	file.open("FilesToREAD\\" + fileName, ios::in);
 
-	CustomVector<String> lineREAD;
+	CustomVector<string> lineREAD;
 	READLINE(file, lineREAD);
 	int lineNumber = 1;
 	while (!file.eof())
@@ -538,7 +538,7 @@ BTree<String>& stringCreateBTREE(int index, String typee, String branch)
 		READLINE(file, lineREAD);
 		if (lineREAD.getSize() <= 1)
 			break;
-		Tree->insert(lineREAD[index], fileName, tostring(lineNumber++));
+		Tree->insert(lineREAD[index], fileName, to_string(lineNumber++));
 	}
 	//Tree->printInorder(Tree->root);
 	file.close();
@@ -546,7 +546,7 @@ BTree<String>& stringCreateBTREE(int index, String typee, String branch)
 	return *Tree;
 }
 
-BTree<int>& intCreateBTREE(int index, String typee, String branch)
+BTree<int>& intCreateBTREE(int index, string typee, string branch)
 {
 	activeBranch4 = branch;
 	int degree;
@@ -555,8 +555,9 @@ BTree<int>& intCreateBTREE(int index, String typee, String branch)
 	BTree<int>* Tree = new  BTree<int>(degree);
 
 	fstream file;
-	file.open("FilesToREAD\\" + fileName.toStdString(), ios::in);
-	CustomVector<String> lineREAD;
+	file.open("FilesToREAD\\" + fileName, ios::in);
+
+	CustomVector<string> lineREAD;
 	READLINE(file, lineREAD);
 	int lineNumber = 1;
 	while (!file.eof())
@@ -565,15 +566,15 @@ BTree<int>& intCreateBTREE(int index, String typee, String branch)
 		READLINE(file, lineREAD);
 		if (lineREAD.getSize() <= 1)
 			break;
-		Tree->insert(stoi(lineREAD[index]), fileName, tostring(lineNumber++));
+		Tree->insert(stoi(lineREAD[index]), fileName, to_string(lineNumber++));
 	}
-	//Tree->printInorder(Tree->root);
+	//Tree->print();
 	file.close();
 
 	return *Tree;
 }
 
-BTree<double>& doubleCreateBTREE(int index, String typee, String branch)
+BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 {
 	activeBranch4 = branch;
 	int degree;
@@ -582,9 +583,9 @@ BTree<double>& doubleCreateBTREE(int index, String typee, String branch)
 	BTree<double>* Tree = new  BTree<double>(degree);
 
 	fstream file;
-	file.open("FilesToREAD\\" + fileName.toStdString(), ios::in);
+	file.open("FilesToREAD\\" + fileName, ios::in);
 
-	CustomVector<String> lineREAD;
+	CustomVector<string> lineREAD;
 	READLINE(file, lineREAD);
 	int lineNumber = 1;
 	while (!file.eof())
@@ -593,7 +594,7 @@ BTree<double>& doubleCreateBTREE(int index, String typee, String branch)
 		READLINE(file, lineREAD);
 		if (lineREAD.getSize() <= 1)
 			break;
-		Tree->insert(stod(lineREAD[index]), fileName, tostring(lineNumber++));
+		Tree->insert(stod(lineREAD[index]), fileName, to_string(lineNumber++));
 	}
 	//Tree->printInorder(Tree->root);
 	file.close();
@@ -602,7 +603,7 @@ BTree<double>& doubleCreateBTREE(int index, String typee, String branch)
 }
 
 template<typename T>
-void PointSearch(BTree<T>* R, CustomVector<String> fields, T key)
+void PointSearch(BTree<T>* R, CustomVector<string> fields, T key)
 {
 	pair<BTREEDataNode<T>*, int> res = R->search(key);
 	if (!res.first)
@@ -611,23 +612,23 @@ void PointSearch(BTree<T>* R, CustomVector<String> fields, T key)
 }
 
 template<typename T>
-void RangeSearch(BTree<T>* R, CustomVector<String> fields, T start, T end)
+void RangeSearch(BTree<T>* R, CustomVector<string> fields, T start, T end)
 {
 	R->INRANGEROOT(R->root, fields, start, end);
 }
 
 template<typename T>
-void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, String valToDel)
+void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
 {
-	CustomVector<String> tuples;
+	CustomVector<string> tuples;
 	set<int> indexis;
 	int i = 0;
 
 	// Iterate through ptr->AddressList using an index-based for loop
 	for (int i = 0; i < ptr->AddressList.getSize(); ++i)
 	{
-		String str = "";
-		CustomVector<String> temp = GetTuples(ptr->AddressList[i]);
+		string str = "";
+		CustomVector<string> temp = GetTuples(ptr->AddressList[i]);
 		if (toLower(temp[index]) != toLower(valToDel))
 			continue;
 
@@ -643,17 +644,17 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, String valToDel)
 	for (int i = 0; i < ptr->AddressList.getSize(); ++i)
 	{
 		fstream file;
-		String line = "";
-		String path = "FilesToREAD\\" + ptr->AddressList[0].filename;
-		file.open(path.toStdString(), ios::in);
-		while (getline(file, line.toStdString(), '\n'))
+		string line = "";
+		string path = "FilesToREAD\\" + ptr->AddressList[0].filename;
+		file.open(path, ios::in);
+		while (getline(file, line, '\n'))
 		{
 			int res = getFieldIndex(tuples, line);
 			if (res == -1)
 				sstream << line << endl;
 		}
 		file.close();
-		file.open(path.toStdString(), ios::out);
+		file.open(path, ios::out);
 		file << sstream.rdbuf();
 		file.close();
 	}
@@ -668,18 +669,18 @@ void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, String valToDel)
 	copyVect(ptr->AddressList, tempo);
 }
 
-void DeleteTuple(BTree<int>* BT, CustomVector<String> fields)
+void DeleteTuple(BTree<int>* BT, CustomVector<string> fields)
 {
-	String input = "";
+	string input = "";
 	cout << "\nEnter Delete Query: ";
 	cin.ignore();
-	getline(cin, input.toStdString(), '\n');
+	getline(cin, input, '\n');
 	stringstream sstream;
 	sstream << input;
 	sstream >> input;
 	cout << input << endl;
-	CustomVector<String> tags;
-	while (getline(sstream, input.toStdString(), ','))
+	CustomVector<string> tags;
+	while (getline(sstream, input, ','))
 	{
 		if (input[0] == ' ')
 			input.erase(0, 1);
@@ -706,34 +707,50 @@ void DeleteTuple(BTree<int>* BT, CustomVector<String> fields)
 
 	if (toLower(tags[1]) == toLower(BT->fieldname))
 	{
-		String path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);
+		string path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);
 		remove(path.c_str());
 		BT = &intCreateBTREE(getFieldIndex(fields, BT->fieldname), "", activeBranch4);
 		BT->CreateTreeFile();
 	}
+
+	CustomVector<string> LogMessage;
+	LogMessage.push_back("BTREE");
+
+	string concatenatedTags;
+	for (int i = 0; i < tags.getSize(); i++) {
+		if (i > 0) {
+			concatenatedTags += ", ";
+		}
+		concatenatedTags += tags[i];
+	}
+
+	LogMessage.push_back(concatenatedTags);
+	LogMessage.push_back("DELETED");
+
+	addCommit1(activeBranch4, LogMessage);
 }
 
-void DeleteTuple(BTree<String>* BT, CustomVector<String> fields)
+void DeleteTuple(BTree<string>* BT, CustomVector<string> fields)
 {
-	String input = "";
+	string input = "";
 	cout << "\nEnter Delete Query: ";
 	cin.ignore();
-	getline(cin, input.toStdString(), '\n');
+	getline(cin, input, '\n');
 	stringstream sstream;
 	sstream << input;
 	sstream >> input;
 	cout << input << endl;
-	CustomVector<String> tags;
+	CustomVector<string> tags;
 
-	while (getline(sstream, input.toStdString(), ','))
+	while (getline(sstream, input, ','))
 	{
 		if (input[0] == ' ')
 			input.erase(0, 1);
 		tags.push_back(input);
 	}
 
-	pair<BTREEDataNode<String>*, int> toDelete = BT->search((tags[0]));
-	RBSUBNODE<String>* ptr = &toDelete.first->key[toDelete.second];
+	pair<BTREEDataNode<string>*, int> toDelete = BT->search((tags[0]));
+	RBSUBNODE<string>* ptr = &toDelete.first->key[toDelete.second];
 
 	int ind = getFieldIndex(fields, tags[1]);
 	if (ind == -1)
@@ -748,29 +765,45 @@ void DeleteTuple(BTree<String>* BT, CustomVector<String> fields)
 		return;
 	}
 
-	RemoveTupleFromFile<String>(ptr, ind, tags[2]);
+	RemoveTupleFromFile<string>(ptr, ind, tags[2]);
 
 	if (toLower(tags[1]) == toLower(BT->fieldname))
 	{
-		String path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);
+		string path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);
 		remove(path.c_str());
 		BT = &stringCreateBTREE(getFieldIndex(fields, BT->fieldname), "", activeBranch4);
 		BT->CreateTreeFile();
 	}
+
+	CustomVector<string> LogMessage;
+	LogMessage.push_back("BTREE");
+
+	string concatenatedTags;
+	for (int i = 0; i < tags.getSize(); i++) {
+		if (i > 0) {
+			concatenatedTags += ", ";
+		}
+		concatenatedTags += tags[i];
+	}
+
+	LogMessage.push_back(concatenatedTags);
+	LogMessage.push_back("DELETED");
+
+	addCommit1(activeBranch4, LogMessage);
 }
 
-void DeleteTuple(BTree<double>* BT, CustomVector<String> fields)
+void DeleteTuple(BTree<double>* BT, CustomVector<string> fields)
 {
-	String input = "";
+	string input = "";
 	cout << "\nEnter Delete Query: ";
 	cin.ignore();
-	getline(cin, input.toStdString(), '\n');
+	getline(cin, input, '\n');
 	stringstream sstream;
 	sstream << input;
 	sstream >> input;
 	cout << input << endl;
-	CustomVector<String> tags;
-	while (getline(sstream, input.toStdString(), ','))
+	CustomVector<string> tags;
+	while (getline(sstream, input, ','))
 	{
 		if (input[0] == ' ')
 			input.erase(0, 1);
@@ -803,9 +836,24 @@ void DeleteTuple(BTree<double>* BT, CustomVector<String> fields)
 
 	if (toLower(tags[1]) == toLower(BT->fieldname))
 	{
-		String path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);
+		string path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);
 		remove(path.c_str());
 		BT = &doubleCreateBTREE(getFieldIndex(fields, BT->fieldname), "", activeBranch4);
 		BT->CreateTreeFile();
 	}
+	CustomVector<string> LogMessage;
+	LogMessage.push_back("BTREE");
+
+	string concatenatedTags;
+	for (int i = 0; i < tags.getSize(); i++) {
+		if (i > 0) {
+			concatenatedTags += ", ";
+		}
+		concatenatedTags += tags[i];
+	}
+
+	LogMessage.push_back(concatenatedTags);
+	LogMessage.push_back("DELETED");
+
+	addCommit1(activeBranch4, LogMessage);
 }

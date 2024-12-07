@@ -454,7 +454,7 @@ String String::operator+(const char* str) {
     return *this;
 }
 
-//#include <string>
+#include <string>
 
 String String::operator-(const String& substr) {
     int s1 = 0, s2 = 0;
@@ -721,7 +721,6 @@ bool String::operator==(const char* str) const { // returns true if the c-string
 }
 
 String::~String() {
-    if (size > 0)
     delete[] arr;
 };
 
@@ -854,4 +853,11 @@ String tostring(int value) {
     String result(buffer);
     delete[] buffer; // Free the temporary buffer
     return result;
+}
+
+template<typename T>
+std::string toStringT(const T& obj) {
+    std::ostringstream oss;
+    oss << obj;
+    return oss.str();
 }
