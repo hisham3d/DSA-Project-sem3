@@ -125,8 +125,10 @@ void addCommit1(const string& branchName, const CustomVector<string>& LogMessage
     ofstream file(path, ios::app);
 
     string user;
+    cin.ignore();
     cout << "\nEnter username: ";
     getline(cin, user, '\n');
+    cout << endl;
 
     if (!fileExists) {
         file << "                                    _________________\n";

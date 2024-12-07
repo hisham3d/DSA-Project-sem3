@@ -6,11 +6,44 @@ using namespace std;
 string activeBranch4;
 
 template <typename T>
+class BTREESUBNODE
+{
+public:
+	T val;
+	CustomVector <AddressLocation> AddressList;
+	void print()
+	{
+		for (int i = 0; i < AddressList.getSize(); i++)
+			cout << AddressList[i].filename << "  " << AddressList[i].linenumber << endl;
+	}
+
+	void printinffile(fstream& file)
+	{
+		for (int i = 0; i < AddressList.getSize(); i++)
+			file << AddressList[i].filename << "\n" << AddressList[i].linenumber << endl;
+	}
+};
+
+template<typename T>
+void DisplayAllTuples(CustomVector<string>& Fields, BTREESUBNODE <T>& ptr)
+{
+	for (int i = 0; i < ptr.AddressList.getSize(); i++)
+	{
+		CustomVector<string> lt = GetTuples(ptr.AddressList[i]);
+
+		for (int i = 0; i < lt.getSize(); i++)
+			cout << left << setw(30) << Fields[i] << ":  " << "                  " << lt[i] << endl;
+
+		cout << "---------------------------------------------------------------------------------\n";
+	}
+}
+
+template <typename T>
 class BTREEDataNode
 {
 public:
 	BTREEDataNode<T>** child;	// Array of pointers to children.
-	RBSUBNODE<T>* key;				// Array of keys
+	BTREESUBNODE<T>* key;				// Array of keys
 	int counter;
 	int  size;		// Number of keys.
 	bool leaf;			// Whether the node is a leaf.
@@ -334,7 +367,7 @@ template <typename T>
 void BTree<T>::initializeNode(BTREEDataNode<T>* x)
 {
 	x->size = 0;
-	x->key = new RBSUBNODE<T>[(2 * minDegree - 1)];
+	x->key = new BTREESUBNODE<T>[(2 * minDegree - 1)];
 	x->child = new BTREEDataNode<T>*[2 * minDegree];
 	x->counter = counter++;
 }
@@ -519,7 +552,7 @@ BTree<string>& stringCreateBTREE(int index, string typee, string branch)
 {
 	activeBranch4 = branch;
 	int degree;
-	cout << "Enter the minimum degree : ";
+	cout << "Enter the minimum degree: ";
 	cin >> degree;
 	BTree<string>* Tree = new  BTree<string>(degree);
 
@@ -547,7 +580,7 @@ BTree<int>& intCreateBTREE(int index, string typee, string branch)
 {
 	activeBranch4 = branch;
 	int degree;
-	cout << "Enter the minimum degree : ";
+	cout << "Enter the minimum degree: ";
 	cin >> degree;
 	BTree<int>* Tree = new  BTree<int>(degree);
 
@@ -575,7 +608,7 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 {
 	activeBranch4 = branch;
 	int degree;
-	cout << "Enter the minimum degree : ";
+	cout << "Enter the minimum degree: ";
 	cin >> degree;
 	BTree<double>* Tree = new  BTree<double>(degree);
 
@@ -600,7 +633,7 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 }
 
 template<typename T>
-void RemoveTupleFromFile(RBSUBNODE<T>* ptr, int index, string valToDel)
+void RemoveTupleFromFile(BTREESUBNODE<T>* ptr, int index, string valToDel)
 {
 	CustomVector<string> tuples;
 	set<int> indexis;
@@ -660,7 +693,7 @@ void DeleteTuple(BTree<int>* BT, CustomVector<string> fields)
 	stringstream sstream;
 	sstream << input;
 	sstream >> input;
-	cout << input << endl;
+	//cout << input << endl;
 	CustomVector<string> tags;
 	while (getline(sstream, input, ','))
 	{
@@ -670,7 +703,7 @@ void DeleteTuple(BTree<int>* BT, CustomVector<string> fields)
 	}
 
 	pair<BTREEDataNode<int>*, int> toDelete = BT->search(stoi(tags[0]));
-	RBSUBNODE<int>* ptr = &toDelete.first->key[toDelete.second];
+	BTREESUBNODE<int>* ptr = &toDelete.first->key[toDelete.second];
 	int ind = getFieldIndex(fields, tags[1]);
 
 	if (ind == -1)
@@ -687,13 +720,13 @@ void DeleteTuple(BTree<int>* BT, CustomVector<string> fields)
 
 	RemoveTupleFromFile<int>(ptr, ind, tags[2]);
 
-	if (toLower(tags[1]) == toLower(BT->fieldname))
+	/*if (toLower(tags[1]) == toLower(BT->fieldname))
 	{
 		string path = "BRANCHES\\" + activeBranch4 + "\\TREES\\BTREE\\" + BT->fieldname + "\\" + BT->GetFileName(toDelete.first);
 		remove(path.c_str());
 		BT = &intCreateBTREE(getFieldIndex(fields, BT->fieldname), "", activeBranch4);
 		BT->CreateTreeFile();
-	}
+	}*/
 
 	CustomVector<string> LogMessage;
 	LogMessage.push_back("BTREE");
@@ -721,7 +754,7 @@ void DeleteTuple(BTree<string>* BT, CustomVector<string> fields)
 	stringstream sstream;
 	sstream << input;
 	sstream >> input;
-	cout << input << endl;
+	//cout << input << endl;
 	CustomVector<string> tags;
 
 	while (getline(sstream, input, ','))
@@ -732,7 +765,7 @@ void DeleteTuple(BTree<string>* BT, CustomVector<string> fields)
 	}
 
 	pair<BTREEDataNode<string>*, int> toDelete = BT->search((tags[0]));
-	RBSUBNODE<string>* ptr = &toDelete.first->key[toDelete.second];
+	BTREESUBNODE<string>* ptr = &toDelete.first->key[toDelete.second];
 
 	int ind = getFieldIndex(fields, tags[1]);
 	if (ind == -1)
@@ -799,7 +832,7 @@ void DeleteTuple(BTree<double>* BT, CustomVector<string> fields)
 	}
 
 	pair<BTREEDataNode<double>*, int> toDelete = BT->search(stoi(tags[0]));
-	RBSUBNODE<double>* ptr = &toDelete.first->key[toDelete.second];
+	BTREESUBNODE<double>* ptr = &toDelete.first->key[toDelete.second];
 
 	int ind = getFieldIndex(fields, tags[1]);
 	if (ind == -1)

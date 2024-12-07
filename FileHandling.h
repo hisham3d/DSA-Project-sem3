@@ -281,3 +281,24 @@ void GetFields(string Filename, CustomVector<string>& LINE1, CustomVector<string
     READLINE(file, Entries);
     file.close();
 }
+
+void UpdateDataFile() {
+    // Open the CSV file for reading
+    ifstream csvFile("FilesToREAD\\healthcare_dataset.csv");
+
+    // Open the data.txt file for writing
+    ofstream dataFile("FilesToREAD\\data.txt");
+
+    // Copy content from the CSV file to the data file line by line
+    string line;
+    int row = 1;
+    while (getline(csvFile, line)) {
+        dataFile << line << "\n";
+        row++;
+    }
+
+    // Close the files
+    csvFile.close();
+    dataFile.close();
+
+}

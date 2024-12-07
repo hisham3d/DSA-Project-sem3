@@ -50,39 +50,6 @@ public:
     }
 };
 
-template <typename T>
-class RBSUBNODE
-{
-public:
-    T val;
-    CustomVector <AddressLocation> AddressList;
-    void print()
-    {
-        for (int i = 0; i < AddressList.getSize(); i++)
-            cout << AddressList[i].filename << "  " << AddressList[i].linenumber << endl;
-    }
-
-    void printinffile(fstream& file)
-    {
-        for (int i = 0; i < AddressList.getSize(); i++)
-            file << AddressList[i].filename << "\n" << AddressList[i].linenumber << endl;
-    }
-};
-
-template<typename T>
-void DisplayAllTuples(CustomVector<string>& Fields, RBSUBNODE <T>& ptr)
-{
-    for (int i = 0; i < ptr.AddressList.getSize(); i++)
-    {
-        CustomVector<string> lt = GetTuples(ptr.AddressList[i]);
-
-        for (int i = 0; i < lt.getSize(); i++)
-            cout << left << setw(30) << Fields[i] << ":  " << "                  " << lt[i] << endl;
-
-        cout << "---------------------------------------------------------------------------------\n";
-    }
-}
-
 template <class T>
 class RedBlackTree
 {
@@ -886,7 +853,7 @@ void DeleteTuple(RedBlackTree<T>* RB, int index, T val)
     LogMessage.push_back("RB");
     LogMessage.push_back(toStringT(val));
     LogMessage.push_back("Deleted");
-    addCommit1(activeBranch2, LogMessage);
+    addCommit1(activeBranch3, LogMessage);
 }
 
 template<typename T>

@@ -535,7 +535,7 @@ void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
     Avl = &intCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "int", activeBranch2);
     Avl->fieldname = fields[fieldIndex];
     Avl->CreateTreeFile(Avl->root);
-    cout << "Tree created again with updated data." << endl;
+    cout << "Updated tree data." << endl;
 
     // COMMIT LOG
     CustomVector<string> LogMessage;
@@ -587,7 +587,7 @@ void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields) {
     Avl = &stringCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "string", activeBranch2);
     Avl->fieldname = fields[fieldIndex];
     Avl->CreateTreeFile(Avl->root);
-    cout << "Tree created again with updated data." << endl;
+    cout << "Updated tree data." << endl;
 
     CustomVector<string> LogMessage;
     LogMessage.push_back("AVL");
@@ -640,7 +640,7 @@ void UpdateTuple(AVL<double>*& Avl, CustomVector<string> fields) {
     Avl = &doubleCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "double", activeBranch2);
     Avl->fieldname = fields[fieldIndex];
     Avl->CreateTreeFile(Avl->root);
-    cout << "Tree created again with updated data." << endl;
+    cout << "Updated tree data." << endl;
 
     CustomVector<string> LogMessage;
     LogMessage.push_back("AVL");

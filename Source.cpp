@@ -116,7 +116,7 @@ void MENUBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
 
-		cout << "Enter your choice : ";
+		cout << "Enter your choice: ";
 		cin >> choice;
 
 		if (DataTypes[choice - 1] == "string")
@@ -422,8 +422,10 @@ void mainMenu(CustomVector<string>& Fields, CustomVector<string>& Entries, Custo
 
 int main()
 {
+	createFile("FilesToREAD\\data.txt");
 	char ch = '1';
 
+	UpdateDataFile();
 	CustomVector<string> Fields, Entries, DataTypes;
 	GetFields(fileName, Fields, Entries);
 	AllocateDataTypes(DataTypes, Entries);
