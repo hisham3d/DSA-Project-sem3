@@ -68,35 +68,23 @@ string getCurrentTimestamp1() {
     time_t timeT = chrono::system_clock::to_time_t(now);
 
     struct tm localTime;
-    localtime_s(&localTime, &timeT); // Safe replacement for localtime
+    localtime_s(&localTime, &timeT);
 
     stringstream ss;
     ss << put_time(&localTime, "%Y-%m-%d %H:%M:%S"); // Format: YYYY-MM-DD HH:MM:SS
     return ss.str();
 }
 void addCommit1(const string& branchName, const CustomVector<string>& LogMessage) {
-    // Construct the file path
     string path = "BRANCHES\\" + branchName + "\\commit_log.txt";
     ofstream file(path, ios::app);
 
-    if (!file.is_open()) {
-        cout << "Failed to access commit log for branch '" << branchName << "'.\n";
-        return;
-    }
-
-    // Get the current timestamp
     string timestamp = getCurrentTimestamp1();
 
-    // Parse existing commit history to determine the next commit number
     CustomVector<Commit_Log> history = parseCommitHistory1(branchName);
     int nextCommitNumber = history.empty() ? 1 : history.back().commitNumber + 1;
 
-    // Construct the message from LogMessage vector
- 
-
-    // Write the commit log entry
-    file << nextCommitNumber << ":" << LogMessage[0] << ":" << LogMessage[1] << ":" << timestamp << "\n";
+    file << nextCommitNumber << "|" << LogMessage[0] << "|" << LogMessage[1] << "|" << timestamp << "\n";
     file.close();
 
-    cout << "Commit_Log added successfully with message: " << "\n";
+    cout << "----- Commit log updated -----" << "\n";
 }

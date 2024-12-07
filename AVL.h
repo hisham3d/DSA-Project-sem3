@@ -521,20 +521,18 @@ void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
     Avl->fieldname = fields[fieldIndex];
     Avl->CreateTreeFile(Avl->root);
     cout << "Tree created again with updated data." << endl;
-    
-    CustomVector<std::string> LogMessage;
+
+    CustomVector<string> LogMessage;
     LogMessage.push_back("AVL");
 
-    // Concatenate tags into a single string
     string concatenatedTags;
     for (int i = 0; i < tags.getSize(); i++) {
         if (i > 0) {
-            concatenatedTags += ", "; // Add separator for readability
+            concatenatedTags += ", ";
         }
         concatenatedTags += tags[i];
     }
 
-    // Add concatenated string to log message
     LogMessage.push_back(concatenatedTags);
     addCommit1(activeBranch2, LogMessage);
 }
@@ -656,6 +654,4 @@ void DeleteTuple(AVL<T>* Avl, int index, T val)
         remove(RemovePath.c_str());
 
     cout << "Node successfully deleted and data deleted from file." << endl;
-    //addCommit1(activeBranch2, "Refactored feature implementation.");
-
 }
