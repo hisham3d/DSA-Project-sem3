@@ -9,17 +9,17 @@ using namespace std;
 
 
 
-    class Commit_Log {
-    public:
-        int commitNumber;
-        string user;
-        string query;
-        string timestamp;
-        Commit_Log() : commitNumber(0), user(""),query(""), timestamp("") {}
+class Commit_Log {
+public:
+    int commitNumber;
+    string user;
+    string query;
+    string timestamp;
+    Commit_Log() : commitNumber(0), user(""), query(""), timestamp("") {}
 
-        Commit_Log(int commitNum, const string& usr, const string& qry, const string& ts)
-            : commitNumber(commitNum), user(usr), query(qry), timestamp(ts) {}
-    };
+    Commit_Log(int commitNum, const string& usr, const string& qry, const string& ts)
+        : commitNumber(commitNum), user(usr), query(qry), timestamp(ts) {}
+};
 
 
 CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
@@ -38,7 +38,7 @@ CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
 
     while (getline(file, line)) {
         if (line.empty() || line[0] != '|') {
-            continue; 
+            continue;
         }
 
         try {
@@ -55,13 +55,13 @@ CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
                 int commitNumber = stoi(line.substr(pos1 + 1, pos2 - pos1 - 1));
 
                 string user = line.substr(pos3 + 1, pos4 - pos3 - 1);
-                user.erase(user.find_last_not_of(' ') + 1); 
+                user.erase(user.find_last_not_of(' ') + 1);
 
                 string query = line.substr(pos5 + 1, pos6 - pos5 - 1);
-                query.erase(query.find_last_not_of(' ') + 1); 
+                query.erase(query.find_last_not_of(' ') + 1);
 
                 string timestamp = line.substr(pos6 + 1);
-                timestamp.erase(timestamp.find_last_not_of(' ') + 1); 
+                timestamp.erase(timestamp.find_last_not_of(' ') + 1);
 
                 history.emplace_back(commitNumber, user, query, timestamp);
             }
@@ -75,21 +75,34 @@ CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
     return history;
 }
 
-void displayCommitHistory1(const string& branchName) {
-    CustomVector<Commit_Log> history = parseCommitHistory1(branchName);
+void displayCommitChanges(const string& branchName) {
+    // File path for the commit log
+    string path = "BRANCHES\\" + branchName + "\\commit_log.txt";
 
-    if (history.empty()) {
-        cout << "No commits to display for branch '" << branchName << "'.\n";
+    // Check if the file exists
+    if (!std::filesystem::exists(path)) {
+        cout << "No commit log found for branch '" << branchName << "'.\n";
         return;
     }
 
-    cout << "Commit_Log History for '" << branchName << "':\n";
-    for (const auto& commit : history) {
-        cout << "- Commit_Log #" << commit.commitNumber << ": \"" <<  "\"\n";
-        cout << "  Timestamp: " << commit.timestamp << "\n";
+    // Open the file in read mode
+    ifstream file(path);
+    if (!file.is_open()) {
+        cout << "Failed to access commit log for branch '" << branchName << "'.\n";
+        return;
     }
-    cout << endl;
+
+    // Read and display the contents of the file line by line
+    string line;
+    cout << "\nDisplaying Commit Log for '" << branchName << "':\n";
+    while (getline(file, line)) {
+        cout << line << "\n";
+    }
+
+    file.close();
+    cout << "\n----- End of Commit Log -----\n";
 }
+
 
 string getCurrentTimestamp1() {
 
@@ -110,10 +123,6 @@ void addCommit1(const string& branchName, const CustomVector<string>& LogMessage
     bool fileExists = std::filesystem::exists(path);
 
     ofstream file(path, ios::app);
-    if (!file.is_open()) {
-        cout << "Failed to access commit log for branch '" << branchName << "'.\n";
-        return;
-    }
 
     string user;
     cout << "\nEnter username: ";
@@ -136,10 +145,10 @@ void addCommit1(const string& branchName, const CustomVector<string>& LogMessage
     string combinedQuery = LogMessage[1] + " -> " + LogMessage[2];
 
     file << "|" << left << setw(4) << ("<" + to_string(nextCommitNumber) + ">")
-        << "| " << setw(20) << user            
-        << "| " << setw(6) << LogMessage[0]    
-        << "| " << setw(30) << combinedQuery  
-        << "| " << setw(28) << timestamp << " |\n"; 
+        << "| " << setw(20) << user
+        << "| " << setw(6) << LogMessage[0]
+        << "| " << setw(30) << combinedQuery
+        << "| " << setw(28) << timestamp << " |\n";
 
     file.close();
 

@@ -220,7 +220,20 @@ public:
         cout << r->value << " ";
         printInorder(r->right);
     }
+    void printTree(AVLDataNode<T>* root, int space = 0, int height = 10) {
+        if (root == NULL) return;
 
+        space += height;
+
+        printTree(root->right, space);
+
+        cout << endl;
+        for (int i = height; i < space; i++) cout << " ";
+
+        cout << '|' << root->value << '|' << endl;
+
+        printTree(root->left, space);
+    }
     int height(AVLDataNode<T>* r)
     {
         if (r == NULL)
@@ -705,4 +718,10 @@ void DeleteTuple(AVL<T>* Avl, int index, T val)
     LogMessage.push_back(toStringT(val));
     LogMessage.push_back("Deleted");
     addCommit1(activeBranch2, LogMessage);
+}
+
+void display_commit_log() {
+
+    displayCommitChanges(activeBranch2);
+
 }

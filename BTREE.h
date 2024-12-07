@@ -307,6 +307,30 @@ void BTree<T>::print()
 }
 
 template <typename T>
+void BTree<T>::printNode(BTREEDataNode<T>* node, int tab) {
+	// Print indentation for the current level
+	for (int i = 0; i < tab; i++) {
+		cout << "\t";
+	}
+
+	// Print the node keys enclosed in vertical bars '|'
+	cout << "|";
+	for (int i = 0; i < node->size; i++) {
+		cout << node->key[i].val << "|";
+	}
+	cout << "\n";
+
+	// If the node is not a leaf, recursively print its children
+	if (!node->leaf) {
+		tab++; // Increase indentation for child nodes
+		for (int i = 0; i <= node->size; i++) {
+			printNode(node->child[i], tab);
+		}
+	}
+}
+
+
+template <typename T>
 void BTree<T>::initializeNode(BTREEDataNode<T>* x)
 {
 	x->size = 0;
@@ -490,33 +514,6 @@ char BTree<T>::fixChildSize(BTREEDataNode<T>* parent, int  index)
 	return 0;
 }
 
-template <typename T>
-void BTree<T>::printNode(BTREEDataNode<T>* node, int  tab)
-{
-
-	for (int i = 0; i < tab; i++)
-	{
-		cout << ("\t");
-	}
-
-	for (int i = 0; i < node->size; i++)
-	{
-		cout << node->key[i].val;
-		node->key[i].print();
-		cout << (" ");
-	}
-	cout << ("\n");
-
-	// Print all child nodes.
-	if (!node->leaf)
-	{
-		tab++;
-		for (int i = 0; i <= node->size; i++)
-		{
-			printNode(node->child[i], tab);
-		}
-	}
-}
 
 BTree<string>& stringCreateBTREE(int index, string typee, string branch)
 {
@@ -566,9 +563,9 @@ BTree<int>& intCreateBTREE(int index, string typee, string branch)
 		READLINE(file, lineREAD);
 		if (lineREAD.getSize() <= 1)
 			break;
-		Tree->insert(stoi(lineREAD[index]), fileName, to_string(lineNumber++));
+		Tree->insert(stod(lineREAD[index]), fileName, to_string(lineNumber++));
 	}
-	//Tree->print();
+	//Tree->printInorder(Tree->root);
 	file.close();
 
 	return *Tree;
@@ -600,21 +597,6 @@ BTree<double>& doubleCreateBTREE(int index, string typee, string branch)
 	file.close();
 
 	return *Tree;
-}
-
-template<typename T>
-void PointSearch(BTree<T>* R, CustomVector<string> fields, T key)
-{
-	pair<BTREEDataNode<T>*, int> res = R->search(key);
-	if (!res.first)
-		return;
-	DisplayAllTuples<T>(fields, res.first->key[res.second]);
-}
-
-template<typename T>
-void RangeSearch(BTree<T>* R, CustomVector<string> fields, T start, T end)
-{
-	R->INRANGEROOT(R->root, fields, start, end);
 }
 
 template<typename T>
@@ -856,4 +838,26 @@ void DeleteTuple(BTree<double>* BT, CustomVector<string> fields)
 	LogMessage.push_back("DELETED");
 
 	addCommit1(activeBranch4, LogMessage);
+}
+
+void display_commit_log2() {
+
+	displayCommitChanges(activeBranch4);
+
+}
+
+
+template<typename T>
+void PointSearch(BTree<T>* R, CustomVector<string> fields, T key)
+{
+	pair<BTREEDataNode<T>*, int> res = R->search(key);
+	if (!res.first)
+		return;
+	DisplayAllTuples<T>(fields, res.first->key[res.second]);
+}
+
+template<typename T>
+void RangeSearch(BTree<T>* R, CustomVector<string> fields, T start, T end)
+{
+	R->INRANGEROOT(R->root, fields, start, end);
 }

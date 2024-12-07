@@ -868,8 +868,10 @@ void DeleteTuple(RedBlackTree<T>* RB, int index, T val)
 {
     RBDataNode <T>* toDelete = RB->search(RB->root, val);
 
-    if (toDelete == NULL)
+    if (toDelete == NULL || toDelete == RB->end) {
+        cout << "ERROR: Value not found" << endl;
         return;
+    }
 
     RemoveTupleFromFile<T>(toDelete);
     string RemovePath = "BRANCHES\\" + activeBranch3 + "\\TREES\\RB\\" + RB->fieldname + "\\" + RB->GetNodeFilename(toDelete) + ".txt";
@@ -937,7 +939,7 @@ void UpdateTuple(RedBlackTree<int>*& RB, CustomVector<string> fields) {
         return;
     }
 
-    RBDataNode<int>* toDelete = RB->search(RB->root, stoi(tags[0]));
+    RBDataNode<int>* toDelete = RB->search(RB->root, stoi(tags[1]));
     if (toDelete == NULL) {
         cout << "Node not found" << endl;
         return;
@@ -989,7 +991,7 @@ void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields) {
         return;
     }
 
-    RBDataNode<string>* toDelete = RB->search(RB->root, tags[0]);
+    RBDataNode<string>* toDelete = RB->search(RB->root, tags[1]);
     if (toDelete == NULL) {
         cout << "Node not found" << endl;
         return;
@@ -1003,7 +1005,7 @@ void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields) {
     cout << "Tree created again with updated data." << endl;
 
     CustomVector<string> LogMessage;
-    LogMessage.push_back("AVL");
+    LogMessage.push_back("RB");
 
     string concatenatedTags;
     for (int i = 0; i < tags.getSize(); i++) {
@@ -1042,7 +1044,7 @@ void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<string> fields) {
         return;
     }
 
-    RBDataNode<double>* toDelete = RB->search(RB->root, stod(tags[0]));
+    RBDataNode<double>* toDelete = RB->search(RB->root, stod(tags[1]));
     if (toDelete == NULL) {
         cout << "Node not found" << endl;
         return;
@@ -1056,7 +1058,7 @@ void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<string> fields) {
     cout << "Tree created again with updated data." << endl;
 
     CustomVector<string> LogMessage;
-    LogMessage.push_back("AVL");
+    LogMessage.push_back("RB");
 
     string concatenatedTags;
     for (int i = 0; i < tags.getSize(); i++) {
@@ -1070,4 +1072,10 @@ void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<string> fields) {
     LogMessage.push_back("UPDATED");
 
     addCommit1(activeBranch3, LogMessage);
+}
+
+void display_commit_log1() {
+
+    displayCommitChanges(activeBranch3);
+
 }
