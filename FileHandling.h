@@ -300,5 +300,24 @@ void UpdateDataFile() {
     // Close the files
     csvFile.close();
     dataFile.close();
+}
 
+void UpdateCsvFile() {
+    // Open the CSV file for reading
+    ofstream csvFile("FilesToREAD\\healthcare_dataset.csv");
+
+    // Open the data.txt file for writing
+    ifstream dataFile("FilesToREAD\\data.txt");
+
+    // Copy content from the CSV file to the data file line by line
+    string line;
+    int row = 1;
+    while (getline(dataFile, line)) {
+        csvFile << line << "\n";
+        row++;
+    }
+
+    // Close the files
+    csvFile.close();
+    dataFile.close();
 }

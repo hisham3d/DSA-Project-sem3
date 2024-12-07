@@ -436,5 +436,7 @@ int main()
 		cin >> ch;
 	} while (ch == '1');
 
+	UpdateCsvFile();
+
 	return 0;
 }
