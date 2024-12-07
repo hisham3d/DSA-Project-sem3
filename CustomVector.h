@@ -120,4 +120,18 @@ public:
         }
         return data[size - 1];
     }
+    void erase(size_t index) {
+        if (index >= size) {
+            throw std::out_of_range("Index out of bounds");
+        }
+
+        // Shift elements to the left
+        for (size_t i = index; i < size - 1; ++i) {
+            data[i] = data[i + 1];
+        }
+
+        // Decrease size
+        --size;
+    }
+
 };

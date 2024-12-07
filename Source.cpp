@@ -2,6 +2,9 @@
 #include"BTREE.h"
 #include "CustomVector.h"
 #include <iostream>
+#include <thread>
+#include <chrono>
+
 using namespace std;
 
 string activeBranch;
@@ -12,7 +15,7 @@ void ourNames()
 	cout << endl << endl;
 	cout << "                        Hisham Abdullah 23I-0693" << endl;
 	cout << "                        Ruhab Ahmed 23I-0559" << endl;
-	cout << "                        Daniyal Zaidi 23I-0023" << endl;
+	cout << "                        Daniyal Hussain 23I-0023" << endl;
 	cout << endl << endl;
 	cout << "************************************************************************" << endl;
 	cout << endl << endl;
@@ -43,7 +46,8 @@ int submenu()
 	cout << "[2] Delete" << endl;
 	cout << "[3] Point Search" << endl;
 	cout << "[4] Range Search" << endl;
-	cout << "[5] Exit" << endl;
+	cout << "[5] Display Commit changes log" << endl;
+	cout << "[6] Display selected tree" << endl;
 	cout << "Enter your choice: ";
 	cin >> option;
 	cout << endl << endl;
@@ -85,6 +89,13 @@ void subMENUBTREE(BTree<T>* IBTREE, CustomVector<string> Fields)
 			cin >> n2;
 			RangeSearch(IBTREE, Fields, n1, n2);
 		}
+		if (option == 5) {
+			display_commit_log2();
+		}
+		if (option == 6) {
+			IBTREE->print();
+		}
+
 		cout << "\nDo you Want to peform again (Y/N): ";
 		cin >> ch;
 	} while (ch == 'Y' || ch == 'y');
@@ -105,7 +116,7 @@ void MENUBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
 
-		cout << "Enter your choice: ";
+		cout << "Enter your choice : ";
 		cin >> choice;
 
 		if (DataTypes[choice - 1] == "string")
@@ -177,6 +188,14 @@ void RBSUBMENU(RedBlackTree <T>* IRBTREE, CustomVector<string>& Fields)
 		cout << "\nENTER THE END VALUE FOR SEARCH: ";
 		getline(cin, n2, '\n');
 		RangeSearch(&ReadRBNodeFromFile(IRBTREE->fieldname + "\\" + IRBTREE->GetNodeFilename(IRBTREE->root)), n1, n2, Fields, IRBTREE->fieldname);
+	}
+	if (option == 5) {
+		display_commit_log1();
+
+
+	}
+	if (option == 6) {
+		IRBTREE->print(IRBTREE->root, "", true);
 	}
 }
 
@@ -258,13 +277,14 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, CustomVector<string>& Fields, int choice)
 	system("cls");
 	if (option == 1)
 	{
+		//UpdateTuple(IAVLTREE, Fields, Fields[choice - 1]);
 		UpdateTuple(IAVLTREE, Fields);
 	}
 
 	if (option == 2)
 	{
 		T obj;
-		cout << "\nENTER THE VALUE YOU WANT TO DELETE: ";
+		cout << "\nEnter value to delete: ";
 		cin >> obj;
 		DeleteTuple<T>(IAVLTREE, getFieldIndex(Fields, IAVLTREE->fieldname), obj);
 	}
@@ -273,7 +293,7 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, CustomVector<string>& Fields, int choice)
 	{
 		string obj;
 		cin.ignore();
-		cout << "\nENTER THE INDEX YOU WANT TO SEARCH: ";
+		cout << "\nEnter Index to search: ";
 		getline(cin, obj, '\n');
 		PointSearch(&ReadAvlNodeFromFile(IAVLTREE->fieldname + "\\" + IAVLTREE->GetNodeFilename(IAVLTREE->root)), obj, Fields, IAVLTREE->fieldname);
 	}
@@ -282,12 +302,20 @@ void AVLSUBMENU(AVL<T>* IAVLTREE, CustomVector<string>& Fields, int choice)
 	{
 		string n1, n2;
 		cin.ignore();
-		cout << "\nENTER THE STARTING VALUE FOR SEARCH: ";
+		cout << "\nEnter starting value to search: ";
 		getline(cin, n1, '\n');
 		cin.ignore();
-		cout << "\nENTER THE END VALUE FOR SEARCH: ";
+		cout << "\nEnter ending value to search: ";
 		getline(cin, n2, '\n');
 		RangeSearch(&ReadAvlNodeFromFile(IAVLTREE->fieldname + "\\" + IAVLTREE->GetNodeFilename(IAVLTREE->root)), n1, n2, Fields, IAVLTREE->fieldname);
+	}
+	if (option == 5) {
+		display_commit_log();
+
+	}
+	if (option == 6) {
+		IAVLTREE->printTree(IAVLTREE->root);
+
 	}
 }
 

@@ -75,21 +75,34 @@ CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
     return history;
 }
 
-void displayCommitHistory1(const string& branchName) {
-    CustomVector<Commit_Log> history = parseCommitHistory1(branchName);
+void displayCommitChanges(const string& branchName) {
+    // File path for the commit log
+    string path = "BRANCHES\\" + branchName + "\\commit_log.txt";
 
-    if (history.empty()) {
-        cout << "No commits to display for branch '" << branchName << "'.\n";
+    // Check if the file exists
+    if (!std::filesystem::exists(path)) {
+        cout << "No commit log found for branch '" << branchName << "'.\n";
         return;
     }
 
-    cout << "Commit_Log History for '" << branchName << "':\n";
-    for (const auto& commit : history) {
-        cout << "- Commit_Log #" << commit.commitNumber << ": \"" <<  "\"\n";
-        cout << "  Timestamp: " << commit.timestamp << "\n";
+    // Open the file in read mode
+    ifstream file(path);
+    if (!file.is_open()) {
+        cout << "Failed to access commit log for branch '" << branchName << "'.\n";
+        return;
     }
-    cout << endl;
+
+    // Read and display the contents of the file line by line
+    string line;
+    cout << "\nDisplaying Commit Log for '" << branchName << "':\n";
+    while (getline(file, line)) {
+        cout << line << "\n";
+    }
+
+    file.close();
+    cout << "\n----- End of Commit Log -----\n";
 }
+
 
 string getCurrentTimestamp1() {
 

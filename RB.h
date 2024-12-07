@@ -1071,3 +1071,9 @@ void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<string> fields) {
 
     addCommit1(activeBranch3, LogMessage);
 }
+
+void display_commit_log1() {
+
+    displayCommitChanges(activeBranch3);
+
+}
