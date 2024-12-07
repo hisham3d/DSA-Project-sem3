@@ -366,14 +366,9 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 	} while (ch == 'Y' || ch == 'y');
 }
 
-int main()
-{
+void mainMenu(CustomVector<string>& Fields, CustomVector<string>& Entries, CustomVector<string>& DataTypes) {
+	system("cls");
 	ourNames();
-
-	CustomVector<string> Fields, Entries, DataTypes;
-	GetFields(fileName, Fields, Entries);
-	AllocateDataTypes(DataTypes, Entries);
-
 	cout << "------------------- BRANCHES --------------------" << endl;
 	activeBranch = "main";
 	activeBranch = branchSelection(activeBranch);
@@ -394,6 +389,23 @@ int main()
 	{
 		MENURBTREE(Fields, DataTypes);
 	}
+
+	return;
+}
+
+int main()
+{
+	char ch = '1';
+
+	CustomVector<string> Fields, Entries, DataTypes;
+	GetFields(fileName, Fields, Entries);
+	AllocateDataTypes(DataTypes, Entries);
+
+	do {
+		mainMenu(Fields, Entries, DataTypes);
+		cout << "Press 1 to return to main menu: ";
+		cin >> ch;
+	} while (ch == '1');
 
 	return 0;
 }
