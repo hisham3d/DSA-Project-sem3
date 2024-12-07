@@ -6,16 +6,21 @@
 #include "CustomVector.h"
 using namespace std;
 
-struct Commit_Log {
-    int commitNumber;
-    string message;
-    string timestamp;
 
-    Commit_Log() : commitNumber(0), message(""), timestamp("") {}
 
-    Commit_Log(int num, const string& msg, const string& time)
-        : commitNumber(num), message(msg), timestamp(time) {}
-};
+
+    class Commit_Log {
+    public:
+        int commitNumber;
+        string user;
+        string query;
+        string timestamp;
+        Commit_Log() : commitNumber(0), user(""),query(""), timestamp("") {}
+
+        Commit_Log(int commitNum, const string& usr, const string& qry, const string& ts)
+            : commitNumber(commitNum), user(usr), query(qry), timestamp(ts) {}
+    };
+
 
 CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
     CustomVector<Commit_Log> history;
@@ -28,17 +33,41 @@ CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
     }
 
     string line;
-    while (getline(file, line)) {
-        int commitNumber;
-        string message, timestamp;
-        size_t pos1 = line.find(':');
-        size_t pos2 = line.find_last_of(':');
+    for (int i = 0; i < 7 && getline(file, line); ++i) {
+    }
 
-        if (pos1 != string::npos && pos2 != string::npos && pos1 != pos2) {
-            commitNumber = stoi(line.substr(0, pos1));
-            message = line.substr(pos1 + 1, pos2 - pos1 - 1);
-            timestamp = line.substr(pos2 + 1);
-            history.emplace_back(commitNumber, message, timestamp);
+    while (getline(file, line)) {
+        if (line.empty() || line[0] != '|') {
+            continue; 
+        }
+
+        try {
+            size_t pos1 = line.find('<');
+            size_t pos2 = line.find('>');
+            size_t pos3 = line.find('|', pos2 + 1);
+            size_t pos4 = line.find('|', pos3 + 1);
+            size_t pos5 = line.find('|', pos4 + 1);
+            size_t pos6 = line.rfind('|');
+
+            if (pos1 != string::npos && pos2 != string::npos && pos3 != string::npos &&
+                pos4 != string::npos && pos5 != string::npos && pos6 != string::npos) {
+
+                int commitNumber = stoi(line.substr(pos1 + 1, pos2 - pos1 - 1));
+
+                string user = line.substr(pos3 + 1, pos4 - pos3 - 1);
+                user.erase(user.find_last_not_of(' ') + 1); 
+
+                string query = line.substr(pos5 + 1, pos6 - pos5 - 1);
+                query.erase(query.find_last_not_of(' ') + 1); 
+
+                string timestamp = line.substr(pos6 + 1);
+                timestamp.erase(timestamp.find_last_not_of(' ') + 1); 
+
+                history.emplace_back(commitNumber, user, query, timestamp);
+            }
+        }
+        catch (const std::exception& e) {
+            cout << "Error parsing commit log entry: " << e.what() << "\n";
         }
     }
 
@@ -56,7 +85,7 @@ void displayCommitHistory1(const string& branchName) {
 
     cout << "Commit_Log History for '" << branchName << "':\n";
     for (const auto& commit : history) {
-        cout << "- Commit_Log #" << commit.commitNumber << ": \"" << commit.message << "\"\n";
+        cout << "- Commit_Log #" << commit.commitNumber << ": \"" <<  "\"\n";
         cout << "  Timestamp: " << commit.timestamp << "\n";
     }
     cout << endl;
@@ -75,16 +104,44 @@ string getCurrentTimestamp1() {
     return ss.str();
 }
 void addCommit1(const string& branchName, const CustomVector<string>& LogMessage) {
+
     string path = "BRANCHES\\" + branchName + "\\commit_log.txt";
+
+    bool fileExists = std::filesystem::exists(path);
+
     ofstream file(path, ios::app);
+    if (!file.is_open()) {
+        cout << "Failed to access commit log for branch '" << branchName << "'.\n";
+        return;
+    }
+
+    string user;
+    cout << "\nEnter username: ";
+    getline(cin, user, '\n');
+
+    if (!fileExists) {
+        file << "                                    _________________\n";
+        file << "                                   |                 |\n";
+        file << "                                   |  < COMMIT LOG > |\n";
+        file << "                                   |_________________|\n";
+        file << " _________________________________________________________________________________________________\n";
+        file << "|ID  |        USER         | TREE  |           QUERY               |          TIMESTMP            |\n";
+        file << "|____|_____________________|_______|_______________________________|______________________________|\n";
+    }
 
     string timestamp = getCurrentTimestamp1();
 
     CustomVector<Commit_Log> history = parseCommitHistory1(branchName);
     int nextCommitNumber = history.empty() ? 1 : history.back().commitNumber + 1;
+    string combinedQuery = LogMessage[1] + " -> " + LogMessage[2];
 
-    file << nextCommitNumber << "|" << LogMessage[0] << "|" << LogMessage[1] << "|" << timestamp << "\n";
+    file << "|" << left << setw(4) << ("<" + to_string(nextCommitNumber) + ">")
+        << "| " << setw(20) << user            
+        << "| " << setw(6) << LogMessage[0]    
+        << "| " << setw(30) << combinedQuery  
+        << "| " << setw(28) << timestamp << " |\n"; 
+
     file.close();
 
-    cout << "----- Commit log updated -----" << "\n";
+    cout << "----- Commit log updated -----\n";
 }

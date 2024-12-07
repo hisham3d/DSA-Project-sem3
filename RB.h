@@ -943,6 +943,22 @@ void UpdateTuple(RedBlackTree<int>*& RB, CustomVector<string> fields) {
     RB->fieldname = fields[fieldIndex];
     RB->CreateTreeFile(RB->root);
     cout << "Tree created again with updated data." << endl;
+
+    CustomVector<string> LogMessage;
+    LogMessage.push_back("RB");
+
+    string concatenatedTags;
+    for (int i = 0; i < tags.getSize(); i++) {
+        if (i > 0) {
+            concatenatedTags += ", ";
+        }
+        concatenatedTags += tags[i];
+    }
+
+    LogMessage.push_back(concatenatedTags);
+    LogMessage.push_back("UPDATED");
+
+    addCommit1(activeBranch3, LogMessage);
 }
 
 void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields) {
@@ -979,6 +995,22 @@ void UpdateTuple(RedBlackTree<string>*& RB, CustomVector<string> fields) {
     RB->fieldname = fields[fieldIndex];
     RB->CreateTreeFile(RB->root);
     cout << "Tree created again with updated data." << endl;
+
+    CustomVector<string> LogMessage;
+    LogMessage.push_back("AVL");
+
+    string concatenatedTags;
+    for (int i = 0; i < tags.getSize(); i++) {
+        if (i > 0) {
+            concatenatedTags += ", ";
+        }
+        concatenatedTags += tags[i];
+    }
+
+    LogMessage.push_back(concatenatedTags);
+    LogMessage.push_back("UPDATED");
+
+    addCommit1(activeBranch3, LogMessage);
 }
 
 
@@ -1016,4 +1048,20 @@ void UpdateTuple(RedBlackTree<double>*& RB, CustomVector<string> fields) {
     RB->fieldname = fields[fieldIndex];
     RB->CreateTreeFile(RB->root);
     cout << "Tree created again with updated data." << endl;
+
+    CustomVector<string> LogMessage;
+    LogMessage.push_back("AVL");
+
+    string concatenatedTags;
+    for (int i = 0; i < tags.getSize(); i++) {
+        if (i > 0) {
+            concatenatedTags += ", ";
+        }
+        concatenatedTags += tags[i];
+    }
+
+    LogMessage.push_back(concatenatedTags);
+    LogMessage.push_back("UPDATED");
+
+    addCommit1(activeBranch3, LogMessage);
 }

@@ -711,6 +711,22 @@ void DeleteTuple(BTree<int>* BT, CustomVector<string> fields)
 		BT = &intCreateBTREE(getFieldIndex(fields, BT->fieldname), "", activeBranch4);
 		BT->CreateTreeFile();
 	}
+
+	CustomVector<string> LogMessage;
+	LogMessage.push_back("BTREE");
+
+	string concatenatedTags;
+	for (int i = 0; i < tags.getSize(); i++) {
+		if (i > 0) {
+			concatenatedTags += ", ";
+		}
+		concatenatedTags += tags[i];
+	}
+
+	LogMessage.push_back(concatenatedTags);
+	LogMessage.push_back("DELETED");
+
+	addCommit1(activeBranch4, LogMessage);
 }
 
 void DeleteTuple(BTree<string>* BT, CustomVector<string> fields)
@@ -757,6 +773,22 @@ void DeleteTuple(BTree<string>* BT, CustomVector<string> fields)
 		BT = &stringCreateBTREE(getFieldIndex(fields, BT->fieldname), "", activeBranch4);
 		BT->CreateTreeFile();
 	}
+
+	CustomVector<string> LogMessage;
+	LogMessage.push_back("BTREE");
+
+	string concatenatedTags;
+	for (int i = 0; i < tags.getSize(); i++) {
+		if (i > 0) {
+			concatenatedTags += ", ";
+		}
+		concatenatedTags += tags[i];
+	}
+
+	LogMessage.push_back(concatenatedTags);
+	LogMessage.push_back("DELETED");
+
+	addCommit1(activeBranch4, LogMessage);
 }
 
 void DeleteTuple(BTree<double>* BT, CustomVector<string> fields)
@@ -808,4 +840,19 @@ void DeleteTuple(BTree<double>* BT, CustomVector<string> fields)
 		BT = &doubleCreateBTREE(getFieldIndex(fields, BT->fieldname), "", activeBranch4);
 		BT->CreateTreeFile();
 	}
+	CustomVector<string> LogMessage;
+	LogMessage.push_back("BTREE");
+
+	string concatenatedTags;
+	for (int i = 0; i < tags.getSize(); i++) {
+		if (i > 0) {
+			concatenatedTags += ", ";
+		}
+		concatenatedTags += tags[i];
+	}
+
+	LogMessage.push_back(concatenatedTags);
+	LogMessage.push_back("DELETED");
+
+	addCommit1(activeBranch4, LogMessage);
 }

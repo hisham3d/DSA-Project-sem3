@@ -534,6 +534,8 @@ void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
     }
 
     LogMessage.push_back(concatenatedTags);
+    LogMessage.push_back("UPDATED");
+
     addCommit1(activeBranch2, LogMessage);
 }
 
@@ -570,6 +572,24 @@ void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields) {
     Avl->fieldname = fields[fieldIndex];
     Avl->CreateTreeFile(Avl->root);
     cout << "Tree created again with updated data." << endl;
+
+    CustomVector<string> LogMessage;
+    LogMessage.push_back("AVL");
+
+    string concatenatedTags;
+    for (int i = 0; i < tags.getSize(); i++) {
+        if (i > 0) {
+            concatenatedTags += ", ";
+        }
+        concatenatedTags += tags[i];
+    }
+
+    LogMessage.push_back(concatenatedTags);
+    LogMessage.push_back("UPDATED");
+
+    addCommit1(activeBranch2, LogMessage);
+
+
 }
 
 void UpdateTuple(AVL<double>*& Avl, CustomVector<string> fields) {
@@ -605,6 +625,22 @@ void UpdateTuple(AVL<double>*& Avl, CustomVector<string> fields) {
     Avl->fieldname = fields[fieldIndex];
     Avl->CreateTreeFile(Avl->root);
     cout << "Tree created again with updated data." << endl;
+
+    CustomVector<string> LogMessage;
+    LogMessage.push_back("AVL");
+
+    string concatenatedTags;
+    for (int i = 0; i < tags.getSize(); i++) {
+        if (i > 0) {
+            concatenatedTags += ", ";
+        }
+        concatenatedTags += tags[i];
+    }
+
+    LogMessage.push_back(concatenatedTags);
+    LogMessage.push_back("UPDATED");
+
+    addCommit1(activeBranch2, LogMessage);
 }
 
 template<typename T>
@@ -654,4 +690,12 @@ void DeleteTuple(AVL<T>* Avl, int index, T val)
         remove(RemovePath.c_str());
 
     cout << "Node successfully deleted and data deleted from file." << endl;
+
+    //std::string val1 = std::to_string(val);
+
+    //CustomVector<string> LogMessage;
+    //LogMessage.push_back("AVL");
+    //LogMessage.push_back(val1);
+    //LogMessage.push_back("Deleted");
+    //addCommit1(activeBranch2, LogMessage);
 }
