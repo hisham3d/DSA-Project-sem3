@@ -414,7 +414,8 @@ void MerkleTreeSubMenu(MerkleTree<T>* tree, vector<string>& Fields, int choice)
 
 	if (option == 5)
 	{
-		display_commit_log();
+		tree->printHashTable();
+		//display_commit_log();
 	}
 	if (option == 6) {
 		tree->printTree(tree->root);
@@ -465,7 +466,7 @@ void MENUMerkleTree(vector<string>& Fields, vector<string>& DataTypes)
 			intTree->CreateTreeFile(intTree->root, activeBranch, Fields[choice - 1]);  // For int tree
 
 			do {
-				//MerkleTreeSubMenu<int>(intTree, Fields, choice);
+				MerkleTreeSubMenu<int>(intTree, Fields, choice);
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -519,14 +520,13 @@ void mainMenu(CustomVector<string>& Fields, CustomVector<string>& Entries, Custo
 		MENURBTREE(Fields, DataTypes);
 	}
 	else if (treechoice == 4) {
-		// Inline conversion of Fields to std::vector
-		std::vector<std::string> stdFields;
+
+		vector<string> stdFields;
 		for (int i = 0; i < Fields.getSize(); ++i) {
 			stdFields.push_back(Fields[i]);
 		}
 
-		// Inline conversion of DataTypes to std::vector
-		std::vector<std::string> stdDataTypes;
+		vector<string> stdDataTypes;
 		for (int i = 0; i < DataTypes.getSize(); ++i) {
 			stdDataTypes.push_back(DataTypes[i]);
 		}
