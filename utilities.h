@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 #include <list>
+#include "FileHandling.h"
 #include "myString.h"
 #include <filesystem>
 #include <sys/stat.h>
@@ -13,7 +14,30 @@
 #include <iomanip>
 using namespace std;
 
+int getLatestVersion() {
+    string versionFile = "FilesToREAD\\versions.txt";
+    ifstream file(versionFile);
+
+    string line, lastLine;
+
+    while (getline(file, line)) {
+        // Ignore empty lines or lines with only whitespace
+        if (!line.empty() && line.find_first_not_of(" \t") != string::npos) {
+            lastLine = line;
+        }
+    }
+
+    file.close();
+
+    if (lastLine.empty()) {
+        return 0;
+    }
+
+    return stoi(lastLine);
+}
+
 string fileName = "healthcare_dataset.txt";
+
 class AddressLocation
 {
 public:

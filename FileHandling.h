@@ -283,34 +283,46 @@ void GetFields(string Filename, CustomVector<string>& LINE1, CustomVector<string
     file.close();
 }
 
+void appendVersion(string& versionFile, int version) {
+    ofstream versionFileStream(versionFile, ios::app);
+    if (versionFileStream.is_open()) {
+        versionFileStream << version << "\n";
+        versionFileStream.close();
+    }
+}
+
 void UpdateDataFile() {
+    string versionFile = "FilesToREAD\\versions.txt";
+
+    int currentV = getLatestVersion();
+
+    int newV = currentV + 1;
+
     ifstream csvFile("FilesToREAD\\healthcare_dataset.csv");
     ofstream dataFile("FilesToREAD\\healthcare_dataset.txt");
 
-    // Copy content from the CSV file to the data file line by line
     string line;
-    int row = 1;
     while (getline(csvFile, line)) {
         dataFile << line << "\n";
-        row++;
     }
 
     csvFile.close();
     dataFile.close();
+
+    appendVersion(versionFile, newV);
 }
 
 void UpdateCsvFile() {
-    ofstream csvFile("FilesToREAD\\healthcare_dataset.csv");
-    ifstream dataFile("FilesToREAD\\healthcare_dataset.txt");
+    string versionFile = "FilesToREAD\\versions.txt";
 
-    // Copy content from the CSV file to the data file line by line
+    ifstream dataFile("FilesToREAD\\healthcare_dataset.txt");
+    ofstream csvFile("FilesToREAD\\healthcare_dataset.csv");
+
     string line;
-    int row = 1;
     while (getline(dataFile, line)) {
         csvFile << line << "\n";
-        row++;
     }
 
-    csvFile.close();
     dataFile.close();
+    csvFile.close();
 }
