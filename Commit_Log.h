@@ -135,9 +135,9 @@ void addCommit1(const string& branchName, const CustomVector<string>& LogMessage
         file << "                                   |                 |\n";
         file << "                                   |  < COMMIT LOG > |\n";
         file << "                                   |_________________|\n";
-        file << " ___________________________________________________________________________________________________________\n";
-        file << "|ID  |        USER         | TREE  |           QUERY               |          TIMESTMP            | VERSION |\n";
-        file << "|____|_____________________|_______|_______________________________|______________________________|_________|\n";
+        file << " _________________________________________________________________________________________________\n";
+        file << "|ID  |        USER         | TREE  |           QUERY               |          TIMESTMP            |\n";
+        file << "|____|_____________________|_______|_______________________________|______________________________|\n";
     }
 
     string timestamp = getCurrentTimestamp1();
@@ -146,12 +146,11 @@ void addCommit1(const string& branchName, const CustomVector<string>& LogMessage
     int nextCommitNumber = history.empty() ? 1 : history.back().commitNumber + 1;
     string combinedQuery = LogMessage[1] + " -> " + LogMessage[2];
 
-    file << "|" << left << setw(4) << ("<" + to_string(nextCommitNumber) + ">")
-        << "| " << setw(20) << user
-        << "| " << setw(6) << LogMessage[0]
-        << "| " << setw(30) << combinedQuery
-        << "| " << setw(28) << timestamp
-        << "| " << setw(28) << to_string(getLatestVersion()) << " |\n";
+        file << "|" << left << setw(4) << ("<" + to_string(nextCommitNumber) + ">")
+            << "| " << setw(20) << user
+            << "| " << setw(6) << LogMessage[0]
+            << "| " << setw(30) << combinedQuery
+            << "| " << setw(28) << timestamp << " |\n";
     
 
     file.close();

@@ -277,52 +277,9 @@ string branchSelection(string& activeBranch)
 void GetFields(string Filename, CustomVector<string>& LINE1, CustomVector<string>& Entries)
 {
     fstream file;
+    //file.open("FilesToREAD\\" + filename);
     file.open("FilesToREAD\\" + Filename);
     READLINE(file, LINE1);
     READLINE(file, Entries);
     file.close();
-}
-
-void appendVersion(string& versionFile, int version) {
-    ofstream versionFileStream(versionFile, ios::app);
-    if (versionFileStream.is_open()) {
-        versionFileStream << version << "\n";
-        versionFileStream.close();
-    }
-}
-
-void UpdateDataFile() {
-    string versionFile = "FilesToREAD\\versions.txt";
-
-    int currentV = getLatestVersion();
-
-    int newV = currentV + 1;
-
-    ifstream csvFile("FilesToREAD\\healthcare_dataset.csv");
-    ofstream dataFile("FilesToREAD\\healthcare_dataset.txt");
-
-    string line;
-    while (getline(csvFile, line)) {
-        dataFile << line << "\n";
-    }
-
-    csvFile.close();
-    dataFile.close();
-
-    appendVersion(versionFile, newV);
-}
-
-void UpdateCsvFile() {
-    string versionFile = "FilesToREAD\\versions.txt";
-
-    ifstream dataFile("FilesToREAD\\healthcare_dataset.txt");
-    ofstream csvFile("FilesToREAD\\healthcare_dataset.csv");
-
-    string line;
-    while (getline(dataFile, line)) {
-        csvFile << line << "\n";
-    }
-
-    dataFile.close();
-    csvFile.close();
 }

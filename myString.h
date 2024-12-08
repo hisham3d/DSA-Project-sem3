@@ -640,10 +640,3 @@ String tostring(int value)
     delete[] buffer; // Free the temporary buffer
     return result;
 }
-
-template <typename T>
-std::string toString(const T& data) {
-    std::ostringstream oss;
-    oss << data;
-    return oss.str();
-}

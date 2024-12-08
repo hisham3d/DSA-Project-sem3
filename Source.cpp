@@ -227,7 +227,9 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			SRBTREE->CreateTreeFile(SRBTREE->root);
 			do {
 				RBSUBMENU<string>(SRBTREE, Fields);
-
+				/*SRBTREE = &stringCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				SRBTREE->fieldname = Fields[choice - 1];
+				SRBTREE->CreateTreeFile(SRBTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -241,7 +243,9 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			IRBTREE->CreateTreeFile(IRBTREE->root);
 			do {
 				RBSUBMENU<int>(IRBTREE, Fields);
-
+				/*IRBTREE = &intCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				IRBTREE->fieldname = Fields[choice - 1];
+				IRBTREE->CreateTreeFile(IRBTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -255,7 +259,9 @@ void MENURBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			DRBTREE->CreateTreeFile(DRBTREE->root);
 			do {
 				RBSUBMENU<double>(DRBTREE, Fields);
-
+				/*DRBTREE = &doubleCreateRBTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				DRBTREE->fieldname = Fields[choice - 1];
+				DRBTREE->CreateTreeFile(DRBTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -342,7 +348,9 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			SAVLTREE->CreateTreeFile(SAVLTREE->root);
 			do {
 				AVLSUBMENU<string>(SAVLTREE, Fields, choice);
-
+				/*SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				SAVLTREE->fieldname = Fields[choice - 1];
+				SAVLTREE->CreateTreeFile(SAVLTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -356,7 +364,10 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			IAVLTREE->CreateTreeFile(IAVLTREE->root);
 			do {
 				AVLSUBMENU<int>(IAVLTREE, Fields, choice);
+				/*IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				IAVLTREE->fieldname = Fields[choice - 1];
 
+				IAVLTREE->CreateTreeFile(IAVLTREE->root);*/
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -370,6 +381,9 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			DAVLTREE->CreateTreeFile(DAVLTREE->root);
 			do {
 				AVLSUBMENU<double>(DAVLTREE, Fields, choice);
+				/*DAVLTREE = &doubleCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
+				DAVLTREE->fieldname = Fields[choice - 1];
+				DAVLTREE->CreateTreeFile(DAVLTREE->root);*/
 
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
@@ -414,10 +428,11 @@ void MerkleTreeSubMenu(MerkleTree<T>* tree, vector<string>& Fields, int choice)
 
 	if (option == 5)
 	{
-		display_commit_log();
+		tree->printHashTable();
 	}
 	if (option == 6) {
 		tree->printTree(tree->root);
+		tree->printHashTable();
 	}
 }
 
@@ -442,12 +457,12 @@ void MENUMerkleTree(vector<string>& Fields, vector<string>& DataTypes)
 
 		if (DataTypes[choice - 1] == "string")
 		{
-			vector<string> data;  // Populate this with data from your source (CSV, etc.)
+			vector<string> data; 
 
 			stringTree = &createStringMerkleTreeFromCSV(choice - 1, DataTypes[choice - 1]);
 			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\MERKLETREE\\" + Fields[choice - 1]);
 			stringTree->fieldname = Fields[choice - 1];
-			stringTree->CreateTreeFile(stringTree->root, activeBranch, Fields[choice - 1]);  // For stringTree
+			stringTree->CreateTreeFile(stringTree->root, activeBranch, Fields[choice - 1]);  
 			do {
 				MerkleTreeSubMenu<string>(stringTree, Fields, choice);
 				cout << "\nDo you Want to run it again (Y/N): ";
@@ -462,10 +477,10 @@ void MENUMerkleTree(vector<string>& Fields, vector<string>& DataTypes)
 			intTree = &createIntMerkleTreeFromCSV(choice - 1, DataTypes[choice - 1]);
 			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\MERKLETREE\\" + Fields[choice - 1]);
 			intTree->fieldname = Fields[choice - 1];
-			intTree->CreateTreeFile(intTree->root, activeBranch, Fields[choice - 1]);  // For int tree
+			intTree->CreateTreeFile(intTree->root, activeBranch, Fields[choice - 1]);  
 
 			do {
-				//MerkleTreeSubMenu<int>(intTree, Fields, choice);
+				MerkleTreeSubMenu<int>(intTree, Fields, choice);
 				cout << "\nDo you Want to run it again (Y/N): ";
 				cin >> ch;
 			} while (ch == 'Y' || ch == 'y');
@@ -491,14 +506,11 @@ void MENUMerkleTree(vector<string>& Fields, vector<string>& DataTypes)
 	} while (ch == 'Y' || ch == 'y');
 }
 
-
 void mainMenu(CustomVector<string>& Fields, CustomVector<string>& Entries, CustomVector<string>& DataTypes) {
+
 	system("cls");
 	ourNames();
-
-	cout << "VERSION: " << to_string(getLatestVersion()) << endl;
-
-	cout << "------------------- BRANCHES --------------------" << endl;
+	cout << "-------------------- BRANCHES --------------------" << endl;
 	activeBranch = "main";
 	activeBranch = branchSelection(activeBranch);
 
@@ -519,14 +531,13 @@ void mainMenu(CustomVector<string>& Fields, CustomVector<string>& Entries, Custo
 		MENURBTREE(Fields, DataTypes);
 	}
 	else if (treechoice == 4) {
-		// Inline conversion of Fields to std::vector
-		std::vector<std::string> stdFields;
+
+		vector<string> stdFields;
 		for (int i = 0; i < Fields.getSize(); ++i) {
 			stdFields.push_back(Fields[i]);
 		}
 
-		// Inline conversion of DataTypes to std::vector
-		std::vector<std::string> stdDataTypes;
+		vector<string> stdDataTypes;
 		for (int i = 0; i < DataTypes.getSize(); ++i) {
 			stdDataTypes.push_back(DataTypes[i]);
 		}
@@ -539,8 +550,6 @@ void mainMenu(CustomVector<string>& Fields, CustomVector<string>& Entries, Custo
 
 int main()
 {
-	//createFile("FilesToREAD\\healthcare_dataset.txt");
-	UpdateDataFile();
 	char ch = '1';
 
 	CustomVector<string> Fields, Entries, DataTypes;
@@ -552,8 +561,6 @@ int main()
 		cout << "Press 1 to return to main menu: ";
 		cin >> ch;
 	} while (ch == '1');
-
-	UpdateCsvFile();
 
 	return 0;
 }
