@@ -82,7 +82,7 @@ public:
         hashTable.resize(10);
 
         // Creating leaf nodes and adding them to the hash table
-        for (size_t i = 0; i < data.size(); ++i) {
+        for (int i = 0; i < data.size(); ++i) {
             string valueAsString;
             if constexpr (std::is_same<T, std::string>::value) {
                 valueAsString = data[i];
@@ -95,7 +95,7 @@ public:
             MerkleNode<T>* node = new MerkleNode<T>(data[i], sha256); // Create the node
 
             // Add the node to the hash table (using hash as the key)
-            size_t bucketIndex = getHashBucketIndex(nodeHash);
+            int bucketIndex = getHashBucketIndex(nodeHash);
             hashTable[bucketIndex].push_back(node);
 
             nodes.push_back(node);  // Add node to the list for tree construction
@@ -104,7 +104,7 @@ public:
         // Build the tree by combining nodes
         while (nodes.size() > 1) {
             vector<MerkleNode<T>*> nextLevel;
-            for (size_t i = 0; i < nodes.size(); i += 2) {
+            for (int i = 0; i < nodes.size(); i += 2) {
                 if (i + 1 < nodes.size()) {
                     nextLevel.push_back(new MerkleNode<T>(nodes[i], nodes[i + 1], sha256));
                 }
@@ -118,8 +118,8 @@ public:
         root = nodes[0];  // The root of the tree
     }
 
-    size_t getHashBucketIndex(const string& nodeHash) const {
-        size_t hashValue = 0;
+    int getHashBucketIndex(const string& nodeHash) const {
+        int hashValue = 0;
         for (char ch : nodeHash) {
             hashValue = (hashValue * 31 + ch) % hashTable.size();
         }
@@ -127,12 +127,12 @@ public:
     }
 
     void addToHashTable(MerkleNode<T>* node) {
-        size_t index = std::hash<string>{}(node->hash) % hashTable.size();
+        int index = std::hash<string>{}(node->hash) % hashTable.size();
         hashTable[index].push_back(node); // Use chaining to handle hash collisions
     }
 
     MerkleNode<T>* getFromHashTable(const string& hashValue) {
-        size_t index = std::hash<string>{}(hashValue) % hashTable.size();
+        int index = std::hash<string>{}(hashValue) % hashTable.size();
         for (MerkleNode<T>* node : hashTable[index]) {
             if (node->hash == hashValue) {
                 return node;
@@ -142,7 +142,7 @@ public:
     }
 
     void printHashTable() const {
-        for (size_t i = 0; i < hashTable.size(); ++i) {
+        for (int i = 0; i < hashTable.size(); ++i) {
             const auto& bucket = hashTable[i];
             if (!bucket.empty()) {
                 cout << "Hash Chain " << i << ": ";
@@ -284,7 +284,7 @@ public:
 
         while (currentLevel.size() > 1) {
             vector<string> newLevel;
-            for (size_t i = 0; i < currentLevel.size(); i += 2) {
+            for (int i = 0; i < currentLevel.size(); i += 2) {
                 string combinedHash = (i + 1 < currentLevel.size())
                     ? hashFunction(currentLevel[i] + currentLevel[i + 1])
                     : hashFunction(currentLevel[i]);
@@ -536,7 +536,7 @@ template <typename T>
 void DisplayAllTuples(const vector<string>& Fields, const MerkleNode<T>& node) {
     for (const auto& address : node.AddressList) {
         vector<string> tuples = GetTuples(address);
-        for (size_t i = 0; i < tuples.size() && i < Fields.size(); i++) {
+        for (int i = 0; i < tuples.size() && i < Fields.size(); i++) {
             cout << left << setw(30) << Fields[i] << ":  " << tuples[i] << endl;
         }
         cout << "---------------------------------------------------------------------------------\n";

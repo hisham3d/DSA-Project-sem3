@@ -6,9 +6,6 @@
 #include "CustomVector.h"
 using namespace std;
 
-
-
-
 class Commit_Log {
 public:
     int commitNumber;
@@ -20,7 +17,6 @@ public:
     Commit_Log(int commitNum, const string& usr, const string& qry, const string& ts)
         : commitNumber(commitNum), user(usr), query(qry), timestamp(ts) {}
 };
-
 
 CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
     CustomVector<Commit_Log> history;
@@ -42,12 +38,12 @@ CustomVector<Commit_Log> parseCommitHistory1(const string& branchName) {
         }
 
         try {
-            size_t pos1 = line.find('<');
-            size_t pos2 = line.find('>');
-            size_t pos3 = line.find('|', pos2 + 1);
-            size_t pos4 = line.find('|', pos3 + 1);
-            size_t pos5 = line.find('|', pos4 + 1);
-            size_t pos6 = line.rfind('|');
+            int pos1 = line.find('<');
+            int pos2 = line.find('>');
+            int pos3 = line.find('|', pos2 + 1);
+            int pos4 = line.find('|', pos3 + 1);
+            int pos5 = line.find('|', pos4 + 1);
+            int pos6 = line.rfind('|');
 
             if (pos1 != string::npos && pos2 != string::npos && pos3 != string::npos &&
                 pos4 != string::npos && pos5 != string::npos && pos6 != string::npos) {
@@ -151,7 +147,7 @@ void addCommit1(const string& branchName, const CustomVector<string>& LogMessage
         << "| " << setw(6) << LogMessage[0]
         << "| " << setw(30) << combinedQuery
         << "| " << setw(28) << timestamp
-        << "| " << setw(28) << to_string(getLatestVersion()) << " |\n";
+        << " | " << setw(7) << to_string(getLatestVersion()) << " |\n";
     
 
     file.close();
