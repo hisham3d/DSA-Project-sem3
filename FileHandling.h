@@ -61,6 +61,8 @@ void CREATETREEFOLDERS(string branch)
     createFolder("BRANCHES\\" + branch + "\\TREES\\AVL");
     createFolder("BRANCHES\\" + branch + "\\TREES\\RB");
     createFolder("BRANCHES\\" + branch + "\\TREES\\BTREE");
+    createFolder("BRANCHES\\" + branch + "\\TREES\\MERKLETREE");
+
 }
 
 void CREATEBRANCHESFOLDERS(string name)
@@ -275,7 +277,6 @@ string branchSelection(string& activeBranch)
 void GetFields(string Filename, CustomVector<string>& LINE1, CustomVector<string>& Entries)
 {
     fstream file;
-    //file.open("FilesToREAD\\" + filename);
     file.open("FilesToREAD\\" + Filename);
     READLINE(file, LINE1);
     READLINE(file, Entries);
@@ -283,11 +284,8 @@ void GetFields(string Filename, CustomVector<string>& LINE1, CustomVector<string
 }
 
 void UpdateDataFile() {
-    // Open the CSV file for reading
     ifstream csvFile("FilesToREAD\\healthcare_dataset.csv");
-
-    // Open the data.txt file for writing
-    ofstream dataFile("FilesToREAD\\data.txt");
+    ofstream dataFile("FilesToREAD\\healthcare_dataset.txt");
 
     // Copy content from the CSV file to the data file line by line
     string line;
@@ -297,17 +295,13 @@ void UpdateDataFile() {
         row++;
     }
 
-    // Close the files
     csvFile.close();
     dataFile.close();
 }
 
 void UpdateCsvFile() {
-    // Open the CSV file for reading
     ofstream csvFile("FilesToREAD\\healthcare_dataset.csv");
-
-    // Open the data.txt file for writing
-    ifstream dataFile("FilesToREAD\\data.txt");
+    ifstream dataFile("FilesToREAD\\healthcare_dataset.txt");
 
     // Copy content from the CSV file to the data file line by line
     string line;
@@ -317,7 +311,6 @@ void UpdateCsvFile() {
         row++;
     }
 
-    // Close the files
     csvFile.close();
     dataFile.close();
 }

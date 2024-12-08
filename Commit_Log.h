@@ -118,17 +118,17 @@ string getCurrentTimestamp1() {
 }
 void addCommit1(const string& branchName, const CustomVector<string>& LogMessage) {
 
+    string user;
+    cin.ignore();
+    cout << "\nEnter username: ";
+    getline(cin, user, '\n');
+    cout << endl;
     string path = "BRANCHES\\" + branchName + "\\commit_log.txt";
 
     bool fileExists = std::filesystem::exists(path);
 
     ofstream file(path, ios::app);
 
-    string user;
-    cin.ignore();
-    cout << "\nEnter username: ";
-    getline(cin, user, '\n');
-    cout << endl;
 
     if (!fileExists) {
         file << "                                    _________________\n";
@@ -146,11 +146,12 @@ void addCommit1(const string& branchName, const CustomVector<string>& LogMessage
     int nextCommitNumber = history.empty() ? 1 : history.back().commitNumber + 1;
     string combinedQuery = LogMessage[1] + " -> " + LogMessage[2];
 
-    file << "|" << left << setw(4) << ("<" + to_string(nextCommitNumber) + ">")
-        << "| " << setw(20) << user
-        << "| " << setw(6) << LogMessage[0]
-        << "| " << setw(30) << combinedQuery
-        << "| " << setw(28) << timestamp << " |\n";
+        file << "|" << left << setw(4) << ("<" + to_string(nextCommitNumber) + ">")
+            << "| " << setw(20) << user
+            << "| " << setw(6) << LogMessage[0]
+            << "| " << setw(30) << combinedQuery
+            << "| " << setw(28) << timestamp << " |\n";
+    
 
     file.close();
 

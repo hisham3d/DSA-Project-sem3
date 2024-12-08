@@ -13,7 +13,7 @@
 #include <iomanip>
 using namespace std;
 
-string fileName = "data.txt";
+string fileName = "healthcare_dataset.txt";
 class AddressLocation
 {
 public:

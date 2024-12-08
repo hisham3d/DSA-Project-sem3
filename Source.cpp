@@ -1,5 +1,6 @@
 #pragma once
 #include"BTREE.h"
+#include"MERKLETREE.h"
 #include "CustomVector.h"
 #include <iostream>
 #include <thread>
@@ -30,6 +31,7 @@ int mainmenu()
 	cout << "[1] AVL Trees" << endl;
 	cout << "[2] B Trees" << endl;
 	cout << "[3] Red Black Trees" << endl;
+	cout << "[4] Merkle Trees" << endl;
 	cin >> choice;
 	cout << endl << endl;
 	return choice;
@@ -116,7 +118,7 @@ void MENUBTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 			cout << "[" << i + 1 << "] " << Fields[i] << endl;
 		}
 
-		cout << "Enter your choice: ";
+		cout << "Enter your choice : ";
 		cin >> choice;
 
 		if (DataTypes[choice - 1] == "string")
@@ -341,7 +343,7 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 		if (DataTypes[choice - 1] == "string")
 		{
 			SAVLTREE = &stringCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
-			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\AVL\\" + Fields[choice - 1]);
+			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\MERKLETREE\\" + Fields[choice - 1]);
 			SAVLTREE->fieldname = Fields[choice - 1];
 			SAVLTREE->CreateTreeFile(SAVLTREE->root);
 			do {
@@ -357,7 +359,7 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 		if (DataTypes[choice - 1] == "int")
 		{
 			IAVLTREE = &intCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
-			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\AVL\\" + Fields[choice - 1]);
+			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\MERKLETREE\\" + Fields[choice - 1]);
 			IAVLTREE->fieldname = Fields[choice - 1];
 			IAVLTREE->CreateTreeFile(IAVLTREE->root);
 			do {
@@ -373,7 +375,7 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 
 		if (DataTypes[choice - 1] == "double")
 		{
-			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\AVL\\" + Fields[choice - 1]);
+			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\MERKLETREE\\" + Fields[choice - 1]);
 			DAVLTREE = &doubleCreateAvlTree(choice - 1, DataTypes[choice - 1], activeBranch);
 			DAVLTREE->fieldname = Fields[choice - 1];
 			DAVLTREE->CreateTreeFile(DAVLTREE->root);
@@ -392,6 +394,117 @@ void MENUAVLTREE(CustomVector<string>Fields, CustomVector<string> DataTypes)
 		cin >> ch;
 	} while (ch == 'Y' || ch == 'y');
 }
+
+template<typename T>
+void MerkleTreeSubMenu(MerkleTree<T>* tree, vector<string>& Fields, int choice)
+{
+	int option = submenu();
+	system("cls");
+
+	if (option == 1)
+	{
+		cout << "\nMerkle Root: " << tree->getRootHash() << endl;
+	}
+
+	if (option == 2)
+	{
+		cout << "\nDisplaying Merkle Tree..." << endl;
+		tree->printTree();
+	}
+
+	if (option == 3)
+	{
+		string obj;
+		cin.ignore();
+		cout << "\nEnter value to search in tree: ";
+		getline(cin, obj, '\n');
+	}
+
+	if (option == 4)
+	{
+		// Option for other actions related to Merkle Tree
+		// For example, you might implement range-based logic or hash-based queries
+	}
+
+	if (option == 5)
+	{
+		display_commit_log();
+	}
+	if (option == 6) {
+		tree->printTree(tree->root);
+	}
+}
+
+void MENUMerkleTree(vector<string>& Fields, vector<string>& DataTypes)
+{
+	MerkleTree<string>* stringTree = NULL;
+	MerkleTree<int>* intTree = NULL;
+	MerkleTree<double>* doubleTree = NULL;
+	char ch;
+
+	do {
+		system("cls");
+		int choice = 0;
+
+		for (int i = 0; i < Fields.size(); i++)
+		{
+			cout << "[" << i + 1 << "] " << Fields[i] << endl;
+		}
+
+		cout << "Enter your choice: ";
+		cin >> choice;
+
+		if (DataTypes[choice - 1] == "string")
+		{
+			vector<string> data;  // Populate this with data from your source (CSV, etc.)
+
+			stringTree = &createStringMerkleTreeFromCSV(choice - 1, DataTypes[choice - 1]);
+			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\MERKLETREE\\" + Fields[choice - 1]);
+			stringTree->fieldname = Fields[choice - 1];
+			stringTree->CreateTreeFile(stringTree->root, activeBranch, Fields[choice - 1]);  // For stringTree
+			do {
+				MerkleTreeSubMenu<string>(stringTree, Fields, choice);
+				cout << "\nDo you Want to run it again (Y/N): ";
+				cin >> ch;
+			} while (ch == 'Y' || ch == 'y');
+		}
+
+		if (DataTypes[choice - 1] == "int")
+		{
+			vector<int> data;  
+
+			intTree = &createIntMerkleTreeFromCSV(choice - 1, DataTypes[choice - 1]);
+			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\MERKLETREE\\" + Fields[choice - 1]);
+			intTree->fieldname = Fields[choice - 1];
+			intTree->CreateTreeFile(intTree->root, activeBranch, Fields[choice - 1]);  // For int tree
+
+			do {
+				//MerkleTreeSubMenu<int>(intTree, Fields, choice);
+				cout << "\nDo you Want to run it again (Y/N): ";
+				cin >> ch;
+			} while (ch == 'Y' || ch == 'y');
+		}
+
+		if (DataTypes[choice - 1] == "double")
+		{
+			vector<double> data;  
+
+			doubleTree = &createDoubleMerkleTreeFromCSV(choice - 1, DataTypes[choice - 1]);
+			createFolder("BRANCHES\\" + activeBranch + "\\TREES\\MERKLETREE\\" + Fields[choice - 1]);
+			doubleTree->fieldname = Fields[choice - 1];
+			doubleTree->CreateTreeFile(doubleTree->root, activeBranch, Fields[choice - 1]);
+			do {
+				MerkleTreeSubMenu<double>(doubleTree, Fields, choice);
+				cout << "\nDo you Want to run it again (Y/N): ";
+				cin >> ch;
+			} while (ch == 'Y' || ch == 'y');
+		}
+
+		cout << "Do you Want to run it again for same TREE (Y/N): ";
+		cin >> ch;
+	} while (ch == 'Y' || ch == 'y');
+}
+
 
 void mainMenu(CustomVector<string>& Fields, CustomVector<string>& Entries, CustomVector<string>& DataTypes) {
 	system("cls");
@@ -416,16 +529,31 @@ void mainMenu(CustomVector<string>& Fields, CustomVector<string>& Entries, Custo
 	{
 		MENURBTREE(Fields, DataTypes);
 	}
+	else if (treechoice == 4) {
+		// Inline conversion of Fields to std::vector
+		std::vector<std::string> stdFields;
+		for (int i = 0; i < Fields.getSize(); ++i) {
+			stdFields.push_back(Fields[i]);
+		}
+
+		// Inline conversion of DataTypes to std::vector
+		std::vector<std::string> stdDataTypes;
+		for (int i = 0; i < DataTypes.getSize(); ++i) {
+			stdDataTypes.push_back(DataTypes[i]);
+		}
+
+		MENUMerkleTree(stdFields, stdDataTypes);
+	}
 
 	return;
 }
 
 int main()
 {
-	createFile("FilesToREAD\\data.txt");
+	createFile("FilesToREAD\\healthcare_dataset.txt");
+	UpdateDataFile();
 	char ch = '1';
 
-	UpdateDataFile();
 	CustomVector<string> Fields, Entries, DataTypes;
 	GetFields(fileName, Fields, Entries);
 	AllocateDataTypes(DataTypes, Entries);

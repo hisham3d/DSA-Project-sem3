@@ -50,6 +50,39 @@ public:
     }
 };
 
+template <typename T>
+class RBSUBNODE
+{
+public:
+    T val;
+    CustomVector <AddressLocation> AddressList;
+    void print()
+    {
+        for (int i = 0; i < AddressList.getSize(); i++)
+            cout << AddressList[i].filename << "  " << AddressList[i].linenumber << endl;
+    }
+
+    void printinffile(fstream& file)
+    {
+        for (int i = 0; i < AddressList.getSize(); i++)
+            file << AddressList[i].filename << "\n" << AddressList[i].linenumber << endl;
+    }
+};
+
+template<typename T>
+void DisplayAllTuples(CustomVector<string>& Fields, RBSUBNODE <T>& ptr)
+{
+    for (int i = 0; i < ptr.AddressList.getSize(); i++)
+    {
+        CustomVector<string> lt = GetTuples(ptr.AddressList[i]);
+
+        for (int i = 0; i < lt.getSize(); i++)
+            cout << left << setw(30) << Fields[i] << ":  " << "                  " << lt[i] << endl;
+
+        cout << "---------------------------------------------------------------------------------\n";
+    }
+}
+
 template <class T>
 class RedBlackTree
 {
@@ -833,6 +866,7 @@ void RemoveTupleFromFile(RBDataNode<T>* ptr)
 template<typename T>
 void DeleteTuple(RedBlackTree<T>* RB, int index, T val)
 {
+
     RBDataNode <T>* toDelete = RB->search(RB->root, val);
 
     if (toDelete == NULL || toDelete == RB->end) {
@@ -848,10 +882,16 @@ void DeleteTuple(RedBlackTree<T>* RB, int index, T val)
         remove(RemovePath.c_str());
 
     cout << "Node successfully deleted and data deleted from file." << endl;
-
+    string valueAsString;
+    if constexpr (is_same<T, string>::value) {
+        valueAsString = val; // If T is already a string
+    }
+    else {
+        valueAsString = to_string(val); // Convert numeric values to string
+    }
     CustomVector<string> LogMessage;
-    LogMessage.push_back("RB");
-    LogMessage.push_back(toStringT(val));
+    LogMessage.push_back("AVL");
+    LogMessage.push_back(valueAsString);
     LogMessage.push_back("Deleted");
     addCommit1(activeBranch3, LogMessage);
 }

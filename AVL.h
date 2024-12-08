@@ -535,7 +535,7 @@ void UpdateTuple(AVL<int>*& Avl, CustomVector<string> fields)
     Avl = &intCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "int", activeBranch2);
     Avl->fieldname = fields[fieldIndex];
     Avl->CreateTreeFile(Avl->root);
-    cout << "Updated tree data." << endl;
+    cout << "Tree created again with updated data." << endl;
 
     // COMMIT LOG
     CustomVector<string> LogMessage;
@@ -587,7 +587,7 @@ void UpdateTuple(AVL<string>*& Avl, CustomVector<string> fields) {
     Avl = &stringCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "string", activeBranch2);
     Avl->fieldname = fields[fieldIndex];
     Avl->CreateTreeFile(Avl->root);
-    cout << "Updated tree data." << endl;
+    cout << "Tree created again with updated data." << endl;
 
     CustomVector<string> LogMessage;
     LogMessage.push_back("AVL");
@@ -640,7 +640,7 @@ void UpdateTuple(AVL<double>*& Avl, CustomVector<string> fields) {
     Avl = &doubleCreateAvlTree(getFieldIndex(fields, Avl->fieldname), "double", activeBranch2);
     Avl->fieldname = fields[fieldIndex];
     Avl->CreateTreeFile(Avl->root);
-    cout << "Updated tree data." << endl;
+    cout << "Tree created again with updated data." << endl;
 
     CustomVector<string> LogMessage;
     LogMessage.push_back("AVL");
@@ -700,6 +700,8 @@ void RemoveTupleFromFile(AVLDataNode<T>* ptr)
 template <typename T>
 void DeleteTuple(AVL<T>* Avl, int index, T val)
 {
+    
+
     AVLDataNode<T>* toDelete = Avl->recursiveSearch(Avl->root, val);
     if (toDelete == NULL) {
         cout << "ERROR: Value not found" << endl;
@@ -713,9 +715,16 @@ void DeleteTuple(AVL<T>* Avl, int index, T val)
 
     cout << "Node successfully deleted and data deleted from file." << endl;
 
+    string valueAsString;
+    if constexpr (std::is_same<T, string>::value) {
+        valueAsString = val; // If T is already a string
+    }
+    else {
+        valueAsString = std::to_string(val); // Convert numeric values to string
+    }
     CustomVector<string> LogMessage;
     LogMessage.push_back("AVL");
-    LogMessage.push_back(toStringT(val));
+    LogMessage.push_back(valueAsString);
     LogMessage.push_back("Deleted");
     addCommit1(activeBranch2, LogMessage);
 }
